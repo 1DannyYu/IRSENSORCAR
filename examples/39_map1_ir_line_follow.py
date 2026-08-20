@@ -58,7 +58,7 @@ import argparse
 import sys
 import time
 from collections.abc import Callable
-from dataclasses import replace
+from dataclasses import dataclass, replace
 from datetime import datetime
 from typing import Protocol
 
@@ -186,6 +186,66 @@ def phase3_lead_in_transition(
     if physical == slight_left:
         return 1, False, "line returned to left inner sensor; retaining candidate"
     return 0, False, "candidate reset before the left outer sensor"
+
+
+@dataclass
+class Phase3CompletionGate:
+    """Sensor-event completion gate for ARC 1 followed by a short Phase 4 proof."""
+
+    exit_confirm_s: float = 0.8
+    phase4_proof_s: float = 2.0
+    mode: str = "arc"
+    arc_turn_observed: bool = False
+    centred_elapsed: float = 0.0
+    phase4_valid_elapsed: float = 0.0
+
+    def update(
+        self,
+        physical: tuple[int, int, int, int],
+        kind: str,
+        nav_state: str,
+        dt: float,
+    ) -> str | None:
+        """Return ``phase4`` or ``complete`` when that transition is confirmed."""
+        if dt < 0:
+            raise ValueError("dt must be non-negative")
+
+        left_curve_evidence = physical in {
+            (0, 1, 0, 0),
+            (1, 0, 0, 0),
+            (1, 1, 0, 0),
+            (1, 1, 1, 0),
+        }
+        localising_follow = kind in ("on_line", "drift") and nav_state == "follow"
+
+        if self.mode == "arc":
+            if left_curve_evidence:
+                self.arc_turn_observed = True
+            if (
+                self.arc_turn_observed
+                and physical == (0, 1, 1, 0)
+                and localising_follow
+            ):
+                self.centred_elapsed += dt
+            else:
+                self.centred_elapsed = 0.0
+            if self.centred_elapsed >= self.exit_confirm_s:
+                self.mode = "phase4"
+                self.centred_elapsed = 0.0
+                return "phase4"
+            return None
+
+        if self.mode == "phase4":
+            if localising_follow:
+                self.phase4_valid_elapsed += dt
+            else:
+                self.phase4_valid_elapsed = 0.0
+            if self.phase4_valid_elapsed >= self.phase4_proof_s:
+                self.mode = "complete"
+                return "complete"
+            return None
+
+        return None
 
 
 def _phase1_log(message: str) -> None:
@@ -388,6 +448,20 @@ def main() -> int:
         "for at most this long while detecting ARC 1 (default 5.0s)",
     )
     parser.add_argument(
+        "--phase3-exit-confirm-s",
+        type=float,
+        default=0.8,
+        help="stable centred P0110 required after observed ARC turning before switching to "
+        "Phase 4 straight control (default 0.8s)",
+    )
+    parser.add_argument(
+        "--phase4-proof-s",
+        type=float,
+        default=2.0,
+        help="valid Phase 4 straight-line following required before the Phase 3 test stops "
+        "successfully (default 2.0s)",
+    )
+    parser.add_argument(
         "--test-phase",
         type=int,
         choices=range(1, 11),
@@ -512,6 +586,10 @@ def main() -> int:
         parser.error("--start-acquire-timeout-s must be non-negative")
     if args.phase3_lead_in_timeout_s <= 0:
         parser.error("--phase3-lead-in-timeout-s must be positive")
+    if args.phase3_exit_confirm_s <= 0:
+        parser.error("--phase3-exit-confirm-s must be positive")
+    if args.phase4_proof_s <= 0:
+        parser.error("--phase4-proof-s must be positive")
     if not 1 <= args.phase1_forward_speed <= 1000:
         parser.error("--phase1-forward-speed must be in [1, 1000]")
     if args.phase1_forward_s <= 0:
@@ -541,8 +619,8 @@ def main() -> int:
                 "car heading east"
             )
             print(
-                "Phase 3 completion: NO distance stop; operator Ctrl+C or --duration is the "
-                "only stop boundary"
+                "Phase 3 completion: NO distance stop; switch to Phase 4 after sensor-confirmed "
+                "ARC exit, then stop after the Phase 4 proof segment"
             )
         if phase.kind is Map1PhaseKind.ARC and phase.number != 3:
             print(
@@ -571,7 +649,13 @@ def main() -> int:
 
     from RPi import GPIO
 
-    from carbot.ir_line_nav import IRLineNav, IRNavPolicy, IRNavState, detect_ir_line
+    from carbot.ir_line_nav import (
+        IRLineNav,
+        IRNavCommand,
+        IRNavPolicy,
+        IRNavState,
+        detect_ir_line,
+    )
     from carbot.ir_tracing import IRTracingSensor
 
     # Setup IR sensor
@@ -980,6 +1064,14 @@ def main() -> int:
     last_logged: tuple | None = None
     last_log_time = 0.0
     logged_lines = 0
+    phase3_completion = (
+        Phase3CompletionGate(
+            exit_confirm_s=args.phase3_exit_confirm_s,
+            phase4_proof_s=args.phase4_proof_s,
+        )
+        if args.test_phase == 3
+        else None
+    )
 
     try:
         while True:
@@ -1038,6 +1130,30 @@ def main() -> int:
             reading = detect_ir_line(sensor, speed=args.speed)
             command = nav.step(reading, dt)
 
+            if phase3_completion is not None:
+                phase3_event = phase3_completion.update(
+                    reading.physical,
+                    reading.state.kind.value,
+                    command.state.value,
+                    dt,
+                )
+                if phase3_event == "phase4":
+                    assert phase3_lead_in_policy is not None
+                    print(
+                        "\n[PHASE] Phase 3 ARC 1 sensor exit confirmed -> "
+                        "Phase 4 North straight",
+                        flush=True,
+                    )
+                    nav = IRLineNav(phase3_lead_in_policy)
+                    command = nav.step(reading, 0.0)
+                elif phase3_event == "complete":
+                    command = IRNavCommand(
+                        0,
+                        0,
+                        "Phase 4 proof complete after sensor-confirmed ARC 1 exit",
+                        IRNavState.STOPPED,
+                    )
+
             # Track statistics
             if command.state is IRNavState.SEARCH and last_state is not IRNavState.SEARCH:
                 search_entries += 1
@@ -1077,7 +1193,14 @@ def main() -> int:
                 # .min_arc_cm/.min_cm_since_previous straight from the log, without guessing.
                 current_phase = phase_progress.current
                 if args.test_phase == 3:
-                    phase_diag = "ph=3 pc=disabled"
+                    assert phase3_completion is not None
+                    if phase3_completion.mode == "arc":
+                        phase_diag = "ph=3 pc=disabled"
+                    else:
+                        phase_diag = (
+                            f"ph=4 proof={phase3_completion.phase4_valid_elapsed:.1f}/"
+                            f"{phase3_completion.phase4_proof_s:.1f}s"
+                        )
                 else:
                     phase_diag = (
                         f"ph={current_phase.number} pc={phase_progress.phase_cm:.1f}cm"
@@ -1132,7 +1255,13 @@ def main() -> int:
         print(f"  Junctions rejected by the distance gate: {nav.junctions_rejected}")
         print(f"  Next junction expected: {nav.junctions.pending.name}")
         if args.test_phase == 3:
-            print("  Estimated route phase: Phase 3 time-bounded test; distance stop disabled")
+            assert phase3_completion is not None
+            print(
+                "  Phase 3 staged result: "
+                f"mode={phase3_completion.mode}, distance stop disabled, "
+                f"Phase 4 proof={phase3_completion.phase4_valid_elapsed:.1f}/"
+                f"{phase3_completion.phase4_proof_s:.1f}s"
+            )
         elif phase_progress.current is None:
             print("  Estimated route phase: distance plan complete")
         else:

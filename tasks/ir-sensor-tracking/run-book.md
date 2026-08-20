@@ -127,9 +127,14 @@ Phase 2 獨立測試會先執行主動 acquisition：看到偏左／偏右黑線
 `P0100 -> P0000 -> P1000` 或左側曲線形狀 `P1100/P1110`，才切換 LEFT ONLY。
 
 Phase 3 不再使用 12cm PWM／時間估算停止。車上沒有 wheel encoder，這個估算已多次在
-ARC 尚未走完時提前停車；LOG 會顯示 `pc=disabled`。操作者在車頭朝北時可按 `Ctrl+C`，
-否則由 `--duration 20` 作為唯一自動安全上限。Phase 5/7 的距離門檻尚未因此自動取消，
-必須等各自實測後再決定。
+ARC 尚未走完時提前停車；LOG 會顯示 `pc=disabled`。Phase 5/7 的距離門檻尚未因此自動
+取消，必須等各自實測後再決定。
+
+完整 Phase 3 測試的成功流程是 Phase 2 後段 → Phase 3 全段 → Phase 4 前段。ARC 控制內
+必須先看到真實左彎訊號，再連續看到 0.8 秒 `P0110` 才切回 Phase 4 普通循線；Phase 4
+必須再有 2 秒有效 ON_LINE/DRIFT 才自動停車。SEARCH、REVERSE 或非定位訊號會讓這 2 秒
+重新計算。20 秒包含起始 acquisition 與 lead-in，只是安全 timeout；跑到 timeout 不算
+通過。
 Phase 3 必須在線上以 north heading 停下，才能開始 Phase 4。
 
 2026-08-21 06:21 的下一次 ARC 1 實跑確實走得更長，但仍衝出路徑。現場確認車身右側的

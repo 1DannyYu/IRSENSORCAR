@@ -346,8 +346,15 @@ five-second ceiling and stops safely if ARC 1 is not confirmed.
 The operator also rejected command-derived distance as the Phase 3 stop gate. With no wheel
 encoders, PWM/time credit is not measured physical distance and repeatedly stopped the chassis
 mid-ARC. The independent Phase 3 run therefore performs no distance accumulation and has no 12cm
-stop. `Ctrl+C` or the operator-selected `--duration` is its only completion boundary; logs print
-`pc=disabled` so this behavior cannot be confused with an older Pi copy.
+stop. Logs print `pc=disabled` so this behavior cannot be confused with an older Pi copy.
+
+The intended test envelope was then clarified as Phase 2 tail -> all of Phase 3 -> the opening of
+Phase 4, not "hold left until 20 seconds." Phase 3 now requires real left-curve evidence after its
+lead-in, then 0.8s of continuous centred `P0110` before switching from the left-only ARC policy to
+ordinary unrestricted Phase 4 line following. It must then accumulate 2.0s of valid ON_LINE/DRIFT
+FOLLOW; SEARCH, REVERSE, or a non-localising reading resets that proof interval. Completion sends
+an explicit zero-wheel STOPPED command. The 20-second duration remains the ceiling for the entire
+test, including acquisition and Phase 2 lead-in, and timeout is not a passing result.
 
 Validation after this change:
 

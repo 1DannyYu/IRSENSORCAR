@@ -9,6 +9,7 @@ SCRIPT = Path(__file__).parents[1] / "examples" / "39_map1_ir_line_follow.py"
 RUN_HARDCODED_PHASE1 = run_path(str(SCRIPT))["run_hardcoded_phase1"]
 PHASE2_ACQUISITION_COMMAND = run_path(str(SCRIPT))["phase2_acquisition_command"]
 PHASE3_LEAD_IN_TRANSITION = run_path(str(SCRIPT))["phase3_lead_in_transition"]
+PHASE3_COMPLETION_GATE = run_path(str(SCRIPT))["Phase3CompletionGate"]
 
 
 class FakeCar:
@@ -168,3 +169,26 @@ def test_phase3_lead_in_rejects_centred_and_right_side_paper_noise() -> None:
 def test_phase3_lead_in_accepts_direct_left_pair_curve_shape() -> None:
     assert PHASE3_LEAD_IN_TRANSITION(0, (1, 1, 0, 0))[1] is True
     assert PHASE3_LEAD_IN_TRANSITION(0, (1, 1, 1, 0))[1] is True
+
+
+def test_phase3_completion_requires_turn_before_centred_exit_confirmation() -> None:
+    gate = PHASE3_COMPLETION_GATE(exit_confirm_s=0.8, phase4_proof_s=2.0)
+    assert gate.update((0, 1, 1, 0), "on_line", "follow", 1.0) is None
+    assert gate.mode == "arc"
+
+    assert gate.update((1, 0, 0, 0), "drift", "follow", 0.1) is None
+    assert gate.arc_turn_observed is True
+    assert gate.update((0, 1, 1, 0), "on_line", "follow", 0.4) is None
+    assert gate.update((0, 1, 1, 0), "on_line", "follow", 0.4) == "phase4"
+
+
+def test_phase3_completion_requires_stable_phase4_following() -> None:
+    gate = PHASE3_COMPLETION_GATE(exit_confirm_s=0.1, phase4_proof_s=2.0)
+    gate.update((0, 1, 0, 0), "drift", "follow", 0.1)
+    assert gate.update((0, 1, 1, 0), "on_line", "follow", 0.1) == "phase4"
+
+    assert gate.update((0, 1, 1, 0), "on_line", "follow", 1.0) is None
+    assert gate.update((0, 0, 0, 0), "ambiguous", "search", 0.1) is None
+    assert gate.phase4_valid_elapsed == 0.0
+    assert gate.update((0, 1, 1, 0), "on_line", "follow", 1.0) is None
+    assert gate.update((0, 1, 0, 0), "drift", "follow", 1.0) == "complete"
