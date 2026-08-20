@@ -385,3 +385,47 @@ The root `README.md` now documents the complete repeatable Map 1 workflow used d
 The README's stale Pi working directory and clone URL were also corrected to
 `~/Car-and-Robotic-Arm` and the current `1DannyYu/IRSENSORCAR` repository. No motor-moving command
 was run while creating or verifying the documentation.
+
+## End-of-session record
+
+Work stopped for the day after preparing, but not physically running, the complete independent
+Phase 3 transition test. The required test envelope is now explicit:
+
+1. place the car at any stable `P0110` point on the Phase 2 eastbound straight, heading east;
+2. follow Phase 2 normally and detect the real ARC 1 entry;
+3. run the left-only Phase 3 controller without a command-distance stop;
+4. after observed left-curve evidence, require 0.8s of centred `P0110` to enter Phase 4;
+5. follow Phase 4 normally for 2.0s of uninterrupted ON_LINE/DRIFT evidence, then stop;
+6. treat the 20-second whole-test timeout as failure, not completion.
+
+The last physical run remains
+`scratch/ir-sensor-tracking/2026-08-21-070301-phase03-quarter-credit-12s.log`. It proved that the
+previous runner applied Phase 3 left-only control while the chassis was still on Phase 2, causing
+six forward/reverse cycles. No physical run has yet validated the new Phase 2 -> 3 -> 4 state
+machine. The next session must begin with that isolated test; Phases 4-10 and the integrated route
+remain blocked on its result.
+
+Final software verification for the staged transition controller:
+
+- focused navigation/phase tests: 111 passed;
+- full stable-Python test suite: 584 passed in 92.65s;
+- Ruff, bytecode compilation, and `git diff --check`: passed;
+- deployed code before this closeout record: commit `ba9deea` on GitHub and Raspberry Pi 5;
+- no motor command was run by the development session while implementing or deploying it.
+
+Git history was unexpectedly replaced twice by an external "Initial project snapshot by Danny
+Yu" process while commits were being published. No force-push was performed by this work. The Pi
+deployment retained its previous heads as recoverable local branches
+`pre-rewrite-main-20260821` (`949cfa1`) and `pre-rewrite-main-20260821-2` (`a4de0eb`) before tracking
+the final rewritten `origin/main`. Before the next edit session, identify or disable the process
+that recreates root commits; otherwise it can again make ordinary fast-forward pulls impossible.
+
+Next-session motor test command (operator beside the car and ready to cut power):
+
+```bash
+ssh -t carpi 'cd ~/Car-and-Robotic-Arm && mkdir -p scratch/ir-sensor-tracking && LOG="scratch/ir-sensor-tracking/$(date +%Y-%m-%d-%H%M%S)-phase02-03-04-transition-20s.log" && echo "COMMIT=$(git rev-parse --short HEAD) LOG=$LOG" && PYTHONPATH=src python3 -u examples/40_map1_ir_phase_test.py --phase 3 --duration 20 --start-acquire-timeout-s 5 --phase3-lead-in-timeout-s 5 --phase3-exit-confirm-s 0.8 --phase4-proof-s 2 --heartbeat-s 0.5 --log-every --log-min-interval-s 0.1 --speed 150 2>&1 | tee "$LOG"'
+```
+
+A passing log must contain `Phase 3 ARC 1 detected`,
+`Phase 3 ARC 1 sensor exit confirmed -> Phase 4 North straight`, and
+`Phase 4 proof complete`. `Duration limit reached (20.0s)` is a failed/incomplete test.
