@@ -670,6 +670,10 @@ def main() -> int:
             GPIO.cleanup()
             return 1
 
+    # Phase 3's --duration is the safety ceiling for the whole independent run, including
+    # centring and the Phase 2 lead-in. It must not restart when ARC 1 is detected.
+    phase3_test_window_started = time.monotonic() if args.test_phase == 3 else None
+
     # Hardcoded start -> ARC 1: open-loop forward + scripted spin, no sensor. Skipped when
     # --start-on-loop -- the car is already placed past the T junction by hand.
     phase1_started = time.monotonic()
@@ -833,7 +837,7 @@ def main() -> int:
 
     # The operator cannot place the chassis precisely at the Phase 2/3 interface. Follow east
     # from any centred Phase 2 point, then switch controllers only after the real leftward sensor
-    # sequence confirms ARC 1. This lead-in is outside the Phase 3 duration window.
+    # sequence confirms ARC 1. The Phase 3 duration safety window already includes this lead-in.
     if args.test_phase == 3 and car:
         assert phase3_arc_policy is not None and phase3_lead_in_policy is not None
         print(
@@ -961,8 +965,9 @@ def main() -> int:
     phase_progress = Map1PhaseProgress(start_phase=progress_start_phase)
     previous_phase_command = None
 
-    start = time.monotonic()
-    last = start
+    loop_started = time.monotonic()
+    start = phase3_test_window_started or loop_started
+    last = loop_started
     frame_index = 0
     line_lost_count = 0
     line_found_count = 0
