@@ -1,0 +1,137 @@
+---
+import ModuleCard from './ModuleCard.astro';
+import Pi5PinoutCard from './Pi5PinoutCard.astro';
+import { CATEGORIES } from '../data/categories';
+import { href, t, type Locale } from '../i18n/ui';
+import {
+  categoryLabel,
+  inventoryPath,
+  modulesInCategory,
+  type Module,
+} from '../lib/modules';
+import '../styles/inventory.css';
+
+interface Props {
+  locale: Locale;
+  /** `all` or a concrete category key */
+  category?: string;
+}
+
+const { locale, category = 'all' } = Astro.props;
+const tr = t(locale);
+const list: Module[] = modulesInCategory(category);
+const activeKey = category;
+const heading =
+  activeKey === 'all' ? tr('inventory.title') : categoryLabel(activeKey);
+---
+
+<header class="inventory-header">
+  <div class="header-container">
+    <div class="header-copy">
+      <h1>{heading}</h1>
+      <p class="header-sub">{tr('site.subtitle')}</p>
+      {
+        activeKey !== 'all' && (
+          <p class="header-note">
+            {tr('inventory.category.showing')} {list.length} {tr('inventory.unit')}
+          </p>
+        )
+      }
+      {activeKey === 'all' && <p class="header-note">{tr('project.note')}</p>}
+    </div>
+    <div class="header-right">
+      <span class="stat-pill">
+        {tr('inventory.count')}：<strong id="stat-count">{list.length}</strong>
+        {tr('inventory.unit')}
+      </span>
+    </div>
+  </div>
+</header>
+
+{activeKey === 'all' && <Pi5PinoutCard locale={locale} />}
+
+<div class="toolbar">
+  <div class="search-wrapper">
+    <span class="search-icon" aria-hidden="true">🔍</span>
+    <input
+      type="search"
+      id="search-input"
+      class="search-input"
+      placeholder={tr('inventory.search')}
+    />
+  </div>
+  <nav class="category-tabs" id="category-tabs" aria-label={tr('inventory.categories')}>
+    {
+      CATEGORIES.map((c) => (
+        <a
+          class:list={['tab-btn', { active: c.key === activeKey }]}
+          href={href(locale, inventoryPath(c.key))}
+          data-cat={c.key}
+        >
+          {c.label}
+        </a>
+      ))
+    }
+  </nav>
+</div>
+
+<main class="inventory-grid" id="inventory-grid">
+  {list.map((mod) => <ModuleCard module={mod} locale={locale} />)}
+  <div class="empty-state" id="empty-state" hidden>
+    <h3>{tr('inventory.empty.title')}</h3>
+    <p>{tr('inventory.empty.desc')}</p>
+  </div>
+</main>
+
+<script>
+  const cards = [...document.querySelectorAll<HTMLElement>('.module-card')];
+  const empty = document.getElementById('empty-state')!;
+  const statCount = document.getElementById('stat-count')!;
+  const searchInput = document.getElementById('search-input') as HTMLInputElement;
+
+  const haystack = new WeakMap<HTMLElement, string>();
+  for (const card of cards) {
+    haystack.set(card, (card.textContent ?? '').toLowerCase());
+  }
+
+  function applyFilter() {
+    const q = searchInput.value.toLowerCase().trim();
+    let shown = 0;
+    for (const card of cards) {
+      const visible = !q || (haystack.get(card) ?? '').includes(q);
+      card.hidden = !visible;
+      if (visible) shown++;
+    }
+    statCount.textContent = String(shown);
+    empty.hidden = shown > 0;
+  }
+
+  searchInput.addEventListener('input', applyFilter);
+  applyFilter();
+</script>
+
+<style>
+  .header-copy {
+    max-width: 76ch;
+  }
+
+  .header-sub {
+    margin-top: 0.25rem;
+  }
+
+  .header-note {
+    margin-top: 0.6rem;
+    color: var(--text-secondary);
+    font-size: 0.92rem;
+    line-height: 1.6;
+  }
+
+  .category-tabs .tab-btn {
+    text-decoration: none;
+  }
+
+  .module-card {
+    text-decoration: none;
+    color: inherit;
+  }
+</style>

@@ -1,0 +1,47 @@
+# macOS
+.DS_Store
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+
+# Node and site build tooling
+node_modules/
+dist/
+.astro/
+
+# Build output
+_site/
+
+# Rebuildable Keil MDK artifacts excluded from vendor imports
+*.o
+*.crf
+*.d
+*.lst
+*.dep
+*.bak
+*.uvoptx
+*.uvguix
+*.scvd
+*.iex
+*.sct
+*.map
+*.axf
+*.tra
+*.lnp
+*.__i
+*.build_log.htm
+Objects/*.htm
+JLinkSettings.ini
+JLinkLog.txt
+
+# Local Reasonix state, including command history
+.reasonix/
+reasonix.toml
+
+# Private viva preparation notes; the repository is public
+docs/Mechatronics Folio and Journal/viva-qa-model-answers.md

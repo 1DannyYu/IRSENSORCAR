@@ -1,0 +1,33 @@
+[project]
+name = "carbot"
+version = "0.1.0"
+description = "Raspberry Pi control package for the NeZha-driven car and robotic arm"
+requires-python = ">=3.11"
+dependencies = [
+    "numpy>=2.0",
+    "smbus2>=0.5.0",
+]
+
+[project.optional-dependencies]
+vision = [
+    "opencv-contrib-python-headless>=4.10",
+]
+mapping = [
+    "pycolmap>=3.11",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0",
+    "ruff>=0.6",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/carbot"]
+
+[tool.ruff]
+line-length = 100

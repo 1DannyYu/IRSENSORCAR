@@ -1,0 +1,210 @@
+---
+import { Image } from 'astro:assets';
+import { asset } from '../lib/images';
+import guide from '../data/assembly-guide.json';
+import { type Locale } from '../i18n/ui';
+import '../styles/assembly.css';
+
+interface Props {
+  locale: Locale;
+}
+const filters = [
+  ['all', 'All Sections'],
+  ['intro', 'Overview'],
+  ['hardware', 'Packing List'],
+  ['part1', 'Chassis'],
+  ['part2', 'Upper Plate'],
+  ['part3', 'Mecanum'],
+  ['part4', 'Robotic Arm'],
+  ['part5', 'Integration'],
+];
+---
+
+<div class="guide-shell">
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <h2>🤖 <span>Dasheng Manual</span></h2>
+      <p>ABS Multi-Form Car &amp; Robotic Arm</p>
+    </div>
+    <nav class="nav-sections">
+      {
+        [...new Set(guide.nav.map((n) => n.group))].map((group) => (
+          <>
+            <div class="nav-group-title">{group}</div>
+            {guide.nav
+              .filter((n) => n.group === group)
+              .map((n) => (
+                <a href={`#${n.id}`} class="nav-link">
+                  <span>{n.label}</span>
+                  <span class="badge">{n.pages}</span>
+                </a>
+              ))}
+          </>
+        ))
+      }
+    </nav>
+  </aside>
+
+  <main class="guide-main">
+    <header class="hero">
+      <h1 class="hero-title">{guide.hero.title}</h1>
+      <p class="hero-subtitle">{guide.hero.subtitle}</p>
+    </header>
+
+    <div class="controls-bar">
+      <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input
+          type="text"
+          id="guide-search"
+          placeholder="Search steps, parts (e.g. M2.5*6, Locknut, Ackermann, Servo)…"
+        />
+      </div>
+      <div class="filter-tags" id="guide-filters">
+        {
+          filters.map(([key, label], i) => (
+            <button class:list={['filter-btn', { active: i === 0 }]} data-filter={key}>
+              {label}
+            </button>
+          ))
+        }
+      </div>
+    </div>
+
+    {
+      guide.sections.map((section) => (
+        <div id={section.id} class="guide-section">
+          <div class="section-header">
+            <h2>{section.heading}</h2>
+            <span class="section-tag">{section.tag}</span>
+          </div>
+          <div class="step-grid">
+            {section.steps.map((step) => (
+              <article class="step-card" data-category={step.category}>
+                {step.image && (
+                  <div
+                    class="step-image-container"
+                    data-full={asset(step.image).src}
+                    data-caption={step.caption}
+                  >
+                    <Image
+                      src={asset(step.image)}
+                      alt={step.caption || step.title}
+                      widths={[420, 840]}
+                      loading="lazy"
+                    />
+                    <div class="zoom-overlay">🔍 Click to Zoom</div>
+                  </div>
+                )}
+                <div class="step-body">
+                  <div class="step-header">
+                    <span class="step-number">{step.number}</span>
+                    {step.pills.map((p) => (
+                      <span class="meta-pill">{p}</span>
+                    ))}
+                  </div>
+                  <h3 class="step-title">{step.title}</h3>
+                  {step.blocks.map((b) =>
+                    b.kind === 'text' ? (
+                      <p class="step-desc" set:html={b.html} />
+                    ) : (
+                      <div class:list={[b.kind, b.variant]} set:html={b.html} />
+                    ),
+                  )}
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      ))
+    }
+
+    <div class="empty-state" id="guide-empty" hidden>
+      <h3>No matching steps</h3>
+    </div>
+  </main>
+</div>
+
+<div class="lightbox-overlay" id="guide-lightbox">
+  <button class="lightbox-close-btn" id="guide-lightbox-close" aria-label="close">&times;</button>
+  <div class="lightbox-img-container">
+    <img id="guide-lightbox-img" src="" alt="" />
+  </div>
+  <div class="lightbox-caption-bar">
+    <h4 id="guide-lightbox-caption"></h4>
+  </div>
+</div>
+
+<script>
+  const cards = [...document.querySelectorAll<HTMLElement>('.step-card')];
+  const sections = [...document.querySelectorAll<HTMLElement>('.guide-section')];
+  const search = document.getElementById('guide-search') as HTMLInputElement;
+  const filters = document.getElementById('guide-filters')!;
+  const emptyState = document.getElementById('guide-empty')!;
+
+  const haystack = new WeakMap<HTMLElement, string>();
+  for (const c of cards) haystack.set(c, (c.textContent ?? '').toLowerCase());
+
+  let currentFilter = 'all';
+
+  function apply() {
+    const q = search.value.toLowerCase().trim();
+    let shown = 0;
+    for (const card of cards) {
+      const ok =
+        (currentFilter === 'all' || card.dataset.category === currentFilter) &&
+        (!q || (haystack.get(card) ?? '').includes(q));
+      card.hidden = !ok;
+      if (ok) shown++;
+    }
+    // Hide a section heading when all of its cards are filtered out.
+    for (const s of sections) {
+      s.hidden = !s.querySelector<HTMLElement>('.step-card:not([hidden])');
+    }
+    emptyState.hidden = shown > 0;
+  }
+
+  search.addEventListener('input', apply);
+  filters.addEventListener('click', (e) => {
+    const btn = (e.target as HTMLElement).closest<HTMLElement>('.filter-btn');
+    if (!btn) return;
+    filters.querySelectorAll('.filter-btn').forEach((b) => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentFilter = btn.dataset.filter ?? 'all';
+    apply();
+  });
+
+  // Keep the active sidebar item in sync with the visible section.
+  const links = [...document.querySelectorAll<HTMLAnchorElement>('.nav-link')];
+  const observer = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        if (!entry.isIntersecting) continue;
+        links.forEach((l) => l.classList.toggle('active', l.hash === `#${entry.target.id}`));
+      }
+    },
+    { rootMargin: '-20% 0px -70% 0px' },
+  );
+  sections.forEach((s) => observer.observe(s));
+
+  // Lightbox
+  const lb = document.getElementById('guide-lightbox')!;
+  const lbImg = document.getElementById('guide-lightbox-img') as HTMLImageElement;
+  document.addEventListener('click', (e) => {
+    const wrap = (e.target as HTMLElement).closest<HTMLElement>('.step-image-container');
+    if (wrap) {
+      lbImg.src = wrap.dataset.full ?? '';
+      document.getElementById('guide-lightbox-caption')!.textContent = wrap.dataset.caption ?? '';
+      lb.classList.add('active');
+      return;
+    }
+    if (e.target === lb || (e.target as HTMLElement).id === 'guide-lightbox-close') {
+      lb.classList.remove('active');
+    }
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') lb.classList.remove('active');
+  });
+
+  apply();
+</script>

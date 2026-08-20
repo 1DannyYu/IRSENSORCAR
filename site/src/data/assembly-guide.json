@@ -1,0 +1,576 @@
+{
+  "hero": {
+    "title": "Dasheng Multi-Form Smart Car & Robotic Arm",
+    "subtitle": "Comprehensive Step-by-Step English Assembly Guide for the ABS Chassis & Acrylic Robotic Arm Kit (Model Version: 2024.07.08)",
+    "badges": [
+      "🚘 3 Chassis Modes (Differential / Ackermann / Mecanum)",
+      "🛠️ ABS Frame + Acrylic Arm",
+      "📍 50 Detailed Illustrated Pages"
+    ]
+  },
+  "nav": [
+    {
+      "group": "Overview & Specifications",
+      "id": "section-intro",
+      "label": "📘 Introduction & Modes",
+      "pages": "P.1-6"
+    },
+    {
+      "group": "Overview & Specifications",
+      "id": "section-hardware",
+      "label": "🔩 Packing List & Fasteners",
+      "pages": "P.7-11"
+    },
+    {
+      "group": "Assembly Steps",
+      "id": "section-part1",
+      "label": "🚗 Part 1: Chassis Assembly",
+      "pages": "P.12-24"
+    },
+    {
+      "group": "Assembly Steps",
+      "id": "section-part2",
+      "label": "📐 Part 2: Upper Plate & Boards",
+      "pages": "P.25-33"
+    },
+    {
+      "group": "Assembly Steps",
+      "id": "section-part3",
+      "label": "⚙️ Part 3: Mecanum Wheels",
+      "pages": "P.34-35"
+    },
+    {
+      "group": "Assembly Steps",
+      "id": "section-part4",
+      "label": "🦾 Part 4: Robotic Arm",
+      "pages": "P.36-47"
+    },
+    {
+      "group": "Assembly Steps",
+      "id": "section-part5",
+      "label": "🏁 Part 5: Final Vehicle Integration",
+      "pages": "P.48-50"
+    }
+  ],
+  "sections": [
+    {
+      "id": "section-intro",
+      "heading": "📘 Overview & Chassis Modes",
+      "tag": "Pages 1 – 6",
+      "steps": [
+        {
+          "category": "intro",
+          "number": "PAGE 01",
+          "title": "Dasheng Multi-Form Smart Car Assembly Instructions",
+          "pills": [
+            "Cover Page"
+          ],
+          "caption": "Page 1: Title & Document Version",
+          "image": "assets/assembly-guide/pages/page_1.png",
+          "blocks": [
+            {
+              "kind": "text",
+              "html": "<strong>Company:</strong> Youfang Robot Technology Co., Ltd.<br>\n                            <strong>Document Title:</strong> Dasheng Multi-Form Smart Car Operating & Assembly Instructions (ABS Material Edition)<br>\n                            <strong>Version History:</strong> 2024.02.22 / 2024.03.28 / 2024.07.08"
+            }
+          ]
+        },
+        {
+          "category": "intro",
+          "number": "PAGE 02",
+          "title": "4-Wheel Differential Drive Chassis Overview",
+          "pills": [
+            "Chassis Mode 1"
+          ],
+          "caption": "Page 2: 4-Wheel Differential Drive Chassis",
+          "image": "assets/assembly-guide/pages/page_2.png",
+          "blocks": [
+            {
+              "kind": "text",
+              "html": "The 4-Wheel Differential Drive mode is the most common entry-level robot chassis structure. It controls 4 independent motors to drive each wheel individually, allowing zero-radius pivot turning by spinning left and right wheels at different speeds or in opposite directions.\n                            <br><br>\n                            <em>Note: Since all 4 wheels are fixed in orientation, turning generates tire friction against the ground.</em>"
+            },
+            {
+              "kind": "callout",
+              "variant": "info",
+              "html": "<span class=\"callout-icon\">💡</span>\n                            <div><strong>Lock Screw Status:</strong> Direction Lock Screw must be <strong>FULLY TIGHTENED</strong> in Differential mode."
+            }
+          ]
+        },
+        {
+          "category": "intro",
+          "number": "PAGE 03",
+          "title": "Ackermann Steering Chassis Overview",
+          "pills": [
+            "Chassis Mode 2"
+          ],
+          "caption": "Page 3: Ackermann Steering Chassis",
+          "image": "assets/assembly-guide/pages/page_3.png",
+          "blocks": [
+            {
+              "kind": "text",
+              "html": "Mimicking real automotive steering geometry, the Ackermann configuration controls front-wheel steering angles via a dedicated servo motor. This setup provides superior stability during high-speed movement and precise cornering control.\n                            <br><br>\n                            It is widely adopted in National University Student Smart Car Competitions and autonomous driving research labs."
+            },
+            {
+              "kind": "callout",
+              "variant": "info",
+              "html": "<span class=\"callout-icon\">💡</span>\n                            <div><strong>Lock Screw Status:</strong> Direction Lock Screw must <strong>NOT BE INSTALLED</strong> in Ackermann mode to allow steering linkage motion."
+            }
+          ]
+        },
+        {
+          "category": "intro",
+          "number": "PAGE 04",
+          "title": "Mecanum Wheel Chassis Overview",
+          "pills": [
+            "Chassis Mode 3"
+          ],
+          "caption": "Page 4: Mecanum Wheel Chassis",
+          "image": "assets/assembly-guide/pages/page_4.png",
+          "blocks": [
+            {
+              "kind": "text",
+              "html": "Mecanum wheel drive enables full omnidirectional mobility—allowing the robot to move sideways (crab walk), diagonally, and spin in place. It is extensively used in robotics competitions like Robocon and FRC due to its extreme maneuverability.\n                            <br><br>\n                            <em>Note: Requires relatively flat surfaces to maintain roller contact and traction.</em>"
+            },
+            {
+              "kind": "callout",
+              "variant": "info",
+              "html": "<span class=\"callout-icon\">💡</span>\n                            <div><strong>Lock Screw Status:</strong> Direction Lock Screw must be <strong>FULLY TIGHTENED</strong> in Mecanum mode."
+            }
+          ]
+        },
+        {
+          "category": "intro",
+          "number": "PAGE 05",
+          "title": "Top Plate Hole Dimension Diagram",
+          "pills": [
+            "Dimension Specs"
+          ],
+          "caption": "Page 5: Top Plate Dimensions & Hole Layout",
+          "image": "assets/assembly-guide/pages/page_5.png",
+          "blocks": [
+            {
+              "kind": "text",
+              "html": "The car features a 3-tier structure:\n                            <br>• <strong>Bottom Tier:</strong> Recommended for battery placement.\n                            <br>• <strong>Middle & Top Tiers:</strong> Designed with standardized mounting grid holes for electronic controller boards, sensors, and expansion modules."
+            }
+          ]
+        },
+        {
+          "category": "intro",
+          "number": "PAGE 06",
+          "title": "Development Board / Nezha Control Board Direct Mounting",
+          "pills": [
+            "Optional Upgrade"
+          ],
+          "caption": "Page 6: Dev Board / Nezha Board Installation",
+          "image": "assets/assembly-guide/pages/page_6.png",
+          "blocks": [
+            {
+              "kind": "text",
+              "html": "For customers who purchased compatible expansion development boards or Nezha control boards:\n                            <br>The control board can directly serve as the middle structural chassis plate, replacing the standard top flat acrylic piece."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "section-hardware",
+      "heading": "🔩 Packing List & Hardware Guide",
+      "tag": "Pages 7 – 11",
+      "steps": [
+        {
+          "category": "intro",
+          "number": "PAGE 07",
+          "title": "Dual-Form ABS Smart Car Packing List",
+          "pills": [
+            "Inventory 1"
+          ],
+          "caption": "Page 7: Packing List - Dual-Form ABS Smart Car",
+          "image": "assets/assembly-guide/pages/page_7.png",
+          "blocks": [
+            {
+              "kind": "text",
+              "html": "<strong>Kit Components:</strong> ABS frame components, acrylic top plate, N20 gear motors x2, wheels, fasteners.\n                            <br><br>\n                            <em>Note: Protective kraft paper covers acrylic parts to prevent scratches. Peel off if a glossy pure black finish is desired.</em>"
+            }
+          ]
+        },
+        {
+          "category": "intro",
+          "number": "PAGE 08",
+          "title": "Acrylic Robotic Arm Packing List",
+          "pills": [
+            "Inventory 2"
+          ],
+          "caption": "Page 8: Packing List - Acrylic Robotic Arm Kit",
+          "image": "assets/assembly-guide/pages/page_8.png",
+          "blocks": [
+            {
+              "kind": "text",
+              "html": "<strong>Kit Components:</strong> Precision acrylic arm linkages, claw components, servos, brass standoffs, screws, and nylon lock nuts."
+            }
+          ]
+        },
+        {
+          "category": "intro",
+          "number": "PAGE 09 - 10",
+          "title": "Safety Precautions & Critical Assembly Rules",
+          "pills": [
+            "Critical Warnings"
+          ],
+          "caption": "Page 10: Critical Precautions & Safety Warnings",
+          "image": "assets/assembly-guide/pages/page_10.png",
+          "blocks": [
+            {
+              "kind": "callout",
+              "variant": "warning",
+              "html": "<span class=\"callout-icon\">⚠️</span>\n                            <div>\n                                <strong>1. Acrylic Fragility:</strong> Acrylic parts are brittle. Handle with care during assembly to avoid cracking.\n                                <br><br>\n                                <strong>2. Locknut Friction Rule:</strong> <u>DO NOT overtighten nylon locknuts</u> on revolving arm joints! Joints must swing smoothly. Overtightening increases servo resistance and will burn out / short-circuit the servo motor!\n                                <br><br>\n                                <strong>3. Servo Neutral Calibration:</strong> Do NOT rotate servo horns manually before installation. Power on the servo to let it return to its neutral 90° position before securing servo arms."
+            }
+          ]
+        },
+        {
+          "category": "intro",
+          "number": "PAGE 11",
+          "title": "Screw Model Identification & Parts Reference Guide",
+          "pills": [
+            "Hardware Guide"
+          ],
+          "caption": "Page 11: Hardware & Screw Identification Guide",
+          "image": "assets/assembly-guide/pages/page_11.png",
+          "blocks": [
+            {
+              "kind": "text",
+              "html": "Most fasteners in this kit are standard GB cross-head (Phillips) screws, primarily categorized into <strong>M2 (Black)</strong> and <strong>M2.5 (Silver)</strong>."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "section-part1",
+      "heading": "🚗 Part 1: Chassis Assembly",
+      "tag": "Pages 12 – 24",
+      "steps": [
+        {
+          "category": "part1",
+          "number": "PAGE 12 - 13",
+          "title": "Steering Module: Tie Rod & Motor Seats",
+          "pills": [
+            "Step 1.1 - 1.2"
+          ],
+          "caption": "Page 12-13: Steering Module Sub-assembly",
+          "image": "assets/assembly-guide/pages/page_13.png",
+          "blocks": [
+            {
+              "kind": "text",
+              "html": "<strong>Step 1.1:</strong> Connect the steering tie rod to the motor pressing plate.\n                            <br><br>\n                            <strong>Step 1.2:</strong> Install N20 gear motors into the motor mounting seats."
+            },
+            {
+              "kind": "callout",
+              "variant": "tip",
+              "html": "<span class=\"callout-icon\">💡</span>\n                            <div><strong>Alignment Tip:</strong> Ensure the N20 motor gearbox is completely <u>flush</u> with the edge of the motor mounting seat."
+            }
+          ]
+        },
+        {
+          "category": "part1",
+          "number": "PAGE 14 - 16",
+          "title": "Motor Pressing Plate & Frame Assembly",
+          "pills": [
+            "Step 1.3 - 2.2"
+          ],
+          "caption": "Page 14-16: Motor Seats & Frame Mounting",
+          "image": "assets/assembly-guide/pages/page_16.png",
+          "blocks": [
+            {
+              "kind": "text",
+              "html": "<strong>Step 1.3:</strong> Connect the steering pressing plate to the motor seat using M2.5*10 silver self-tapping screws.\n                            <br><br>\n                            <strong>Step 2.2:</strong> Secure the motor pressing plate with N20 motors using M2.5*6 black self-tapping screws."
+            }
+          ]
+        },
+        {
+          "category": "part1",
+          "number": "PAGE 17 - 18",
+          "title": "Steering Servo & Steering Module Insertion",
+          "pills": [
+            "Step 2.3 - 2.6"
+          ],
+          "caption": "Page 17-18: Servo Installation & Horn Alignment",
+          "image": "assets/assembly-guide/pages/page_18.png",
+          "blocks": [
+            {
+              "kind": "text",
+              "html": "<strong>Step 2.3 - 2.4:</strong> Fit SG90 servo into the chassis slot and secure with M2.5*6 black self-tapping screws.\n                            <br><br>\n                            <strong>Step 2.5:</strong> Mount single-arm servo horn pointing <u>vertically upward (90°)</u>. Fasten with M2*4 screw (silver, inside servo accessory bag).\n                            <br><br>\n                            <strong>Step 2.6:</strong> Place the assembled steering module into the main frame."
+            },
+            {
+              "kind": "callout",
+              "variant": "warning",
+              "html": "<span class=\"callout-icon\">⚠️</span>\n                            <div><strong>Servo Re-centering Note:</strong> If the servo arm output shaft was manually rotated, re-center it electronically to neutral position before attaching the horn."
+            }
+          ]
+        },
+        {
+          "category": "part1",
+          "number": "PAGE 19 - 20",
+          "title": "Steering Module Fixation & Linkage Connection",
+          "pills": [
+            "Step 2.7 - 2.8"
+          ],
+          "caption": "Page 19-20: Steering Linkage Connection",
+          "image": "assets/assembly-guide/pages/page_20.png",
+          "blocks": [
+            {
+              "kind": "text",
+              "html": "<strong>Step 2.7:</strong> Fix the steering module using M2.5*6 flat head silver self-tapping screws.\n                            <br><br>\n                            <strong>Step 2.8:</strong> Connect the servo arm to the steering linkage using M2*8 screw with washer (from servo bag)."
+            },
+            {
+              "kind": "callout",
+              "variant": "tip",
+              "html": "<span class=\"callout-icon\">💡</span>\n                            <div><strong>Hole Location:</strong> Fasten screw into the <strong>2nd hole</strong> of the servo arm. Apply firm force to drive the thread in."
+            }
+          ]
+        },
+        {
+          "category": "part1",
+          "number": "PAGE 21 - 22",
+          "title": "Wheel & Chassis Baffle Installation",
+          "pills": [
+            "Step 2.9 - 2.10"
+          ],
+          "caption": "Page 21-22: Wheel & Baffle Installation",
+          "image": "assets/assembly-guide/pages/page_21.png",
+          "blocks": [
+            {
+              "kind": "text",
+              "html": "<strong>Step 2.9:</strong> Push the 4 wheels onto the N20 motor output D-shafts.\n                            <br><br>\n                            <strong>Step 2.10:</strong> Insert side baffles into the chassis frame slots."
+            },
+            {
+              "kind": "callout",
+              "variant": "tip",
+              "html": "<span class=\"callout-icon\">💡</span>\n                            <div><strong>D-Shaft Alignment:</strong> Align the flat face of the motor shaft with the flat side of the wheel center hole before inserting."
+            }
+          ]
+        },
+        {
+          "category": "part1",
+          "number": "PAGE 23 - 24",
+          "title": "Direction Lock Screw Configuration per Mode",
+          "pills": [
+            "Step 2.11 - Mode Lock"
+          ],
+          "caption": "Page 23: Direction Lock Screw Setup Rules",
+          "image": "assets/assembly-guide/pages/page_23.png",
+          "blocks": [
+            {
+              "kind": "text",
+              "html": "Thread M2.5*6 black self-tapping screw into the direction lock hole according to your desired chassis mode:"
+            },
+            {
+              "kind": "callout",
+              "variant": "warning",
+              "html": "<span class=\"callout-icon\">🚨</span>\n                            <div><strong>CRITICAL WARNING:</strong> When the direction lock screw is fully tightened, <u>DO NOT programmatically drive the steering servo</u>, or gear stripping and servo burnout will occur!"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "section-part2",
+      "heading": "📐 Part 2: Upper Plate & Electronics Mounting",
+      "tag": "Pages 25 – 33",
+      "steps": [
+        {
+          "category": "part2",
+          "number": "PAGE 25 - 27",
+          "title": "Upper Plate Assembly & Mounting",
+          "pills": [
+            "Step 3.1 - 3.3"
+          ],
+          "caption": "Page 25-27: Upper Acrylic Plate Assembly",
+          "image": "assets/assembly-guide/pages/page_26.png",
+          "blocks": [
+            {
+              "kind": "text",
+              "html": "<strong>Step 3.1:</strong> Fix ABS side plates to the acrylic top plate using M2.5*6 black self-tapping screws.\n                            <br><br>\n                            <strong>Step 3.2:</strong> Mount the assembled acrylic upper deck onto the lower chassis using M2.5*6 black self-tapping screws.\n                            <br><br>\n                            <strong>Step 3.3:</strong> Install front and rear top plates using M2.5*6 black self-tapping screws."
+            }
+          ]
+        },
+        {
+          "category": "part2",
+          "number": "PAGE 28 - 33",
+          "title": "Mainboard & Minimum System Installation",
+          "pills": [
+            "Step 3.4 - 3.6"
+          ],
+          "caption": "Page 28-33: Controller Board Mounting Standoffs",
+          "image": "assets/assembly-guide/pages/page_29.png",
+          "blocks": [
+            {
+              "kind": "text",
+              "html": "Select the standoff configuration matching your controller board:"
+            },
+            {
+              "kind": "text",
+              "html": "<strong>3.4.1 / 3.5.1:</strong> Thread single-head brass standoffs M2.5*7+6 into designated top plate grid holes and secure with M2.5 nuts.\n                            <br>\n                            <strong>3.4.2 / 3.5.2:</strong> Align mainboard mounting holes onto standoffs and secure with M2.5*6 silver screws."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "section-part3",
+      "heading": "⚙️ Part 3: Mecanum Wheel Installation",
+      "tag": "Pages 34 – 35",
+      "steps": [
+        {
+          "category": "part3",
+          "number": "PAGE 34 - 35",
+          "title": "Mecanum Coupler & Roller Orientation Setup",
+          "pills": [
+            "Step 2.1.0 - 2.1.5"
+          ],
+          "caption": "Page 34-35: Mecanum Wheel Coupler & Direction Setup",
+          "image": "assets/assembly-guide/pages/page_34.png",
+          "blocks": [
+            {
+              "kind": "text",
+              "html": "<strong>Step 2.1.0 (Coupler):</strong> Slide metal coupler onto N20 motor shaft. Align coupler side set screw with motor D-shaft flat side and tighten securely. Fasten wheel using M2.5*8 screw x1 per wheel.\n                            <br><br>\n                            <strong>Mecanum Roller Orientation Rule:</strong> Mecanum wheels are split into <strong>Left-handed (L)</strong> and <strong>Right-handed (R)</strong> roller directions."
+            },
+            {
+              "kind": "callout",
+              "variant": "tip",
+              "html": "<span class=\"callout-icon\">💡</span>\n                            <div><strong>Top View Pattern Rule:</strong> When viewed from above, the rollers on top of the 4 wheels must form an <strong>\"X\" shape</strong> pointing towards the center of the chassis."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "section-part4",
+      "heading": "🦾 Part 4: Robotic Arm Assembly",
+      "tag": "Pages 36 – 47",
+      "steps": [
+        {
+          "category": "part4",
+          "number": "PAGE 36 - 37",
+          "title": "Arm Base Assembly & Servo Initial Neutral Position",
+          "pills": [
+            "Step 3.1.0 - 3.1.7"
+          ],
+          "caption": "Page 36-37: Arm Base & Servo Neutral Position",
+          "image": "assets/assembly-guide/pages/page_37.png",
+          "blocks": [
+            {
+              "kind": "text",
+              "html": "<strong>Step 3.1.0:</strong> Assemble base structural acrylic plates using M2.5*8 screws x2 and M2.5 nuts x2. Pay close attention to servo orientation.\n                            <br><br>\n                            <strong>Step 3.1.7 (Servo Horn Neutral):</strong> Mount single-arm servo horn in default <u>vertically upward (90°)</u> position."
+            },
+            {
+              "kind": "callout",
+              "variant": "warning",
+              "html": "<span class=\"callout-icon\">⚠️</span>\n                            <div><strong>Neutral Calibration Rule:</strong> Do NOT rotate servo arm manually before installation. If rotated, power on servo to return to mid-point (90°) before mounting horn. Fasten with M1.6*5 black screw or shortest servo screw."
+            }
+          ]
+        },
+        {
+          "category": "part4",
+          "number": "PAGE 38 - 39",
+          "title": "Main Arm Acrylic Linkages & Servo Horn Fixation",
+          "pills": [
+            "Step 3.1.8 - 3.1.14"
+          ],
+          "caption": "Page 38-39: Main Arm Linkage & Servo Fastening",
+          "image": "assets/assembly-guide/pages/page_39.png",
+          "blocks": [
+            {
+              "kind": "text",
+              "html": "<strong>Step 3.1.12:</strong> Attach small acrylic linkage to servo horn using M1.6*5 black self-tapping screws x2.\n                            <br><br>\n                            <strong>Step 3.1.13 - 3.1.14:</strong> Verify initial arm state: servo horn vertical, main upper arm in free state. Fasten horn to servo output gear using the shortest screw inside servo bag."
+            }
+          ]
+        },
+        {
+          "category": "part4",
+          "number": "PAGE 40 - 41",
+          "title": "Arm Standoffs & Joint Lock Nut Adjustment",
+          "pills": [
+            "Step 3.1.16 - 3.1.27"
+          ],
+          "caption": "Page 40-41: Arm Frame Standoffs & Joint Lock Nuts",
+          "image": "assets/assembly-guide/pages/page_40.png",
+          "blocks": [
+            {
+              "kind": "text",
+              "html": "<strong>Step 3.1.18:</strong> Install 22mm brass standoffs (longest 22mm standoffs) using M2.5*8 screws x4 and M2.5 nuts x2.\n                            <br><br>\n                            <strong>Step 3.1.20:</strong> Install 15mm brass standoffs using M2.5*8 screws x4.\n                            <br><br>\n                            <strong>Step 3.1.22 - 3.1.27 (Joint Linkages):</strong> Connect side linkages using M2.5*12 and M2.5*10 screws with <u>Nylon Lock Nuts</u>."
+            },
+            {
+              "kind": "callout",
+              "variant": "warning",
+              "html": "<span class=\"callout-icon\">🚨</span>\n                            <div><strong>DO NOT OVERTIGHTEN LOCK NUTS:</strong> Nylon lock nuts must be left slightly loose so joint linkages pivot freely. Overtightening restricts arm movement and causes servo short-circuit / failure!"
+            }
+          ]
+        },
+        {
+          "category": "part4",
+          "number": "PAGE 42 - 44",
+          "title": "Gripper Claw & End-Effector Assembly",
+          "pills": [
+            "Step 3.2.0 - 3.2.12"
+          ],
+          "caption": "Page 42-44: Gripper / Claw Assembly",
+          "image": "assets/assembly-guide/pages/page_43.png",
+          "blocks": [
+            {
+              "kind": "text",
+              "html": "<strong>Step 3.2.1 - 3.2.6:</strong> Assemble claw frame using M2.5*7+6 brass standoffs x2 and M2.5*6 screws x2. Secure claw servo with M2.5 nuts x2.\n                            <br><br>\n                            <strong>Step 3.2.7:</strong> Align claw servo horn per diagram angle and secure with longest screw from servo package bag.\n                            <br><br>\n                            <strong>Step 3.2.9 - 3.2.12:</strong> Assemble claw scissor linkages using M2.5*10 and M2.5*12 screws with Nylon Lock Nuts. Keep all pivot pins loose for low friction."
+            }
+          ]
+        },
+        {
+          "category": "part4",
+          "number": "PAGE 45 - 47",
+          "title": "Claw-to-Arm Integration & Final Linkages",
+          "pills": [
+            "Step 3.2.13 - 3.2.25"
+          ],
+          "caption": "Page 45-47: Gripper to Arm Integration",
+          "image": "assets/assembly-guide/pages/page_45.png",
+          "blocks": [
+            {
+              "kind": "text",
+              "html": "<strong>Step 3.2.15:</strong> Connect the claw assembly to the main arm body using M2.5*8 screws x3 and M2.5 nuts x3.\n                            <br><br>\n                            <strong>Step 3.2.23:</strong> Install the long actuation linkage rod using M2.5*10 screw x1 and Lock Nuts x2."
+            },
+            {
+              "kind": "callout",
+              "variant": "warning",
+              "html": "<span class=\"callout-icon\">⚠️</span>\n                            <div><strong>FRAGILE PART NOTICE:</strong> The linkage connector in Step 3.2.15 is fragile! Do NOT apply excessive force during insertion. Use spare parts included in kit if broken."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "section-part5",
+      "heading": "🏁 Part 5: Final Vehicle Integration",
+      "tag": "Pages 48 – 50",
+      "steps": [
+        {
+          "category": "part5",
+          "number": "PAGE 48 - 50",
+          "title": "Mounting Arm on Chassis & Complete Robot Showcase",
+          "pills": [
+            "Completion"
+          ],
+          "caption": "Page 50: Assembled Smart Car & Robotic Arm Showcase",
+          "image": "assets/assembly-guide/pages/page_50.png",
+          "blocks": [
+            {
+              "kind": "text",
+              "html": "<strong>Page 48:</strong> Secure the robotic arm onto the top acrylic chassis deck using M2.5*7+6 brass standoffs x4, M2.5 nuts x4, and M2.5*8 screws x4.\n                            <br><br>\n                            <strong>Page 49:</strong> Final vehicle configurations:\n                            <br>• <strong>Fig 4.1:</strong> Rubber Wheel Chassis + Robotic Arm Assembly.\n                            <br>• <strong>Fig 4.2:</strong> Mecanum Wheel Chassis + Robotic Arm Assembly.\n                            <br><br>\n                            <strong>Page 50:</strong> Assembly complete! Thank you for using Youfang Robot products."
+            },
+            {
+              "kind": "callout",
+              "variant": "tip",
+              "html": "<span class=\"callout-icon\">🎉</span>\n                            <div><strong>Congratulations!</strong> Your Dasheng Multi-Form Smart Car & Robotic Arm is fully assembled and ready for programming and remote operation."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

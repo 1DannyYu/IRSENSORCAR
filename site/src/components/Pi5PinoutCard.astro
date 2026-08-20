@@ -1,0 +1,352 @@
+---
+import { NEZHA_I2C_PINS, PIN_GROUPS, pinRows, type PinGroup } from '../data/pi5-pinout';
+import { t, type Locale } from '../i18n/ui';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const tr = t(locale);
+
+const rows = pinRows();
+/* Use side-by-side 1-20 and 21-40 columns on wide screens; stack them on narrow screens. */
+const columns = [rows.slice(0, 10), rows.slice(10)];
+const marked = new Set(NEZHA_I2C_PINS);
+const groups = Object.keys(PIN_GROUPS) as PinGroup[];
+
+const DOC_URL =
+  'https://github.com/1DannyYu/IRSENSORCAR/blob/main/docs/hardware/raspberry-pi-5-pinout.md';
+const OFFICIAL_URL =
+  'https://www.raspberrypi.com/documentation/computers/raspberry-pi.html#gpio';
+---
+
+<details class="pinout-card" open>
+  <summary class="pinout-summary">
+    <h2>{tr('pinout.title')}</h2>
+  </summary>
+
+  <p class="pinout-lede">{tr('pinout.lede')}</p>
+
+  <ul class="pinout-legend" aria-label={tr('pinout.legend')}>
+    {
+      groups.map((key) => (
+        <li class="legend-item" style={`--pin-color:${PIN_GROUPS[key].color}`}>
+          <span class="legend-swatch" aria-hidden="true" />
+          {PIN_GROUPS[key].label}
+        </li>
+      ))
+    }
+  </ul>
+
+  <div class="ladder-grid">
+    {
+      columns.map((column) => (
+        <table class="pin-ladder">
+          <thead>
+            <tr>
+              <th scope="col">{tr('pinout.col.func')}</th>
+              <th scope="col" class="th-pin">
+                {tr('pinout.col.pin')}
+              </th>
+              <th scope="col" class="th-pin">
+                {tr('pinout.col.pin')}
+              </th>
+              <th scope="col">{tr('pinout.col.func')}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {column.map(({ left, right }) => (
+              <tr>
+                <td class="pin-cell pin-cell--left">
+                  <span
+                    class:list={['pin-fn', { 'is-marked': marked.has(left.pin) }]}
+                    style={`--pin-color:${PIN_GROUPS[left.group].color}`}
+                  >
+                    {marked.has(left.pin) && <span class="pin-mark">NeZha</span>}
+                    <span class="pin-label">
+                      <span class="pin-name">{left.name}</span>
+                      {left.alt && <span class="pin-alt">{left.alt}</span>}
+                    </span>
+                    <span class="pin-swatch" aria-hidden="true" />
+                  </span>
+                </td>
+                <td class="pin-no pin-no--odd">{left.pin}</td>
+                <td class="pin-no pin-no--even">{right.pin}</td>
+                <td class="pin-cell pin-cell--right">
+                  <span
+                    class:list={['pin-fn', { 'is-marked': marked.has(right.pin) }]}
+                    style={`--pin-color:${PIN_GROUPS[right.group].color}`}
+                  >
+                    <span class="pin-swatch" aria-hidden="true" />
+                    <span class="pin-label">
+                      <span class="pin-name">{right.name}</span>
+                      {right.alt && <span class="pin-alt">{right.alt}</span>}
+                    </span>
+                    {marked.has(right.pin) && <span class="pin-mark">NeZha</span>}
+                  </span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      ))
+    }
+  </div>
+
+  <p class="pinout-note pinout-note--nezha">{tr('pinout.nezha')}</p>
+  <p class="pinout-note pinout-note--warn">{tr('pinout.warn')}</p>
+
+  <p class="pinout-sources">
+    {tr('pinout.source')}：
+    <a href={DOC_URL} rel="noopener">{tr('pinout.source.doc')}</a>
+    <span aria-hidden="true">·</span>
+    <a href={OFFICIAL_URL} rel="noopener">{tr('pinout.source.official')}</a>
+  </p>
+</details>
+
+<style>
+  /* Match the module-card edges after accounting for the inventory grid padding. */
+  .pinout-card {
+    width: calc(100% - 4rem);
+    max-width: calc(1400px - 4rem);
+    margin: 1.5rem auto 0;
+    padding: 1.25rem 1.5rem 1.5rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
+  }
+
+  .pinout-summary {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+  }
+
+  .pinout-summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .pinout-summary::before {
+    content: '▸';
+    color: var(--accent-cyan);
+    font-size: 0.9rem;
+    transition: var(--transition-smooth);
+  }
+
+  .pinout-card[open] .pinout-summary::before {
+    transform: rotate(90deg);
+  }
+
+  .pinout-summary h2 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  .pinout-lede {
+    margin-top: 0.75rem;
+    max-width: 82ch;
+    color: var(--text-secondary);
+    font-size: 0.88rem;
+    line-height: 1.7;
+  }
+
+  .pinout-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 0.9rem;
+    margin-top: 1rem;
+    padding: 0;
+    list-style: none;
+  }
+
+  .legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: var(--text-secondary);
+    font-size: 0.78rem;
+  }
+
+  .legend-swatch,
+  .pin-swatch {
+    flex: none;
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+    background: var(--pin-color);
+  }
+
+  .ladder-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 1rem 2rem;
+    margin-top: 1.25rem;
+  }
+
+  .pin-ladder {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.82rem;
+  }
+
+  .pin-ladder th {
+    padding: 0 0.5rem 0.5rem;
+    color: var(--text-muted);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .pin-ladder th:first-child {
+    text-align: right;
+  }
+
+  .pin-ladder th:last-child {
+    text-align: left;
+  }
+
+  .th-pin {
+    text-align: center;
+  }
+
+  .pin-cell {
+    padding: 0.12rem 0;
+  }
+
+  .pin-cell--left {
+    text-align: right;
+  }
+
+  .pin-cell--right {
+    text-align: left;
+  }
+
+  .pin-fn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.3rem 0.5rem;
+    border-radius: var(--radius-sm);
+    white-space: nowrap;
+  }
+
+  .pin-label {
+    display: flex;
+    align-items: baseline;
+    gap: 0.35rem;
+    min-width: 0;
+  }
+
+  .pin-name {
+    color: var(--text-primary);
+    font-weight: 600;
+  }
+
+  .pin-alt {
+    color: var(--text-muted);
+    font-size: 0.72rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+
+  .pin-fn.is-marked {
+    background: rgba(56, 189, 248, 0.12);
+    outline: 1px solid rgba(56, 189, 248, 0.45);
+  }
+
+  .pin-mark {
+    padding: 0.05rem 0.35rem;
+    border-radius: 999px;
+    background: var(--accent-cyan);
+    color: #0b0f19;
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+  }
+
+  /* The two centre columns form the physical header. */
+  .pin-no {
+    width: 2.1rem;
+    padding: 0.2rem 0;
+    background: rgba(0, 0, 0, 0.35);
+    color: var(--text-secondary);
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.74rem;
+    text-align: center;
+  }
+
+  .pin-no--odd {
+    border-left: 1px solid var(--border-color);
+  }
+
+  .pin-no--even {
+    border-right: 1px solid var(--border-color);
+  }
+
+  .pin-ladder tbody tr:first-child .pin-no {
+    border-top: 1px solid var(--border-color);
+  }
+
+  .pin-ladder tbody tr:last-child .pin-no {
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .pinout-note {
+    max-width: 82ch;
+    margin-top: 1rem;
+    padding-left: 0.75rem;
+    border-left: 2px solid var(--border-color);
+    color: var(--text-secondary);
+    font-size: 0.83rem;
+    line-height: 1.7;
+  }
+
+  .pinout-note--nezha {
+    border-left-color: var(--accent-cyan);
+  }
+
+  .pinout-note--warn {
+    border-left-color: var(--accent-amber);
+  }
+
+  .pinout-sources {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 1rem;
+    color: var(--text-muted);
+    font-size: 0.78rem;
+  }
+
+  .pinout-sources a {
+    color: var(--accent-cyan);
+  }
+
+  @media (max-width: 768px) {
+    .pinout-card {
+      width: calc(100% - 2rem);
+      margin-top: 1rem;
+      padding: 1rem;
+      border-radius: var(--radius-md);
+    }
+
+    .ladder-grid {
+      gap: 1.5rem;
+    }
+
+    /* Hide alternate labels when narrow screens cannot fit them. */
+    .pin-alt {
+      display: none;
+    }
+
+    .pin-fn {
+      padding: 0.3rem 0.25rem;
+    }
+  }
+</style>

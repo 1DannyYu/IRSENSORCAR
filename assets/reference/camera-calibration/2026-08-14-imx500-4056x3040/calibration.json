@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "camera": {
+    "model": "Raspberry Pi AI Camera IMX500",
+    "image_width_px": 4056,
+    "image_height_px": 3040,
+    "rotation_degrees": 0
+  },
+  "lens_model": {
+    "name": "opencv-plumb-bob",
+    "camera_matrix": [
+      [3106.5869209698417, 0.0, 2043.4708180127138],
+      [0.0, 3106.3569512035956, 1439.3684030301329],
+      [0.0, 0.0, 1.0]
+    ],
+    "distortion_coefficient_order": ["k1", "k2", "p1", "p2", "k3"],
+    "distortion_coefficients": [
+      0.0396059074286428,
+      0.20645962337833404,
+      -0.005703086517252836,
+      0.0028961090890137478,
+      -0.438957017627612
+    ]
+  },
+  "calibration": {
+    "date": "2026-08-14",
+    "opencv_version": "5.0.0",
+    "rms_reprojection_error_px": 1.7266066319941442,
+    "charuco_interpolation": "local-homography",
+    "capture_command": "python3 examples/05_ai_camera_check.py --photo",
+    "board": {
+      "type": "charuco",
+      "squares_x": 5,
+      "squares_y": 7,
+      "dictionary": "DICT_5X5_100",
+      "nominal_square_length_m": 0.03,
+      "nominal_marker_length_m": 0.022,
+      "nominal_scale_line_m": 0.1,
+      "measured_scale_line_m": 0.0935,
+      "nominal_pattern_size_m": [0.15, 0.21],
+      "measured_pattern_size_m": [0.14, 0.195],
+      "measured_print_scale_xy": [0.9333333333333333, 0.9285714285714286],
+      "actual_square_pitch_xy_m": [0.028, 0.027857142857142858],
+      "estimated_actual_marker_size_xy_m": [0.020533333333333334, 0.020428571428571428],
+      "object_point_pitch_xy_m": [0.028, 0.027857142857142858],
+      "scale_note": "Object points were corrected independently in X and Y using the measured printed pattern dimensions."
+    },
+    "model_selection": {
+      "selected": "opencv-plumb-bob",
+      "rational_model_rms_px": 1.6986653161430143,
+      "rationale": "The rational model reduced RMS by only 0.028 px and produced large cancelling coefficients, so the five-coefficient model was retained to avoid overfitting."
+    }
+  },
+  "views": [
+    {"file": "view-02.jpg", "corners": 24, "reprojection_error_px": 0.5482513767900202},
+    {"file": "view-04.jpg", "corners": 24, "reprojection_error_px": 1.1868933254258751},
+    {"file": "view-05.jpg", "corners": 24, "reprojection_error_px": 0.6936857717248884},
+    {"file": "view-06-retry.jpg", "corners": 24, "reprojection_error_px": 1.0237255325121288},
+    {"file": "view-07.jpg", "corners": 24, "reprojection_error_px": 1.3057909226853792},
+    {"file": "view-08.jpg", "corners": 24, "reprojection_error_px": 1.2687138384031147},
+    {"file": "view-09.jpg", "corners": 24, "reprojection_error_px": 0.9310410030415116},
+    {"file": "view-11.jpg", "corners": 20, "reprojection_error_px": 1.8400921247359205},
+    {"file": "view-12.jpg", "corners": 24, "reprojection_error_px": 1.2376879759135004},
+    {"file": "view-13-retry.jpg", "corners": 20, "reprojection_error_px": 1.8138002457091362},
+    {"file": "view-14.jpg", "corners": 24, "reprojection_error_px": 1.7206232572972573},
+    {"file": "view-15.jpg", "corners": 24, "reprojection_error_px": 1.3669461253953106},
+    {"file": "view-16.jpg", "corners": 20, "reprojection_error_px": 2.8009554118801883},
+    {"file": "view-17.jpg", "corners": 10, "reprojection_error_px": 3.2667738243997326},
+    {"file": "view-18.jpg", "corners": 20, "reprojection_error_px": 2.9609478305293044},
+    {"file": "view-19.jpg", "corners": 24, "reprojection_error_px": 2.0413254437424957},
+    {"file": "view-20.jpg", "corners": 24, "reprojection_error_px": 2.269764348535028}
+  ],
+  "excluded_views": [
+    {"file": "view-01.jpg", "reason": "soft focus and high reprojection error"},
+    {"file": "view-03.jpg", "reason": "no ChArUco detection"},
+    {"file": "view-03-retry.jpg", "reason": "soft focus and high reprojection error"},
+    {"file": "view-06.jpg", "reason": "near-duplicate pose"},
+    {"file": "view-10.jpg", "reason": "reprojection-error outlier"},
+    {"file": "view-13.jpg", "reason": "superseded by view-13-retry.jpg"}
+  ],
+  "usage_notes": [
+    "These intrinsics are valid for the uncropped 4056x3040 capture mode used during calibration.",
+    "Scale fx, fy, cx, and cy when resizing the full frame; recompute intrinsics for cropped sensor modes.",
+    "Recalibrate if the camera module, lens, focus, or mounting orientation changes.",
+    "Outer-frame views are intentionally retained to constrain distortion even though their per-view residuals are higher."
+  ]
+}

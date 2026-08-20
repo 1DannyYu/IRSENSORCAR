@@ -1,0 +1,43 @@
+---
+import { Image } from 'astro:assets';
+import { asset } from '../lib/images';
+import { href, t, type Locale } from '../i18n/ui';
+import { inventoryPath } from '../lib/modules';
+
+interface Props {
+  module: Record<string, any>;
+  locale: Locale;
+}
+
+const { module: mod, locale } = Astro.props;
+const tr = t(locale);
+const content = mod.i18n[locale];
+const cover = mod.images[0];
+const detailHref = href(locale, inventoryPath(mod.category, mod.id));
+---
+
+<a class="module-card" href={detailHref} data-cat={mod.category} data-id={mod.id}>
+  <div class="card-image-wrap">
+    <span class="card-badge"># {mod.number}</span>
+    <span class="photo-count-badge">
+      {mod.images.length}
+      {` ${tr('inventory.photos')}`}
+    </span>
+    <Image
+      src={asset(cover)}
+      alt={content.title}
+      widths={[360, 720]}
+      sizes="(max-width: 700px) 100vw, 360px"
+      class="card-image"
+      loading="lazy"
+    />
+  </div>
+  <div class="card-body">
+    <div class="card-title-en">{mod.name}</div>
+    <div class="card-title">{content.title}</div>
+    <div class="card-desc">{content.desc}</div>
+    <div class="tag-list">
+      {mod.tags.map((tag: string) => <span class="tag">{tag}</span>)}
+    </div>
+  </div>
+</a>

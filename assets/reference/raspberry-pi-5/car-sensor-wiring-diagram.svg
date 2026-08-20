@@ -1,0 +1,53 @@
+<svg width="680" height="350" viewBox="0 0 680 350" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>Car project sensor wiring diagram</title>
+<desc>Raspberry Pi 5 as the hub, connected to a Pi camera and NeZha motor driver (already wired) and to an HC-SR04 ultrasonic sensor and an IR obstacle sensor (not yet wired). Lines are tagged with the interface used.</desc>
+<style>
+text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+.th { font-size: 14px; font-weight: 500; fill: #1a1a1a; }
+.ts { font-size: 12px; fill: #444; }
+.box { fill: #ffffff; stroke: #999999; stroke-width: 1; }
+.box-green { fill: #EAF3DE; stroke: #639922; stroke-width: 1; }
+.box-amber { fill: #FAEEDA; stroke: #BA7517; stroke-width: 1; }
+.box-gray { fill: #F1EFE8; stroke: #888780; stroke-width: 1; }
+.title-green { fill: #27500A; }
+.title-amber { fill: #633806; }
+.title-gray { fill: #2C2C2A; }
+</style>
+<line x1="107.5" y1="220" x2="340" y2="130" stroke="#999999" stroke-width="1.5"/>
+<line x1="257.5" y1="220" x2="340" y2="130" stroke="#999999" stroke-width="1.5"/>
+<line x1="407.5" y1="220" x2="340" y2="130" stroke="#999999" stroke-width="1.5"/>
+<line x1="557.5" y1="220" x2="340" y2="130" stroke="#999999" stroke-width="1.5"/>
+<text class="ts" x="166" y="198" text-anchor="middle">CSI</text>
+<text class="ts" x="278" y="198" text-anchor="middle">I2C + 5V</text>
+<text class="ts" x="391" y="198" text-anchor="middle">GPIO 17/27</text>
+<text class="ts" x="503" y="198" text-anchor="middle">GPIO 22</text>
+<g>
+<rect class="box-gray" x="260" y="60" width="160" height="70" rx="4"/>
+<text class="th title-gray" x="340" y="90" text-anchor="middle">Raspberry Pi 5</text>
+<text class="ts" x="340" y="110" text-anchor="middle">40-pin GPIO header</text>
+</g>
+<g>
+<rect class="box-green" x="40" y="220" width="135" height="70" rx="4"/>
+<text class="th title-green" x="107.5" y="250" text-anchor="middle">Pi camera</text>
+<text class="ts" x="107.5" y="270" text-anchor="middle">connected</text>
+</g>
+<g>
+<rect class="box-green" x="190" y="220" width="135" height="70" rx="4"/>
+<text class="th title-green" x="257.5" y="250" text-anchor="middle">NeZha driver</text>
+<text class="ts" x="257.5" y="270" text-anchor="middle">connected</text>
+</g>
+<g>
+<rect class="box-amber" x="340" y="220" width="135" height="70" rx="4"/>
+<text class="th title-amber" x="407.5" y="250" text-anchor="middle">HC-SR04</text>
+<text class="ts" x="407.5" y="270" text-anchor="middle">not yet wired</text>
+</g>
+<g>
+<rect class="box-amber" x="490" y="220" width="135" height="70" rx="4"/>
+<text class="th title-amber" x="557.5" y="250" text-anchor="middle">IR sensor</text>
+<text class="ts" x="557.5" y="270" text-anchor="middle">not yet wired</text>
+</g>
+<circle cx="260" cy="320" r="5" fill="#639922"/>
+<text class="ts" x="272" y="324" text-anchor="start">connected</text>
+<circle cx="420" cy="320" r="5" fill="#BA7517"/>
+<text class="ts" x="432" y="324" text-anchor="start">not yet wired</text>
+</svg>

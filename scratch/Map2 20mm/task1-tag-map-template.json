@@ -1,0 +1,134 @@
+{
+  "name": "task1-map",
+  "description": "Fill x_m/y_m with the measured/designed position of each tag after placement; yaw 0 = N arrow pointing map-north. Map frame: origin at the map's SOUTH-WEST corner, x east, y north, metres; NE corner = (1.00, 0.70). Measure x from the west edge and y from the south edge to the tag center.",
+  "tags": [
+    {
+      "id": 0,
+      "x_m": 0.0,
+      "y_m": 0.0,
+      "z_m": 0.0,
+      "yaw_deg": 0,
+      "size_m": 0.02
+    },
+    {
+      "id": 1,
+      "x_m": 0.0,
+      "y_m": 0.0,
+      "z_m": 0.0,
+      "yaw_deg": 0,
+      "size_m": 0.02
+    },
+    {
+      "id": 2,
+      "x_m": 0.0,
+      "y_m": 0.0,
+      "z_m": 0.0,
+      "yaw_deg": 0,
+      "size_m": 0.02
+    },
+    {
+      "id": 3,
+      "x_m": 0.0,
+      "y_m": 0.0,
+      "z_m": 0.0,
+      "yaw_deg": 0,
+      "size_m": 0.02
+    },
+    {
+      "id": 4,
+      "x_m": 0.0,
+      "y_m": 0.0,
+      "z_m": 0.0,
+      "yaw_deg": 0,
+      "size_m": 0.02
+    },
+    {
+      "id": 5,
+      "x_m": 0.0,
+      "y_m": 0.0,
+      "z_m": 0.0,
+      "yaw_deg": 0,
+      "size_m": 0.02
+    },
+    {
+      "id": 6,
+      "x_m": 0.0,
+      "y_m": 0.0,
+      "z_m": 0.0,
+      "yaw_deg": 0,
+      "size_m": 0.02
+    },
+    {
+      "id": 7,
+      "x_m": 0.0,
+      "y_m": 0.0,
+      "z_m": 0.0,
+      "yaw_deg": 0,
+      "size_m": 0.02
+    },
+    {
+      "id": 8,
+      "x_m": 0.0,
+      "y_m": 0.0,
+      "z_m": 0.0,
+      "yaw_deg": 0,
+      "size_m": 0.02
+    },
+    {
+      "id": 9,
+      "x_m": 0.0,
+      "y_m": 0.0,
+      "z_m": 0.0,
+      "yaw_deg": 0,
+      "size_m": 0.02
+    },
+    {
+      "id": 10,
+      "x_m": 0.0,
+      "y_m": 0.0,
+      "z_m": 0.0,
+      "yaw_deg": 0,
+      "size_m": 0.02
+    },
+    {
+      "id": 11,
+      "x_m": 0.0,
+      "y_m": 0.0,
+      "z_m": 0.0,
+      "yaw_deg": 0,
+      "size_m": 0.02
+    },
+    {
+      "id": 12,
+      "x_m": 0.0,
+      "y_m": 0.0,
+      "z_m": 0.0,
+      "yaw_deg": 0,
+      "size_m": 0.02
+    },
+    {
+      "id": 13,
+      "x_m": 0.0,
+      "y_m": 0.0,
+      "z_m": 0.0,
+      "yaw_deg": 0,
+      "size_m": 0.02
+    },
+    {
+      "id": 14,
+      "x_m": 0.0,
+      "y_m": 0.0,
+      "z_m": 0.0,
+      "yaw_deg": 0,
+      "size_m": 0.02
+    },
+    {
+      "id": 15,
+      "x_m": 0.0,
+      "y_m": 0.0,
+      "z_m": 0.0,
+      "yaw_deg": 0,
+      "size_m": 0.02
+    }
+  ]
+}

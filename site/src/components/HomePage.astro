@@ -1,0 +1,611 @@
+---
+import { Image } from 'astro:assets';
+import { Content as ProjectReadme } from '../../../README.md';
+import { asset } from '../lib/images';
+import modules from '../data/modules.json';
+import guide from '../data/assembly-guide.json';
+import { href, t, type Locale } from '../i18n/ui';
+import routePlanningHtml from '../../../tasks/ir-sensor-tracking/route-planning.html?raw';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const tr = t(locale);
+
+const stepCount = guide.sections.reduce((n, s) => n + s.steps.length, 0);
+const photoCount = new Set(modules.flatMap((m) => m.images)).size;
+const heroImage = asset('assets/assembly/021_RobotCar_With_RoboticArm_Combined.jpg');
+const latestMapImage = asset('assets/reference/map-1/2026-08-21-ir-route-map.png');
+const interactiveRoutePlanningHtml = routePlanningHtml
+  .replace(
+    '../../assets/reference/map-1/2026-08-21-ir-route-map.png',
+    latestMapImage.src,
+  )
+  .replace('<head>', '<head><base target="_blank">');
+
+const hardware = [
+  ['Controller', 'Raspberry Pi 5'],
+  ['Motor driver', 'YOURFUN NeZha bus driver board (I2C 0x40)'],
+  ['Chassis', 'Dasheng multi-form car (ABS), 4× N20 motors'],
+  ['Battery', 'HXS 18650 11.1V 1200mAh'],
+];
+
+const cards = [
+  {
+    icon: '🧩',
+    title: 'My Inventory and Tools',
+    desc: `${modules.length} modules and ${photoCount} photos, with specs, wiring and code samples.`,
+    path: 'inventory',
+  },
+  {
+    icon: '🔧',
+    title: 'Assembly Guide',
+    desc: `${guide.sections.length} sections, ${stepCount} steps, page-by-page against the vendor manual.`,
+    path: 'assembly-guide',
+  },
+];
+
+const warnings = [
+  'The driver board needs 12V. Reversed polarity destroys it.',
+  'When the board feeds 5V to the Pi, never also plug in the Pi USB-C — the vendor manual forbids dual supplies.',
+  'I2C must stay under 200kHz. The Pi defaults to 100kHz; do not raise i2c_arm_baudrate.',
+  'Plugging a 2-pin motor lead into the 4-pin encoder port will destroy the board.',
+  'Lift the wheels off the ground before the first motor run.',
+];
+
+const actions = [
+  { label: 'Browse Inventory', href: href(locale, 'inventory'), kind: 'primary' },
+  { label: 'See Assembly Guide', href: href(locale, 'assembly-guide'), kind: 'secondary' },
+  {
+    label: "Danny's GitHub Repository",
+    href: 'https://github.com/1DannyYu/IRSENSORCAR',
+    kind: 'ghost',
+  },
+  {
+    label: 'Contact Danny on GitHub',
+    href: 'https://github.com/1DannyYu',
+    kind: 'ghost',
+  },
+];
+
+const quickFacts = [
+  { label: 'Modules tracked', value: `${modules.length}` },
+  { label: 'Real photos', value: `${photoCount}` },
+  { label: 'Assembly steps', value: `${stepCount}` },
+];
+
+const statusCards = [
+  {
+    title: 'I2C communication verified',
+    body: 'The Raspberry Pi 5 successfully detected the NeZha board at address 0x40, including reset and LED checks.',
+  },
+  {
+    title: 'Wheel mapping confirmed',
+    body: 'All four motor ports were matched to the real wheel positions, and the direction fixes are already written back into code.',
+  },
+  {
+    title: 'First ground drive passed',
+    body: 'Forward, backward, turning, and spin tests all worked, followed by a short low-speed run on the floor.',
+  },
+  {
+    title: 'Robotic arm remains flexible',
+    body: 'Because of damaged parts and compatibility tradeoffs, the arm portion is still evolving while the smart car platform keeps moving forward.',
+  },
+];
+
+const audienceNotes = [
+  'Built around real wiring notes, real photos, and verified test results rather than concept-only documentation.',
+  'Keeps parts, docs, verification scripts, and the project site in one repo so it is easier to follow and reproduce.',
+  'Shows the project honestly as it evolves, including constraints, tradeoffs, and the next steps.',
+];
+---
+
+<main class="home">
+  <section class="home-hero">
+    <div class="home-hero__copy">
+      <p class="home-eyebrow">{tr('home.eyebrow')}</p>
+      <h1>{tr('home.title')}</h1>
+      <p class="home-lede">{tr('home.lede')}</p>
+      <p class="home-note">{tr('project.note')}</p>
+
+      <div class="home-actions">
+        {
+          actions.map((action) => (
+            <a
+              class:list={['home-action', `is-${action.kind}`]}
+              href={action.href}
+              target={action.href.startsWith('http') ? '_blank' : undefined}
+              rel={action.href.startsWith('http') ? 'noreferrer' : undefined}
+            >
+              {action.label}
+            </a>
+          ))
+        }
+      </div>
+
+      <div class="home-facts">
+        {quickFacts.map((fact) => (
+          <div class="home-fact">
+            <strong>{fact.value}</strong>
+            <span>{fact.label}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <div class="home-hero__media">
+      <Image
+        src={heroImage}
+        alt="Photo of the smart car and robotic arm build"
+        widths={[480, 720, 960]}
+        sizes="(max-width: 900px) 100vw, 44vw"
+        priority
+      />
+    </div>
+  </section>
+
+  <section class="home-cards">
+    {
+      cards.map((c) => (
+        <a class="home-card" href={href(locale, c.path)}>
+          <span class="home-card__icon">{c.icon}</span>
+          <h2>{c.title}</h2>
+          <p>{c.desc}</p>
+        </a>
+      ))
+    }
+  </section>
+
+  <section class="home-readme" data-readme-image={heroImage.src}>
+    <div class="home-section-heading">
+      <p class="home-kicker">Project Guide</p>
+      <h2>Project README</h2>
+      <p>
+        Read the current setup, safety, Map 1 workflow, hardware status, and command reference
+        directly from the repository README.
+      </p>
+      <div class="home-readme__actions">
+        <a href="https://github.com/1DannyYu/IRSENSORCAR" target="_blank" rel="noreferrer">
+          View Danny's GitHub Repository
+        </a>
+        <a href="https://github.com/1DannyYu" target="_blank" rel="noreferrer">
+          Contact Danny on GitHub
+        </a>
+      </div>
+    </div>
+    <div class="home-readme__viewer" tabindex="0" aria-label="Project README document">
+      <ProjectReadme />
+    </div>
+  </section>
+
+  <section class="home-map">
+    <div class="home-section-heading">
+      <p class="home-kicker">Latest Route Map · 21 August 2026</p>
+      <h2>Map 1 AI Camera and IR Sensor Tracking</h2>
+      <p>
+        Select a route segment or phase card to inspect its distance, sensor mode, and
+        navigation action. Use “Show full route” to reset the interactive diagram.
+      </p>
+    </div>
+    <iframe
+      class="home-map__interactive"
+      title="Interactive Map 1 route planning diagram"
+      srcdoc={interactiveRoutePlanningHtml}
+      sandbox="allow-scripts"
+      loading="lazy"
+    ></iframe>
+  </section>
+
+  <section class="home-status">
+    <div class="home-section-heading">
+      <p class="home-kicker">Current Status</p>
+      <h2>What is already working?</h2>
+      <p>A quick summary for first-time visitors: what has already been verified in hardware, and what is still evolving.</p>
+    </div>
+    <div class="home-status-grid">
+      {statusCards.map((card) => (
+        <article class="home-status-card">
+          <h3>{card.title}</h3>
+          <p>{card.body}</p>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="home-value">
+    <div class="home-section-heading">
+      <p class="home-kicker">Why This Repo</p>
+      <h2>Why might someone want to follow this repo?</h2>
+    </div>
+    <ul class="home-value-list">
+      {audienceNotes.map((note) => <li>{note}</li>)}
+    </ul>
+  </section>
+
+  <section class="home-split">
+    <div>
+      <h2>Hardware</h2>
+      <table class="home-table">
+        <tbody>
+          {
+            hardware.map(([k, v]) => (
+              <tr>
+                <td>{k}</td>
+                <td>{v}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <h2>Safety</h2>
+      <ul class="home-warnings">
+        {warnings.map((w) => <li>{w}</li>)}
+      </ul>
+    </div>
+  </section>
+</main>
+
+<style>
+  .home {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem 1rem;
+  }
+  .home-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(300px, 0.9fr);
+    gap: 2rem;
+    align-items: center;
+    padding: 2rem 0 3rem;
+  }
+  .home-hero__copy {
+    min-width: 0;
+  }
+  .home-eyebrow {
+    color: var(--accent-cyan);
+    font-size: 0.85rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .home-hero h1 {
+    margin: 0.6rem 0 1rem;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    line-height: 1.15;
+    background: linear-gradient(120deg, var(--text-primary), var(--accent-cyan));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .home-lede {
+    max-width: 62ch;
+    color: var(--text-secondary);
+    font-size: 1.05rem;
+  }
+  .home-note {
+    max-width: 72ch;
+    margin-top: 1rem;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+  }
+  .home-actions {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-top: 1.5rem;
+  }
+  .home-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: 0.7rem 1rem;
+    border-radius: 999px;
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    text-decoration: none;
+    transition: var(--transition-smooth);
+  }
+  .home-action:hover {
+    transform: translateY(-2px);
+  }
+  .home-action.is-primary {
+    background: var(--accent-blue);
+    color: #fff;
+    border-color: transparent;
+  }
+  .home-action.is-secondary {
+    background: var(--bg-card);
+  }
+  .home-action.is-ghost {
+    color: var(--text-secondary);
+  }
+  .home-facts {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+  }
+  .home-fact {
+    padding: 0.9rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    background: var(--bg-card);
+  }
+  .home-fact strong {
+    display: block;
+    font-size: 1.35rem;
+    line-height: 1.1;
+  }
+  .home-fact span {
+    color: var(--text-secondary);
+    font-size: 0.88rem;
+  }
+  .home-hero__media {
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    background: var(--bg-card);
+    box-shadow: var(--shadow-glow);
+  }
+  .home-hero__media :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .home-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1rem;
+  }
+  .home-card {
+    display: block;
+    padding: 1.5rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    background: var(--bg-card);
+    color: inherit;
+    text-decoration: none;
+    transition: var(--transition-smooth);
+  }
+  .home-card:hover {
+    background: var(--bg-card-hover);
+    border-color: var(--border-glow);
+    box-shadow: var(--shadow-glow);
+    transform: translateY(-3px);
+  }
+  .home-card__icon {
+    font-size: 1.8rem;
+  }
+  .home-card h2 {
+    margin: 0.5rem 0 0.4rem;
+    font-size: 1.15rem;
+  }
+  .home-card p {
+    color: var(--text-secondary);
+    font-size: 0.92rem;
+  }
+  .home-map {
+    margin-top: 3.5rem;
+  }
+  .home-readme {
+    margin-top: 3.5rem;
+  }
+  .home-readme__viewer {
+    max-height: 760px;
+    overflow: auto;
+    padding: clamp(1rem, 3vw, 2rem);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    background: var(--bg-card);
+    box-shadow: var(--shadow-card);
+    scrollbar-gutter: stable;
+  }
+  .home-readme__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1rem;
+  }
+  .home-readme__actions a {
+    display: inline-flex;
+    min-height: 42px;
+    align-items: center;
+    padding: 0.65rem 0.95rem;
+    border: 1px solid var(--border-color);
+    border-radius: 999px;
+    color: var(--text-primary);
+    text-decoration: none;
+  }
+  .home-readme__actions a:hover {
+    border-color: var(--border-glow);
+    background: var(--bg-card-hover);
+  }
+  .home-readme__viewer:focus-visible {
+    border-color: var(--border-glow);
+    outline: 2px solid var(--accent-cyan);
+    outline-offset: 3px;
+  }
+  .home-readme__viewer :global(h1) {
+    margin-top: 0;
+    font-size: clamp(1.65rem, 3vw, 2.25rem);
+  }
+  .home-readme__viewer :global(h2) {
+    margin-top: 2.5rem;
+    padding-bottom: 0.45rem;
+    border-bottom: 1px solid var(--border-color);
+    font-size: clamp(1.3rem, 2.5vw, 1.7rem);
+  }
+  .home-readme__viewer :global(h3) {
+    margin-top: 1.8rem;
+    font-size: 1.12rem;
+  }
+  .home-readme__viewer :global(p),
+  .home-readme__viewer :global(li) {
+    color: var(--text-secondary);
+  }
+  .home-readme__viewer :global(a) {
+    color: var(--accent-cyan);
+  }
+  .home-readme__viewer :global(img) {
+    display: block;
+    width: min(100%, 680px);
+    height: auto;
+    margin: 1rem auto 1.5rem;
+    border-radius: var(--radius-lg);
+  }
+  .home-readme__viewer :global(table) {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    border-collapse: collapse;
+  }
+  .home-readme__viewer :global(th),
+  .home-readme__viewer :global(td) {
+    padding: 0.65rem 0.75rem;
+    border: 1px solid var(--border-color);
+    text-align: left;
+    vertical-align: top;
+  }
+  .home-readme__viewer :global(pre) {
+    overflow-x: auto;
+    padding: 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    background: var(--bg-primary);
+  }
+  .home-readme__viewer :global(code) {
+    font-size: 0.88em;
+  }
+  .home-map__interactive {
+    display: block;
+    width: 100%;
+    min-height: 920px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    background: var(--bg-card);
+    box-shadow: var(--shadow-card);
+  }
+  .home-split {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2.5rem;
+    margin-top: 3.5rem;
+  }
+  .home-status,
+  .home-value {
+    margin-top: 3.5rem;
+  }
+  .home-section-heading {
+    max-width: 70ch;
+    margin-bottom: 1.25rem;
+  }
+  .home-section-heading h2 {
+    margin-bottom: 0.5rem;
+    font-size: clamp(1.5rem, 3vw, 2rem);
+  }
+  .home-section-heading p {
+    color: var(--text-secondary);
+  }
+  .home-kicker {
+    margin-bottom: 0.45rem;
+    color: var(--accent-cyan);
+    font-size: 0.82rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .home-status-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+  }
+  .home-status-card {
+    padding: 1.2rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    background: var(--bg-card);
+  }
+  .home-status-card h3 {
+    margin-bottom: 0.5rem;
+    font-size: 1.02rem;
+  }
+  .home-status-card p,
+  .home-value-list {
+    color: var(--text-secondary);
+    font-size: 0.94rem;
+  }
+  .home-value-list {
+    padding-left: 1.1rem;
+  }
+  .home-value-list li {
+    margin-bottom: 0.65rem;
+  }
+  .home-split h2 {
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+  }
+  .home-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.92rem;
+  }
+  .home-table td {
+    padding: 0.6rem 0.5rem;
+    border-bottom: 1px solid var(--border-color);
+    vertical-align: top;
+  }
+  .home-table td:first-child {
+    width: 32%;
+    color: var(--text-secondary);
+  }
+  .home-warnings {
+    padding-left: 1.1rem;
+    color: var(--text-secondary);
+    font-size: 0.92rem;
+  }
+  .home-warnings li {
+    margin-bottom: 0.6rem;
+  }
+  .home-warnings li::marker {
+    color: var(--accent-rose);
+  }
+  @media (max-width: 900px) {
+    .home-hero {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (max-width: 640px) {
+    .home {
+      padding-inline: 1rem;
+    }
+    .home-facts {
+      grid-template-columns: 1fr;
+    }
+    .home-map__interactive {
+      min-height: 840px;
+    }
+  }
+</style>
+
+<script>
+  const readmeSection = document.querySelector<HTMLElement>('.home-readme');
+  const readmeViewer = readmeSection?.querySelector<HTMLElement>('.home-readme__viewer');
+  const readmeImage = readmeSection?.dataset.readmeImage;
+
+  if (readmeViewer) {
+    readmeViewer.querySelectorAll<HTMLAnchorElement>('a[href]').forEach((link) => {
+      const originalHref = link.getAttribute('href');
+      if (!originalHref || /^(?:[a-z]+:|#|\/)/i.test(originalHref)) return;
+
+      const [path, fragment] = originalHref.split('#', 2);
+      link.href = `https://github.com/1DannyYu/IRSENSORCAR/blob/main/${path}${fragment ? `#${fragment}` : ''}`;
+      link.target = '_blank';
+      link.rel = 'noreferrer';
+    });
+
+    const firstImage = readmeViewer.querySelector<HTMLImageElement>('img');
+    if (firstImage && readmeImage) firstImage.src = readmeImage;
+  }
+</script>

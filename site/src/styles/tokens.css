@@ -1,0 +1,52 @@
+/**
+ * Shared design tokens. Change the colour system here.
+ *
+ * These values merge the original inventory and assembly page roots. --bg-dark and
+ * --bg-main remain aliases to avoid a large legacy-style rewrite. New styles use --bg-dark.
+ */
+:root {
+  /* Backgrounds */
+  --bg-dark: #0b0f19;
+  --bg-main: #0b0f19; /* Legacy assembly-page alias for --bg-dark. */
+  --bg-card: #151c2c;
+  --bg-card-hover: #1e293b;
+  --bg-sidebar: #0e1422;
+  --bg-glass: rgba(21, 28, 44, 0.75);
+
+  /* Borders */
+  --border-color: #2a364f;
+  --border-glow: #38bdf8;
+  --border-highlight: #3b82f6;
+
+  /* Text */
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+
+  /* Accents */
+  --accent-cyan: #38bdf8;
+  --accent-blue: #3b82f6;
+  --accent-indigo: #6366f1;
+  --accent-purple: #a855f7;
+  --accent-emerald: #10b981;
+  --accent-amber: #f59e0b;
+  --accent-rose: #f43f5e;
+
+  /* Radii */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+
+  /* Shadows */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.5);
+  --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.4);
+  --shadow-glow: 0 0 20px rgba(56, 189, 248, 0.2);
+
+  /* Layout */
+  --site-nav-h: 57px;
+
+  /* Motion */
+  --transition-smooth: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}

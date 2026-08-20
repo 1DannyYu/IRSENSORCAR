@@ -1,0 +1,148 @@
+---
+import { href, t, type Locale } from '../i18n/ui';
+import '../styles/tokens.css';
+
+interface Props {
+  locale: Locale;
+  title: string;
+  description?: string;
+  /** Current page, used to highlight the active navigation item. */
+  page?: 'home' | 'inventory' | 'assembly';
+}
+
+const { locale, title, description = '', page } = Astro.props;
+const tr = t(locale);
+const faviconHref = `${import.meta.env.BASE_URL.replace(/\/+$/, '')}/favicon.svg`;
+
+const nav = [
+  { key: 'home', label: tr('nav.home'), path: '' },
+  { key: 'inventory', label: tr('nav.inventory'), path: 'inventory' },
+  { key: 'assembly', label: tr('nav.assembly'), path: 'assembly-guide' },
+] as const;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    {description && <meta name="description" content={description} />}
+    <link rel="icon" href={faviconHref} />
+  </head>
+  <body>
+    <nav class="site-nav">
+      <a class="site-nav__brand" href={href(locale)}>
+        <span class="site-nav__logo">⚡</span>
+        <span>{tr('site.title')}</span>
+      </a>
+      <div class="site-nav__links">
+        {
+          nav.map((item) => (
+            <a
+              href={href(locale, item.path)}
+              class:list={['site-nav__link', { 'is-active': page === item.key }]}
+            >
+              {item.label}
+            </a>
+          ))
+        }
+      </div>
+    </nav>
+
+    <slot />
+
+    <footer class="site-footer">
+      <p>
+        {tr('site.subtitle')} ·
+        <a href="https://github.com/1DannyYu/IRSENSORCAR">Danny's GitHub Repository</a>
+        <a href="https://github.com/1DannyYu">Contact Danny</a>
+      </p>
+    </footer>
+
+    <style>
+      :global(*) {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      :global(body) {
+        min-height: 100vh;
+        background-color: var(--bg-dark);
+        /* Shared ambient glow used throughout the site. */
+        background-image:
+          radial-gradient(circle at 15% 15%, rgba(56, 189, 248, 0.08) 0%, transparent 40%),
+          radial-gradient(circle at 85% 85%, rgba(99, 102, 241, 0.08) 0%, transparent 40%);
+        background-attachment: fixed;
+        color: var(--text-primary);
+        font-family:
+          'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        line-height: 1.6;
+        overflow-x: hidden;
+        -webkit-font-smoothing: antialiased;
+      }
+      .site-nav {
+        position: sticky;
+        top: 0;
+        z-index: 500;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        flex-wrap: wrap;
+        padding: 0.75rem 1.5rem;
+        background: var(--bg-glass);
+        backdrop-filter: blur(14px);
+        border-bottom: 1px solid var(--border-color);
+      }
+      .site-nav__brand {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        color: var(--text-primary);
+        font-weight: 700;
+        text-decoration: none;
+      }
+      .site-nav__logo {
+        display: grid;
+        place-items: center;
+        width: 32px;
+        height: 32px;
+        border-radius: var(--radius-sm);
+        background: linear-gradient(135deg, var(--accent-cyan), var(--accent-indigo));
+      }
+      .site-nav__links {
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+        flex-wrap: wrap;
+      }
+      .site-nav__link {
+        padding: 0.4rem 0.85rem;
+        border-radius: 999px;
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+        text-decoration: none;
+        transition: var(--transition-smooth);
+      }
+      .site-nav__link:hover {
+        background: var(--bg-card-hover);
+        color: var(--text-primary);
+      }
+      .site-nav__link.is-active {
+        background: var(--accent-blue);
+        color: #fff;
+      }
+      .site-footer {
+        padding: 2.5rem 1.5rem;
+        border-top: 1px solid var(--border-color);
+        color: var(--text-muted);
+        font-size: 0.85rem;
+        text-align: center;
+      }
+      .site-footer a {
+        color: var(--accent-cyan);
+      }
+    </style>
+  </body>
+</html>

@@ -1,0 +1,2527 @@
+[
+  {
+    "id": "mod-01",
+    "number": "01/27/86/87",
+    "name": "Waveshare Pan-Tilt HAT (Rev 2.1)",
+    "category": "motion",
+    "tags": [
+      "RaspberryPi",
+      "PCA9685",
+      "TSL2591",
+      "I2C",
+      "Servo"
+    ],
+    "images": [
+      "assets/inventory/001_Waveshare_PanTilt_HAT_Back.jpg",
+      "assets/inventory/027_Waveshare_PanTilt_HAT_Front.jpg",
+      "assets/inventory/086_Waveshare_PanTilt_HAT_Rev21_Front.jpg",
+      "assets/inventory/087_Waveshare_PanTilt_HAT_Rev21_Back.jpg"
+    ],
+    "i18n": {
+      "en": {
+        "title": "Waveshare Pan-Tilt HAT (Rev 2.1)",
+        "desc": "A 2-DOF Pan-Tilt expansion HAT designed for Raspberry Pi. Features onboard PCA9685 PWM driver chip and TSL2591 ambient light sensor, capable of controlling 2 servos while measuring light intensity.",
+        "specs": [
+          {
+            "label": "Driver IC",
+            "val": "PCA9685 (PWM) + TSL2591 (Ambient Light)"
+          },
+          {
+            "label": "Interface",
+            "val": "I2C (PCA9685 Address 0x40, TSL2591 Address 0x29)"
+          },
+          {
+            "label": "Voltage",
+            "val": "5V (Screw terminal supports independent external servo power)"
+          },
+          {
+            "label": "Rotation Angle",
+            "val": "Pan 180° / Tilt 180° mechanical structure"
+          }
+        ],
+        "raspberryPiWiring": [
+          {
+            "pin": "HAT 40-Pin",
+            "conn": "Stack onto the Raspberry Pi 5 40-pin GPIO header (HAT mode)"
+          },
+          {
+            "pin": "VCC (jumpers)",
+            "conn": "Pin 2 or Pin 4 (5V)"
+          },
+          {
+            "pin": "GND",
+            "conn": "Pin 6 (GND)"
+          },
+          {
+            "pin": "SDA",
+            "conn": "Pin 3 (GPIO 2 / SDA)"
+          },
+          {
+            "pin": "SCL",
+            "conn": "Pin 5 (GPIO 3 / SCL)"
+          },
+          {
+            "pin": "Note",
+            "conn": "PCA9685 defaults to I2C 0x40 — conflicts with this project's NeZha board; change address or use separately"
+          }
+        ],
+        "arduinoWiring": [
+          {
+            "pin": "VCC",
+            "conn": "Arduino 5V"
+          },
+          {
+            "pin": "GND",
+            "conn": "Arduino GND"
+          },
+          {
+            "pin": "SDA",
+            "conn": "Arduino A4 (or SDA)"
+          },
+          {
+            "pin": "SCL",
+            "conn": "Arduino A5 (or SCL)"
+          }
+        ],
+        "stm32Wiring": [
+          {
+            "pin": "VCC",
+            "conn": "STM32 3.3V / 5V"
+          },
+          {
+            "pin": "GND",
+            "conn": "STM32 GND"
+          },
+          {
+            "pin": "SDA",
+            "conn": "STM32 PB7 (I2C1_SDA)"
+          },
+          {
+            "pin": "SCL",
+            "conn": "STM32 PB6 (I2C1_SCL)"
+          }
+        ],
+        "codeSnippet": "// Arduino PCA9685 Pan-Tilt Servo Example\n#include <Wire.h>\n#include <Adafruit_PWMServoDriver.h>\n\nAdafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver(0x40);\n\nvoid setup() {\n  pwm.begin();\n  pwm.setPWMFreq(50); // Servo frequency 50Hz\n}\n\nvoid loop() {\n  // Pan axis (Channel 0) to neutral 90 deg (~307 pulse)\n  pwm.setPWM(0, 0, 307);\n  // Tilt axis (Channel 1) to neutral 90 deg\n  pwm.setPWM(1, 0, 307);\n  delay(1000);\n}"
+      }
+    }
+  },
+  {
+    "id": "mod-26",
+    "number": "26/88",
+    "name": "Arduino UNO R3 Controller Board",
+    "category": "controllers",
+    "tags": [
+      "Arduino",
+      "ATmega328P",
+      "CH340",
+      "MCU"
+    ],
+    "images": [
+      "assets/inventory/026_Arduino_UNO_R3_Board.jpg",
+      "assets/inventory/088_Arduino_UNO_R3_Blue_Board.jpg"
+    ],
+    "i18n": {
+      "en": {
+        "title": "Arduino UNO R3 Controller Board",
+        "desc": "Standard open-source microcontroller board powered by the ATmega328P chip. Features 14 digital I/O pins (6 PWM outputs), 6 analog inputs, and onboard USB programming.",
+        "specs": [
+          {
+            "label": "Microcontroller",
+            "val": "ATmega328P (8-bit AVR 16MHz)"
+          },
+          {
+            "label": "Operating Voltage",
+            "val": "5V (VIN supports 7-12V input)"
+          },
+          {
+            "label": "I/O Count",
+            "val": "14 Digital (6 PWM), 6 Analog (A0-A5)"
+          },
+          {
+            "label": "Protocols",
+            "val": "UART, SPI, I2C"
+          }
+        ],
+        "raspberryPiWiring": [
+          {
+            "pin": "USB",
+            "conn": "Raspberry Pi 5 USB-A for flashing and serial monitor"
+          },
+          {
+            "pin": "Arduino RX",
+            "conn": "Raspberry Pi Pin 8 (GPIO 14 / TXD)"
+          },
+          {
+            "pin": "Arduino TX",
+            "conn": "Raspberry Pi Pin 10 (GPIO 15 / RXD)"
+          },
+          {
+            "pin": "GND",
+            "conn": "Pin 6 (GND) shared ground"
+          }
+        ],
+        "arduinoWiring": [
+          {
+            "pin": "USB",
+            "conn": "PC Program Flashing & Serial Monitor"
+          }
+        ],
+        "stm32Wiring": [
+          {
+            "pin": "TXD / RXD",
+            "conn": "Connect via UART for Master-Slave communication"
+          }
+        ],
+        "codeSnippet": "void setup() {\n  pinMode(LED_BUILTIN, OUTPUT);\n  Serial.begin(9600);\n}\nvoid loop() {\n  digitalWrite(LED_BUILTIN, HIGH);\n  delay(500);\n  digitalWrite(LED_BUILTIN, LOW);\n  delay(500);\n}"
+      }
+    }
+  },
+  {
+    "id": "mod-54",
+    "number": "54/55/65/66/67",
+    "name": "STM32F103C8T6 ARM Cortex-M3 (Blue Pill)",
+    "category": "controllers",
+    "tags": [
+      "STM32",
+      "ARM",
+      "Cortex-M3",
+      "72MHz"
+    ],
+    "images": [
+      "assets/inventory/054_STM32F103C8T6_BluePill_Board1_Front.jpg",
+      "assets/inventory/055_STM32F103C8T6_BluePill_Board1_Back.jpg",
+      "assets/inventory/065_STM32F103C8T6_BluePill_Board2_Front.jpg",
+      "assets/inventory/066_STM32F103C8T6_BluePill_Board2_Back.jpg",
+      "assets/inventory/067_STM32F103C8T6_BluePill_Board3_Front.jpg"
+    ],
+    "i18n": {
+      "en": {
+        "title": "STM32F103C8T6 ARM Cortex-M3 (Blue Pill)",
+        "desc": "High-performance ARM Cortex-M3 microcontroller development board ('Blue Pill'). Features 72MHz clock rate, 64KB Flash, 20KB SRAM, and rich hardware peripherals.",
+        "specs": [
+          {
+            "label": "Core",
+            "val": "ARM Cortex-M3 (72MHz)"
+          },
+          {
+            "label": "Memory",
+            "val": "64 KB Flash, 20 KB SRAM"
+          },
+          {
+            "label": "Peripherals",
+            "val": "3x USART, 2x SPI, 2x I2C, 1x CAN, USB 2.0"
+          },
+          {
+            "label": "Debugging",
+            "val": "SWD Header (SWDIO/SWCLK)"
+          }
+        ],
+        "raspberryPiWiring": [
+          {
+            "pin": "PA10 (RX)",
+            "conn": "Raspberry Pi Pin 8 (GPIO 14 / TXD)"
+          },
+          {
+            "pin": "PA9 (TX)",
+            "conn": "Raspberry Pi Pin 10 (GPIO 15 / RXD)"
+          },
+          {
+            "pin": "3.3V",
+            "conn": "Pin 1 or Pin 17 (3.3V); never feed 5V into GPIO"
+          },
+          {
+            "pin": "GND",
+            "conn": "Pin 6 (GND) shared ground"
+          }
+        ],
+        "arduinoWiring": [
+          {
+            "pin": "STM32Duino",
+            "conn": "Supports Arduino IDE via STM32 Core extension"
+          }
+        ],
+        "stm32Wiring": [
+          {
+            "pin": "PA9 (TX)",
+            "conn": "USB-to-TTL RX"
+          },
+          {
+            "pin": "PA10 (RX)",
+            "conn": "USB-to-TTL TX"
+          },
+          {
+            "pin": "3.3V / GND",
+            "conn": "Power Pins"
+          }
+        ],
+        "codeSnippet": "// STM32 HAL GPIO Blink Example\n#include \"stm32f1xx_hal.h\"\nint main(void) {\n  HAL_Init();\n  __HAL_RCC_GPIOC_CLK_ENABLE();\n  GPIO_InitTypeDef GPIO_InitStruct = {0};\n  GPIO_InitStruct.Pin = GPIO_PIN_13;\n  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;\n  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;\n  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);\n  while (1) {\n    HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);\n    HAL_Delay(500);\n  }\n}"
+      }
+    }
+  },
+  {
+    "id": "mod-56",
+    "number": "56/57",
+    "name": "GY-521 MPU6050 6-DOF IMU Sensor",
+    "category": "sensors",
+    "tags": [
+      "Sensor",
+      "MPU6050",
+      "I2C",
+      "Gyro",
+      "Accel"
+    ],
+    "images": [
+      "assets/inventory/056_GY521_MPU6050_Sensor_Front.jpg",
+      "assets/inventory/057_GY521_MPU6050_Sensor_Back.jpg"
+    ],
+    "i18n": {
+      "en": {
+        "title": "GY-521 MPU6050 6-DOF IMU Sensor",
+        "desc": "6-DOF Motion Tracking module combining a 3-axis gyroscope and a 3-axis accelerometer with an onboard Digital Motion Processor (DMP). Ideal for self-balancing robots and quadcopters.",
+        "specs": [
+          {
+            "label": "Chipset",
+            "val": "MPU-6050"
+          },
+          {
+            "label": "Protocol",
+            "val": "I2C (Address 0x68 default, 0x69 when AD0 High)"
+          },
+          {
+            "label": "Voltage",
+            "val": "3.3V - 5V (Onboard LDO regulator)"
+          },
+          {
+            "label": "Range",
+            "val": "Accel ±2g/±4g/±8g/±16g, Gyro ±250/500/1000/2000 °/s"
+          }
+        ],
+        "raspberryPiWiring": [
+          {
+            "pin": "VCC",
+            "conn": "Pin 1 (3.3V; if the board requires 5V use Pin 2, but keep signals 3.3V-safe)"
+          },
+          {
+            "pin": "GND",
+            "conn": "Pin 6 (GND)"
+          },
+          {
+            "pin": "SDA",
+            "conn": "Pin 3 (GPIO 2 / SDA)"
+          },
+          {
+            "pin": "SCL",
+            "conn": "Pin 5 (GPIO 3 / SCL)"
+          }
+        ],
+        "arduinoWiring": [
+          {
+            "pin": "VCC",
+            "conn": "Arduino 5V / 3.3V"
+          },
+          {
+            "pin": "GND",
+            "conn": "Arduino GND"
+          },
+          {
+            "pin": "SCL",
+            "conn": "Arduino A5"
+          },
+          {
+            "pin": "SDA",
+            "conn": "Arduino A4"
+          }
+        ],
+        "stm32Wiring": [
+          {
+            "pin": "VCC",
+            "conn": "STM32 3.3V"
+          },
+          {
+            "pin": "GND",
+            "conn": "STM32 GND"
+          },
+          {
+            "pin": "SCL",
+            "conn": "STM32 PB6"
+          },
+          {
+            "pin": "SDA",
+            "conn": "STM32 PB7"
+          }
+        ],
+        "codeSnippet": "// Arduino MPU6050 Data Read\n#include <Wire.h>\nconst int MPU = 0x68;\nint16_t AcX, AcY, AcZ, Tmp, GyX, GyY, GyZ;\nvoid setup() {\n  Wire.begin();\n  Wire.beginTransmission(MPU);\n  Wire.write(0x6B); // Wake up MPU6050\n  Wire.write(0);\n  Wire.endTransmission(true);\n  Serial.begin(9600);\n}\nvoid loop() {\n  Wire.beginTransmission(MPU);\n  Wire.write(0x3B);\n  Wire.endTransmission(false);\n  Wire.requestFrom(MPU, 14, true);\n  AcX = Wire.read()<<8|Wire.read();\n  AcY = Wire.read()<<8|Wire.read();\n  AcZ = Wire.read()<<8|Wire.read();\n  Serial.print(\"AcX = \"); Serial.println(AcX);\n  delay(333);\n}"
+      }
+    }
+  },
+  {
+    "id": "mod-41",
+    "number": "41/42",
+    "name": "Yahboom 4-Channel IR Tracing Sensor",
+    "category": "sensors",
+    "tags": [
+      "Sensor",
+      "Infrared",
+      "Tracing",
+      "LineFollower"
+    ],
+    "images": [
+      "assets/inventory/041_Yahboom_4Channel_Tracing_Sensor_Back.jpg",
+      "assets/inventory/042_Yahboom_4Channel_Tracing_Sensor_Front.jpg"
+    ],
+    "i18n": {
+      "en": {
+        "title": "Yahboom 4-Channel IR Tracing Sensor",
+        "desc": "High-sensitivity 4-channel infrared line follower module using LM339 comparator. Distinguishes black line on white surface and provides TTL digital outputs.",
+        "specs": [
+          {
+            "label": "Channels",
+            "val": "4 Channels (Out1 - Out4)"
+          },
+          {
+            "label": "Detection Distance",
+            "val": "1cm - 3cm (Adjustable via potentiometers)"
+          },
+          {
+            "label": "Signal Type",
+            "val": "Digital TTL (High/Low output when line detected)"
+          },
+          {
+            "label": "Voltage",
+            "val": "3.3V - 5V"
+          }
+        ],
+        "raspberryPiWiring": [
+          {
+            "pin": "VCC",
+            "conn": "Pin 2 (5V) or Pin 1 (3.3V) per module marking"
+          },
+          {
+            "pin": "GND",
+            "conn": "Pin 6 (GND)"
+          },
+          {
+            "pin": "Out1",
+            "conn": "Pin 11 (GPIO 17)"
+          },
+          {
+            "pin": "Out2",
+            "conn": "Pin 13 (GPIO 27)"
+          },
+          {
+            "pin": "Out3",
+            "conn": "Pin 15 (GPIO 22)"
+          },
+          {
+            "pin": "Out4",
+            "conn": "Pin 16 (GPIO 23)"
+          },
+          {
+            "pin": "Note",
+            "conn": "GPIO is 3.3V only — use a divider/level shifter if outputs are 5V"
+          }
+        ],
+        "arduinoWiring": [
+          {
+            "pin": "VCC",
+            "conn": "Arduino 5V"
+          },
+          {
+            "pin": "GND",
+            "conn": "Arduino GND"
+          },
+          {
+            "pin": "Out1 - Out4",
+            "conn": "Arduino D2, D3, D4, D5"
+          }
+        ],
+        "stm32Wiring": [
+          {
+            "pin": "VCC",
+            "conn": "STM32 3.3V"
+          },
+          {
+            "pin": "GND",
+            "conn": "STM32 GND"
+          },
+          {
+            "pin": "Out1 - Out4",
+            "conn": "STM32 PA0, PA1, PA2, PA3"
+          }
+        ],
+        "codeSnippet": "void setup() {\n  for(int i=2; i<=5; i++) pinMode(i, INPUT);\n  Serial.begin(9600);\n}\nvoid loop() {\n  int s1 = digitalRead(2);\n  int s2 = digitalRead(3);\n  int s3 = digitalRead(4);\n  int s4 = digitalRead(5);\n  Serial.print(\"Line Status: \");\n  Serial.print(s1); Serial.print(s2);\n  Serial.print(s3); Serial.println(s4);\n  delay(100);\n}"
+      }
+    }
+  },
+  {
+    "id": "mod-43",
+    "number": "43/44",
+    "name": "WS2812B 8x8 RGB LED Matrix Panel",
+    "category": "display_audio",
+    "tags": [
+      "Display",
+      "WS2812B",
+      "RGB",
+      "NeoPixel"
+    ],
+    "images": [
+      "assets/inventory/043_WS2812B_8x8_RGB_LED_Matrix_Front.jpg",
+      "assets/inventory/044_WS2812B_8x8_RGB_LED_Matrix_Back.jpg"
+    ],
+    "i18n": {
+      "en": {
+        "title": "WS2812B 8x8 RGB LED Matrix Panel",
+        "desc": "64 (8x8) individually addressable RGB LEDs on a compact matrix panel. Single-wire NZR protocol control over 16.7M colors per pixel.",
+        "specs": [
+          {
+            "label": "LED Type",
+            "val": "WS2812B 5050 RGB"
+          },
+          {
+            "label": "Pixel Count",
+            "val": "64 Pixels (8 Rows x 8 Columns)"
+          },
+          {
+            "label": "Protocol",
+            "val": "Single-line NZR Protocol (DIN / DOUT daisy-chain)"
+          },
+          {
+            "label": "Power",
+            "val": "5V DC (~3.8A max full white, external supply recommended)"
+          }
+        ],
+        "raspberryPiWiring": [
+          {
+            "pin": "VCC",
+            "conn": "External 5V supply (do not draw high current from GPIO); share GND with Pi"
+          },
+          {
+            "pin": "GND",
+            "conn": "Pin 6 (GND) shared ground"
+          },
+          {
+            "pin": "DIN",
+            "conn": "Pin 12 (GPIO 18) via 470Ω; 3.3V→5V level shift recommended"
+          }
+        ],
+        "arduinoWiring": [
+          {
+            "pin": "VCC",
+            "conn": "External 5V Power (Common GND)"
+          },
+          {
+            "pin": "GND",
+            "conn": "GND"
+          },
+          {
+            "pin": "DIN",
+            "conn": "Arduino D6 (in series with 470Ω resistor)"
+          }
+        ],
+        "stm32Wiring": [
+          {
+            "pin": "DIN",
+            "conn": "STM32 PB15 (SPI DMA or PWM+DMA)"
+          }
+        ],
+        "codeSnippet": "// Arduino FastLED WS2812B Example\n#include <FastLED.h>\n#define NUM_LEDS 64\n#define DATA_PIN 6\nCRGB leds[NUM_LEDS];\n\nvoid setup() {\n  FastLED.addLeds<WS2812B, DATA_PIN, GRB>(leds, NUM_LEDS);\n}\nvoid loop() {\n  for(int i = 0; i < NUM_LEDS; i++) {\n    leds[i] = CRGB::Red;\n    FastLED.show();\n    delay(20);\n    leds[i] = CRGB::Black;\n  }\n}"
+      }
+    }
+  },
+  {
+    "id": "mod-72",
+    "number": "72/73",
+    "name": "ESP32 GRBL CNC & Laser Control Board",
+    "category": "motion",
+    "tags": [
+      "Motion",
+      "ESP32",
+      "GRBL",
+      "CNC",
+      "Stepper"
+    ],
+    "images": [
+      "assets/inventory/072_ESP32_GRBL_CNC_Control_Board_Front.jpg",
+      "assets/inventory/073_ESP32_GRBL_CNC_Control_Board_Back.jpg"
+    ],
+    "i18n": {
+      "en": {
+        "title": "ESP32 GRBL CNC & Laser Control Board",
+        "desc": "Dual-core ESP32 motion controller board for 3-axis CNC routers and laser engravers. Supports GRBL firmware, Wi-Fi/Bluetooth web interface, and 3x A4988/DRV8825 stepper sockets.",
+        "specs": [
+          {
+            "label": "Main MCU",
+            "val": "ESP32-WROOM-32D (240MHz Dual-Core)"
+          },
+          {
+            "label": "Axes",
+            "val": "X, Y, Z independent stepper driver sockets"
+          },
+          {
+            "label": "Peripherals",
+            "val": "Spindle PWM / Laser output, Limit switch headers, Handheld controller port"
+          },
+          {
+            "label": "Voltage",
+            "val": "DC 12V - 24V"
+          }
+        ],
+        "raspberryPiWiring": [
+          {
+            "pin": "Micro-USB / USB-C",
+            "conn": "Raspberry Pi USB for WebUI or G-code Sender"
+          },
+          {
+            "pin": "UART RX",
+            "conn": "Pin 8 (GPIO 14 / TXD)"
+          },
+          {
+            "pin": "UART TX",
+            "conn": "Pin 10 (GPIO 15 / RXD)"
+          },
+          {
+            "pin": "GND",
+            "conn": "Pin 6 (GND)"
+          }
+        ],
+        "arduinoWiring": [
+          {
+            "pin": "Micro-USB",
+            "conn": "Flash GRBL firmware or upload via WebUI / UGS"
+          }
+        ],
+        "stm32Wiring": [
+          {
+            "pin": "UART",
+            "conn": "Send G-Code commands via TX/RX"
+          }
+        ],
+        "codeSnippet": "// Common GRBL G-Code Commands\n$X          // Unlock alarm\nG21 G90     // Metric units, absolute positioning\nG0 X10 Y20  // Rapid motion to (10, 20)\nM3 S500     // Turn on Spindle/Laser PWM 50%"
+      }
+    }
+  },
+  {
+    "id": "mod-74",
+    "number": "74/75",
+    "name": "STM32F4 GRBL-HAL 6-Axis Motion Control Board",
+    "category": "motion",
+    "tags": [
+      "STM32",
+      "GRBL-HAL",
+      "6Axis",
+      "Motion",
+      "CNC"
+    ],
+    "images": [
+      "assets/inventory/074_STM32F4_GRBL_HAL_6Axis_Control_Board_Front.jpg",
+      "assets/inventory/075_STM32F4_GRBL_HAL_6Axis_Control_Board_Back.jpg"
+    ],
+    "i18n": {
+      "en": {
+        "title": "STM32F4 GRBL-HAL 6-Axis Motion Control Board",
+        "desc": "Industrial-grade 6-axis motion controller board running grblHAL firmware on an STM32F407 168MHz MCU. Supports high pulse rates, Ethernet streaming, and SD card offline operation.",
+        "specs": [
+          {
+            "label": "MCU",
+            "val": "STM32F407 (168MHz Cortex-M4F + FPU)"
+          },
+          {
+            "label": "Axes",
+            "val": "6 Axes (X, Y, Z, A, B, C) Step/Dir outputs"
+          },
+          {
+            "label": "Interfaces",
+            "val": "Ethernet RJ45, MicroSD Card, USB, Optocoupler isolation"
+          }
+        ],
+        "raspberryPiWiring": [
+          {
+            "pin": "Ethernet / USB",
+            "conn": "Prefer Ethernet or USB for G-code (not GPIO)"
+          },
+          {
+            "pin": "UART RX",
+            "conn": "Pin 8 (GPIO 14 / TXD) as serial fallback"
+          },
+          {
+            "pin": "UART TX",
+            "conn": "Pin 10 (GPIO 15 / RXD)"
+          },
+          {
+            "pin": "GND",
+            "conn": "Pin 6 (GND)"
+          }
+        ],
+        "arduinoWiring": [
+          {
+            "pin": "GRBL-HAL",
+            "conn": "Stream G-Code via WebUI or Ethernet"
+          }
+        ],
+        "stm32Wiring": [
+          {
+            "pin": "Step/Dir",
+            "conn": "Hardware Timers generate up to 300kHz step frequency"
+          }
+        ],
+        "codeSnippet": "// grblHAL Firmware Config\n#define N_AXIS 6\n#define SPINDLE_PWM_FREQ 5000\n#define STEP_PULSE_LATENCY 2"
+      }
+    }
+  },
+  {
+    "id": "mod-76",
+    "number": "76/77",
+    "name": "Waveshare Barcode Scanner Module",
+    "category": "sensors",
+    "tags": [
+      "Sensor",
+      "Camera",
+      "Barcode",
+      "QRCode",
+      "UART"
+    ],
+    "images": [
+      "assets/inventory/076_Waveshare_Barcode_Scanner_Module_Front.jpg",
+      "assets/inventory/077_Waveshare_Barcode_Scanner_Module_Back.jpg"
+    ],
+    "i18n": {
+      "en": {
+        "title": "Waveshare Barcode Scanner Module",
+        "desc": "High-sensitivity optical barcode & QR code decoding camera module. Reads 1D/2D codes from paper or digital screens and outputs decoded strings via UART / USB.",
+        "specs": [
+          {
+            "label": "Supported Decodes",
+            "val": "QR Code, Data Matrix, PDF417, Code 128, EAN, etc."
+          },
+          {
+            "label": "Communication",
+            "val": "UART (9600 baud default) / USB HID / USB Virtual COM"
+          },
+          {
+            "label": "Illumination",
+            "val": "Onboard white LED fill-light + green targeting LED"
+          }
+        ],
+        "raspberryPiWiring": [
+          {
+            "pin": "VCC",
+            "conn": "Pin 2 (5V)"
+          },
+          {
+            "pin": "GND",
+            "conn": "Pin 6 (GND)"
+          },
+          {
+            "pin": "TX (module)",
+            "conn": "Pin 10 (GPIO 15 / RXD)"
+          },
+          {
+            "pin": "RX (module)",
+            "conn": "Pin 8 (GPIO 14 / TXD)"
+          }
+        ],
+        "arduinoWiring": [
+          {
+            "pin": "VCC",
+            "conn": "5V"
+          },
+          {
+            "pin": "GND",
+            "conn": "GND"
+          },
+          {
+            "pin": "TX",
+            "conn": "Arduino D2 (SoftwareSerial RX)"
+          },
+          {
+            "pin": "RX",
+            "conn": "Arduino D3 (SoftwareSerial TX)"
+          }
+        ],
+        "stm32Wiring": [
+          {
+            "pin": "TX",
+            "conn": "STM32 PA10 (USART1_RX)"
+          },
+          {
+            "pin": "RX",
+            "conn": "STM32 PA9 (USART1_TX)"
+          }
+        ],
+        "codeSnippet": "// Arduino Barcode Reader Code\n#include <SoftwareSerial.h>\nSoftwareSerial scanner(2, 3); // RX, TX\n\nvoid setup() {\n  Serial.begin(9600);\n  scanner.begin(9600);\n}\nvoid loop() {\n  if (scanner.available()) {\n    char c = scanner.read();\n    Serial.print(c);\n  }\n}"
+      }
+    }
+  },
+  {
+    "id": "mod-78",
+    "number": "78/79",
+    "name": "Waveshare ToF Laser Distance Sensor",
+    "category": "sensors",
+    "tags": [
+      "Sensor",
+      "Laser",
+      "ToF",
+      "Distance",
+      "UART"
+    ],
+    "images": [
+      "assets/inventory/078_Waveshare_Laser_Sensor_Front.jpg",
+      "assets/inventory/079_Waveshare_Laser_Sensor_Back.jpg"
+    ],
+    "i18n": {
+      "en": {
+        "title": "Waveshare ToF Laser Distance Sensor",
+        "desc": "Time-of-Flight (ToF) optical distance measurement sensor. High accuracy and wide range, unaffected by target surface color or reflectivity.",
+        "specs": [
+          {
+            "label": "Range",
+            "val": "4cm - 400cm (4 meters)"
+          },
+          {
+            "label": "Interface",
+            "val": "UART Serial (115200 baud) / I2C"
+          },
+          {
+            "label": "Precision",
+            "val": "Millimeter-level resolution (±1cm)"
+          }
+        ],
+        "raspberryPiWiring": [
+          {
+            "pin": "VCC",
+            "conn": "Pin 2 (5V)"
+          },
+          {
+            "pin": "GND",
+            "conn": "Pin 6 (GND)"
+          },
+          {
+            "pin": "TX (module)",
+            "conn": "Pin 10 (GPIO 15 / RXD)"
+          },
+          {
+            "pin": "RX (module, if present)",
+            "conn": "Pin 8 (GPIO 14 / TXD)"
+          }
+        ],
+        "arduinoWiring": [
+          {
+            "pin": "VCC",
+            "conn": "5V"
+          },
+          {
+            "pin": "GND",
+            "conn": "GND"
+          },
+          {
+            "pin": "TX",
+            "conn": "Arduino D2 (SoftwareSerial RX)"
+          }
+        ],
+        "stm32Wiring": [
+          {
+            "pin": "TX",
+            "conn": "STM32 PA3 (USART2_RX)"
+          }
+        ],
+        "codeSnippet": "// ToF Packet Parser\nvoid parseToFData(uint8_t buf[]) {\n  if(buf[0] == 0x57 && buf[1] == 0x00) {\n    uint32_t distance_mm = buf[4] | (buf[5] << 8) | (buf[6] << 16);\n    Serial.print(\"Distance: \"); Serial.print(distance_mm); Serial.println(\" mm\");\n  }\n}"
+      }
+    }
+  },
+  {
+    "id": "mod-89",
+    "number": "89",
+    "name": "4-in-1 Mini Sensors Pack",
+    "category": "sensors",
+    "tags": [
+      "Sensors",
+      "Ultrasonic",
+      "Power",
+      "WaterSensor",
+      "Buck"
+    ],
+    "images": [
+      "assets/inventory/089_Four_Mini_Modules_Buck_Power_Ultrasonic_Water.jpg"
+    ],
+    "i18n": {
+      "en": {
+        "title": "4-in-1 Mini Sensors Pack",
+        "desc": "A compact 4-in-1 module kit containing MP1584EN step-down buck converter, HW-131 breadboard power supply, HC-SR04 ultrasonic distance sensor, and water depth sensor.",
+        "specs": [
+          {
+            "label": "1. Buck Converter",
+            "val": "MP1584EN (Input 4.5V-28V, Output 0.8V-20V 3A)"
+          },
+          {
+            "label": "2. Ultrasonic Sensor",
+            "val": "HC-SR04 (2cm-400cm distance, Trig/Echo pulse)"
+          },
+          {
+            "label": "3. Water Depth Sensor",
+            "val": "Analog Depth Sensor (Resistive impedance measurement)"
+          }
+        ],
+        "raspberryPiPinoutGuide": {
+          "title": "Raspberry Pi 5 GPIO Pinout",
+          "image": "assets/reference/raspberry-pi-5/gpio-pinout-diagram.png",
+          "wiringTable": [
+            {
+              "pin": "Pin 2",
+              "gpio": "5V Power",
+              "use": "HC-SR04 VCC"
+            },
+            {
+              "pin": "Pin 6",
+              "gpio": "Ground (GND)",
+              "use": "HC-SR04 GND"
+            },
+            {
+              "pin": "Pin 11",
+              "gpio": "GPIO 17",
+              "use": "HC-SR04 Trig"
+            },
+            {
+              "pin": "Pin 13",
+              "gpio": "GPIO 27",
+              "use": "HC-SR04 Echo (needs divider)"
+            }
+          ]
+        },
+        "raspberryPiWiring": [
+          {
+            "pin": "HC-SR04 VCC",
+            "conn": "Pin 2 (5V)"
+          },
+          {
+            "pin": "HC-SR04 GND",
+            "conn": "Pin 6 (GND)"
+          },
+          {
+            "pin": "HC-SR04 Trig",
+            "conn": "Pin 11 (GPIO 17)"
+          },
+          {
+            "pin": "HC-SR04 Echo",
+            "conn": "Pin 13 (GPIO 27); Echo is a 5V pulse — use a divider/level shifter before GPIO"
+          },
+          {
+            "pin": "Water Sensor S",
+            "conn": "No onboard ADC on Pi — use SPI ADC (e.g. MCP3008: MOSI Pin 19 / MISO Pin 21 / SCLK Pin 23 / CE0 Pin 24)"
+          }
+        ],
+        "arduinoWiring": [
+          {
+            "pin": "HC-SR04 Trig",
+            "conn": "Arduino D8"
+          },
+          {
+            "pin": "HC-SR04 Echo",
+            "conn": "Arduino D9"
+          },
+          {
+            "pin": "Water Sensor S",
+            "conn": "Arduino A0"
+          }
+        ],
+        "stm32Wiring": [
+          {
+            "pin": "HC-SR04 Trig",
+            "conn": "STM32 PB5"
+          },
+          {
+            "pin": "HC-SR04 Echo",
+            "conn": "STM32 PB6"
+          },
+          {
+            "pin": "Water Sensor S",
+            "conn": "STM32 PA0 (ADC1_IN0)"
+          }
+        ],
+        "codeSnippet": "// HC-SR04 Ultrasonic Distance Measurement\nlong duration;\nint distance;\nvoid setup() {\n  pinMode(8, OUTPUT); // Trig\n  pinMode(9, INPUT);  // Echo\n  Serial.begin(9600);\n}\nvoid loop() {\n  digitalWrite(8, LOW); delayMicroseconds(2);\n  digitalWrite(8, HIGH); delayMicroseconds(10);\n  digitalWrite(8, LOW);\n  duration = pulseIn(9, HIGH);\n  distance = duration * 0.034 / 2;\n  Serial.print(\"Distance: \"); Serial.print(distance); Serial.println(\" cm\");\n  delay(200);\n}"
+      }
+    }
+  },
+  {
+    "id": "mod-34",
+    "number": "34",
+    "name": "HXS 18650 11.1V 3S Li-ion Battery Pack",
+    "category": "power",
+    "tags": [
+      "Power",
+      "18650",
+      "Battery",
+      "11.1V"
+    ],
+    "images": [
+      "assets/inventory/034_HXS_18650_11V1_Battery_Pack.jpg"
+    ],
+    "i18n": {
+      "en": {
+        "title": "HXS 18650 11.1V 3S Li-ion Battery Pack",
+        "desc": "High-capacity 11.1V (3S) 18650 lithium battery pack designed for robot cars and motor drivers. Includes protection board and standard DC5.5 barrel connector.",
+        "specs": [
+          {
+            "label": "Nominal Voltage",
+            "val": "11.1V (Full charge 12.6V)"
+          },
+          {
+            "label": "Cell Array",
+            "val": "3S 18650 Series"
+          },
+          {
+            "label": "Plug",
+            "val": "DC 5.5/2.1mm Male Plug"
+          }
+        ],
+        "raspberryPiWiring": [
+          {
+            "pin": "Battery output",
+            "conn": "Feed NeZha / a buck converter first, then power the Raspberry Pi"
+          },
+          {
+            "pin": "Pi power",
+            "conn": "Prefer USB-C 5V; if back-powering via Pin 2/4 (5V), do not also connect USB-C (dual-power hazard)"
+          },
+          {
+            "pin": "GND",
+            "conn": "Share ground with driver board and Pi (Pin 6)"
+          }
+        ],
+        "arduinoWiring": [
+          {
+            "pin": "DC Jack",
+            "conn": "Connect to Arduino VIN / Stepper Driver VMOT"
+          }
+        ],
+        "stm32Wiring": [
+          {
+            "pin": "DC Jack",
+            "conn": "Step down to 5V via LM2596/MP1584 before supplying STM32"
+          }
+        ],
+        "codeSnippet": "// Voltage divider recommended for battery monitoring"
+      }
+    }
+  },
+  {
+    "id": "mod-35",
+    "number": "35",
+    "name": "MCUZONE MPS2242 M.2 NVMe HAT",
+    "category": "power",
+    "tags": [
+      "RaspberryPi",
+      "NVMe",
+      "PCIe",
+      "SSD"
+    ],
+    "images": [
+      "assets/inventory/035_Mcuzone_MPS2242_M2_NVMe_HAT_SSD.jpg"
+    ],
+    "i18n": {
+      "en": {
+        "title": "MCUZONE MPS2242 M.2 NVMe HAT",
+        "desc": "M.2 NVMe SSD expansion board for Raspberry Pi 5 PCIe interface. Dramatically boosts boot speeds and file read/write performance.",
+        "specs": [
+          {
+            "label": "Bus Interface",
+            "val": "PCIe Gen2 / Gen3 (via 16-pin FPC cable)"
+          },
+          {
+            "label": "Supported Drive",
+            "val": "M.2 Key-M 2242 NVMe SSD"
+          }
+        ],
+        "raspberryPiWiring": [
+          {
+            "pin": "PCIe FPC",
+            "conn": "Connect to the Raspberry Pi 5 onboard PCIe FPC connector (not the 40-pin GPIO)"
+          },
+          {
+            "pin": "M.2 slot",
+            "conn": "Insert NVMe SSD (M-Key)"
+          },
+          {
+            "pin": "Power",
+            "conn": "Powered by Pi 5 through the HAT; use an adequate official PSU"
+          }
+        ],
+        "arduinoWiring": [],
+        "stm32Wiring": [],
+        "codeSnippet": "# Enable PCIe Gen3 in Raspberry Pi config.txt\ndtparam=pciex1\ndtparam=pciex1_no_max_payload_size\ndtparam=pciex1_gen=3"
+      }
+    }
+  },
+  {
+    "id": "mod-36",
+    "number": "36/37",
+    "name": "Binocular Stereo Vision Camera Module",
+    "category": "sensors",
+    "tags": [
+      "Sensors",
+      "Camera",
+      "StereoVision",
+      "OpenCV"
+    ],
+    "images": [
+      "assets/inventory/036_Binocular_Stereo_Camera_Module_Angle.jpg",
+      "assets/inventory/037_Binocular_Stereo_Camera_Module_Front.jpg"
+    ],
+    "i18n": {
+      "en": {
+        "title": "Binocular Stereo Vision Camera Module",
+        "desc": "Dual-lens stereo camera module for 3D depth map computation, spatial positioning, and AI object tracking.",
+        "specs": [
+          {
+            "label": "Sensors",
+            "val": "Dual Synchronized CMOS Sensors"
+          },
+          {
+            "label": "Interface",
+            "val": "USB 2.0 Driverless (UVC)"
+          },
+          {
+            "label": "Max Resolution",
+            "val": "2560x720 60fps / 1280x480 60fps"
+          }
+        ],
+        "raspberryPiWiring": [
+          {
+            "pin": "USB",
+            "conn": "Raspberry Pi 5 USB-A (typical for UVC cameras)"
+          },
+          {
+            "pin": "CSI (if supported)",
+            "conn": "Pi 5 CSI ribbon connector (not GPIO Dupont wiring)"
+          }
+        ],
+        "arduinoWiring": [],
+        "stm32Wiring": [],
+        "codeSnippet": "# Python OpenCV Stereo Capture\nimport cv2\ncap = cv2.VideoCapture(0)\ncap.set(cv2.CAP_PROP_FRAME_WIDTH, 2560)\ncap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)\nwhile True:\n    ret, frame = cap.read()\n    left_img = frame[:, :1280]\n    right_img = frame[:, 1280:]\n    cv2.imshow(\"Left\", left_img)\n    if cv2.waitKey(1) == 27: break"
+      }
+    }
+  },
+  {
+    "id": "mod-45",
+    "number": "45/46",
+    "name": "HW-131 Breadboard Power Supply Module",
+    "category": "power",
+    "tags": [
+      "Power",
+      "Breadboard",
+      "5V",
+      "3.3V"
+    ],
+    "images": [
+      "assets/inventory/045_HW131_Breadboard_Power_Supply_Front.jpg",
+      "assets/inventory/046_HW131_Breadboard_Power_Supply_Back.jpg"
+    ],
+    "i18n": {
+      "en": {
+        "title": "HW-131 Breadboard Power Supply Module",
+        "desc": "Plug-and-play power supply module for standard MB-102 breadboards. Provides independent 5V and 3.3V voltage rails.",
+        "specs": [
+          {
+            "label": "Input Voltage",
+            "val": "DC 6.5V - 12V (Barrel jack) or USB 5V"
+          },
+          {
+            "label": "Output Voltage",
+            "val": "3.3V / 5V dual rail toggles"
+          },
+          {
+            "label": "Max Output Current",
+            "val": "< 700 mA"
+          }
+        ],
+        "raspberryPiWiring": [
+          {
+            "pin": "5V / 3.3V out",
+            "conn": "Power breadboard sensors; share GND with Pi Pin 6"
+          },
+          {
+            "pin": "Note",
+            "conn": "Do not paralleling-feed Pi Pin 2/4 from the breadboard PSU; GPIO signals stay 3.3V max"
+          }
+        ],
+        "arduinoWiring": [
+          {
+            "pin": "Output Header",
+            "conn": "Plugs directly into breadboard power rails"
+          }
+        ],
+        "stm32Wiring": [
+          {
+            "pin": "Output Header",
+            "conn": "Supplies 3.3V to STM32, 5V to sensors"
+          }
+        ],
+        "codeSnippet": "// Pure hardware power module"
+      }
+    }
+  },
+  {
+    "id": "mod-47",
+    "number": "47/49",
+    "name": "MT8870 DTMF Audio Decoder Module",
+    "category": "display_audio",
+    "tags": [
+      "Audio",
+      "DTMF",
+      "Decoder",
+      "MT8870"
+    ],
+    "images": [
+      "assets/inventory/047_MT8870_DTMF_Audio_Decoder_Top.jpg",
+      "assets/inventory/049_MT8870_DTMF_Audio_Decoder_CloseUp.jpg"
+    ],
+    "i18n": {
+      "en": {
+        "title": "MT8870 DTMF Audio Decoder Module",
+        "desc": "Decodes telephone touch-tone (DTMF) audio signals received via 3.5mm jack into 4-bit BCD binary data outputs and StD valid signal flag.",
+        "specs": [
+          {
+            "label": "IC",
+            "val": "MT8870D"
+          },
+          {
+            "label": "Input",
+            "val": "3.5mm Audio Jack"
+          },
+          {
+            "label": "Outputs",
+            "val": "Q1, Q2, Q3, Q4 (BCD Data), StD (Valid Tone Flag)"
+          }
+        ],
+        "raspberryPiWiring": [
+          {
+            "pin": "VCC",
+            "conn": "Pin 2 (5V) or Pin 1 (3.3V) per module"
+          },
+          {
+            "pin": "GND",
+            "conn": "Pin 6 (GND)"
+          },
+          {
+            "pin": "Q1–Q4",
+            "conn": "Pins 11 / 13 / 15 / 16 (GPIO 17 / 27 / 22 / 23)"
+          },
+          {
+            "pin": "StD",
+            "conn": "Pin 18 (GPIO 24) for edge detect"
+          }
+        ],
+        "arduinoWiring": [
+          {
+            "pin": "Q1-Q4",
+            "conn": "Arduino D2, D3, D4, D5"
+          },
+          {
+            "pin": "StD",
+            "conn": "Arduino D6 (Interrupt or polling)"
+          }
+        ],
+        "stm32Wiring": [
+          {
+            "pin": "Q1-Q4",
+            "conn": "STM32 PB0, PB1, PB2, PB3"
+          },
+          {
+            "pin": "StD",
+            "conn": "STM32 PB4"
+          }
+        ],
+        "codeSnippet": "// Arduino MT8870 Decoder Code\nvoid setup() {\n  for(int i=2; i<=6; i++) pinMode(i, INPUT);\n  Serial.begin(9600);\n}\nvoid loop() {\n  if(digitalRead(6) == HIGH) { // StD valid signal\n    int code = (digitalRead(5)<<3) | (digitalRead(4)<<2) | (digitalRead(3)<<1) | digitalRead(2);\n    Serial.print(\"DTMF Key Code: \"); Serial.println(code);\n    delay(250);\n  }\n}"
+      }
+    }
+  },
+  {
+    "id": "mod-50",
+    "number": "50/51/61/62",
+    "name": "IR Obstacle Avoidance Sensor Module",
+    "category": "sensors",
+    "tags": [
+      "Sensors",
+      "Infrared",
+      "Obstacle",
+      "Proximity"
+    ],
+    "images": [
+      "assets/inventory/050_IR_Obstacle_Sensor_Board1_Back.jpg",
+      "assets/inventory/051_IR_Obstacle_Sensor_Board1_Front.jpg",
+      "assets/inventory/061_IR_Obstacle_Sensor_Board2_Front.jpg",
+      "assets/inventory/062_IR_Obstacle_Sensor_Board2_Back.jpg"
+    ],
+    "i18n": {
+      "en": {
+        "title": "IR Obstacle Avoidance Sensor Module",
+        "desc": "Active IR proximity detection module. Emits modulated IR light and detects reflections from nearby objects, outputting an active-low digital signal.",
+        "specs": [
+          {
+            "label": "Detection Range",
+            "val": "2cm - 30cm (Adjustable via onboard potentiometer)"
+          },
+          {
+            "label": "Detection Angle",
+            "val": "35° Cone"
+          },
+          {
+            "label": "Output Voltage",
+            "val": "Digital OUT (LOW when object detected, HIGH otherwise)"
+          }
+        ],
+        "raspberryPiWiring": [
+          {
+            "pin": "VCC",
+            "conn": "Pin 2 (5V)"
+          },
+          {
+            "pin": "GND",
+            "conn": "Pin 6 (GND)"
+          },
+          {
+            "pin": "OUT",
+            "conn": "Pin 11 (GPIO 17); divide first if the output is 5V"
+          }
+        ],
+        "arduinoWiring": [
+          {
+            "pin": "VCC",
+            "conn": "Arduino 5V"
+          },
+          {
+            "pin": "GND",
+            "conn": "Arduino GND"
+          },
+          {
+            "pin": "OUT",
+            "conn": "Arduino D2"
+          }
+        ],
+        "stm32Wiring": [
+          {
+            "pin": "OUT",
+            "conn": "STM32 PA0 (EXTI0 Interrupt Input)"
+          }
+        ],
+        "codeSnippet": "void setup() {\n  pinMode(2, INPUT);\n  pinMode(13, OUTPUT);\n}\nvoid loop() {\n  if (digitalRead(2) == LOW) { // Obstacle detected\n    digitalWrite(13, HIGH);\n  } else {\n    digitalWrite(13, LOW);\n  }\n}"
+      }
+    }
+  },
+  {
+    "id": "mod-52",
+    "number": "52/53",
+    "name": "XH-M229 PC ATX Power Supply Breakout",
+    "category": "power",
+    "tags": [
+      "Power",
+      "ATX",
+      "12V",
+      "5V",
+      "3.3V"
+    ],
+    "images": [
+      "assets/inventory/052_XH_M229_ATX_Power_Breakout_Front.jpg",
+      "assets/inventory/053_XH_M229_ATX_Power_Breakout_Back.jpg"
+    ],
+    "i18n": {
+      "en": {
+        "title": "XH-M229 PC ATX Power Supply Breakout",
+        "desc": "Breakout board converting standard desktop PC 24-pin ATX power supplies into multi-rail lab bench power supplies with onboard toggle switch and fuses.",
+        "specs": [
+          {
+            "label": "Input Port",
+            "val": "24-pin Standard ATX Power Supply"
+          },
+          {
+            "label": "Output Rails",
+            "val": "+3.3V, +5V, +12V, -12V DC"
+          },
+          {
+            "label": "Protection",
+            "val": "Glass fuse & screw terminals on each output line"
+          }
+        ],
+        "raspberryPiWiring": [
+          {
+            "pin": "+5V / GND",
+            "conn": "High-current rail for peripherals; share GND with Pi Pin 6"
+          },
+          {
+            "pin": "+3.3V",
+            "conn": "For 3.3V sensors; do not back-feed Pi Pin 1/17"
+          },
+          {
+            "pin": "Note",
+            "conn": "Keep powering the Pi from official USB-C; use ATX for motors/peripherals"
+          }
+        ],
+        "arduinoWiring": [
+          {
+            "pin": "+5V / GND",
+            "conn": "High-current power for servos & Arduino"
+          }
+        ],
+        "stm32Wiring": [
+          {
+            "pin": "+3.3V / GND",
+            "conn": "Stable regulated supply for STM32 board"
+          }
+        ],
+        "codeSnippet": "// Pure hardware power adapter"
+      }
+    }
+  },
+  {
+    "id": "mod-58",
+    "number": "58",
+    "name": "Waveshare USB to TTL Serial Adapter",
+    "category": "power",
+    "tags": [
+      "Power",
+      "USB",
+      "TTL",
+      "Serial",
+      "FT232"
+    ],
+    "images": [
+      "assets/inventory/058_Waveshare_USB_to_TTL_Adapter.jpg"
+    ],
+    "i18n": {
+      "en": {
+        "title": "Waveshare USB to TTL Serial Adapter",
+        "desc": "Industrial USB to TTL UART serial converter adapter used for microcontrollers, Raspberry Pi console debugging, and serial data transmission.",
+        "specs": [
+          {
+            "label": "Serial IC",
+            "val": "FT232 / CH340 Industrial USB-Serial IC"
+          },
+          {
+            "label": "Pinout",
+            "val": "VCC, GND, TXD, RXD, RTS, CTS"
+          },
+          {
+            "label": "Voltage Level",
+            "val": "3.3V / 5V selectable via jumper"
+          }
+        ],
+        "raspberryPiWiring": [
+          {
+            "pin": "TXD (adapter)",
+            "conn": "Pin 10 (GPIO 15 / RXD)"
+          },
+          {
+            "pin": "RXD (adapter)",
+            "conn": "Pin 8 (GPIO 14 / TXD)"
+          },
+          {
+            "pin": "GND",
+            "conn": "Pin 6 (GND)"
+          },
+          {
+            "pin": "VCC",
+            "conn": "Usually leave unconnected (Pi powered via USB-C); use only if the target needs the adapter's 3.3V/5V rail"
+          }
+        ],
+        "arduinoWiring": [
+          {
+            "pin": "TXD -> RX",
+            "conn": "RXD -> TX, GND -> GND"
+          }
+        ],
+        "stm32Wiring": [
+          {
+            "pin": "TXD -> PA10 (RX)",
+            "conn": "RXD -> PA9 (TX), GND -> GND"
+          }
+        ],
+        "codeSnippet": "// Serial.print() Debug Interface"
+      }
+    }
+  },
+  {
+    "id": "mod-59",
+    "number": "59/60",
+    "name": "A4988 Stepper Motor Driver Module",
+    "category": "motion",
+    "tags": [
+      "Motion",
+      "A4988",
+      "Stepper",
+      "Driver"
+    ],
+    "images": [
+      "assets/inventory/059_A4988_Stepper_Motor_Driver_Front.jpg",
+      "assets/inventory/060_A4988_Stepper_Motor_Driver_Back.jpg"
+    ],
+    "i18n": {
+      "en": {
+        "title": "A4988 Stepper Motor Driver Module",
+        "desc": "Microstepping driver for bipolar stepper motors used in 3D printers and CNC machines. Features adjustable current limiting and 5 microstep resolutions down to 1/16.",
+        "specs": [
+          {
+            "label": "Motor Voltage",
+            "val": "8V - 35V DC"
+          },
+          {
+            "label": "Max Current",
+            "val": "2A (Heatsink & active cooling required)"
+          },
+          {
+            "label": "Microsteps",
+            "val": "Full, 1/2, 1/4, 1/8, 1/16 step (MS1, MS2, MS3 pins)"
+          }
+        ],
+        "raspberryPiWiring": [
+          {
+            "pin": "VDD (logic)",
+            "conn": "Pin 1 (3.3V)"
+          },
+          {
+            "pin": "GND",
+            "conn": "Pin 6 (GND); share ground with motor supply"
+          },
+          {
+            "pin": "STEP",
+            "conn": "Pin 11 (GPIO 17)"
+          },
+          {
+            "pin": "DIR",
+            "conn": "Pin 13 (GPIO 27)"
+          },
+          {
+            "pin": "ENABLE",
+            "conn": "Pin 15 (GPIO 22)"
+          },
+          {
+            "pin": "VMOT",
+            "conn": "External motor supply (battery/ATX 12V) — not Pi 5V"
+          }
+        ],
+        "arduinoWiring": [
+          {
+            "pin": "STEP",
+            "conn": "Arduino D2"
+          },
+          {
+            "pin": "DIR",
+            "conn": "Arduino D3"
+          },
+          {
+            "pin": "ENABLE",
+            "conn": "Arduino D4"
+          },
+          {
+            "pin": "1A, 1B, 2A, 2B",
+            "conn": "Stepper Motor 4 Wires"
+          }
+        ],
+        "stm32Wiring": [
+          {
+            "pin": "STEP",
+            "conn": "STM32 PA0"
+          },
+          {
+            "pin": "DIR",
+            "conn": "STM32 PA1"
+          }
+        ],
+        "codeSnippet": "void setup() {\n  pinMode(2, OUTPUT); // STEP\n  pinMode(3, OUTPUT); // DIR\n}\nvoid loop() {\n  digitalWrite(3, HIGH); // Forward\n  for(int i=0; i<200; i++) { // 1 Revolution (200 steps)\n    digitalWrite(2, HIGH); delayMicroseconds(800);\n    digitalWrite(2, LOW);  delayMicroseconds(800);\n  }\n  delay(1000);\n}"
+      }
+    }
+  },
+  {
+    "id": "mod-63",
+    "number": "63/64",
+    "name": "Optocoupler Speed Sensor Module",
+    "category": "sensors",
+    "tags": [
+      "Sensors",
+      "Speed",
+      "RPM",
+      "Encoder",
+      "LM393"
+    ],
+    "images": [
+      "assets/inventory/063_Speed_Sensor_Module_Front.jpg",
+      "assets/inventory/064_Speed_Sensor_Module_Back.jpg"
+    ],
+    "i18n": {
+      "en": {
+        "title": "Optocoupler Speed Sensor Module",
+        "desc": "Optocoupler speed counter module with 5mm slot width. Combined with encoder discs to measure wheel rotation RPM and distance.",
+        "specs": [
+          {
+            "label": "Slot Width",
+            "val": "5 mm"
+          },
+          {
+            "label": "Comparator IC",
+            "val": "LM393 Wide Voltage Comparator"
+          },
+          {
+            "label": "Output",
+            "val": "Digital DO (Pulse output) and Analog AO"
+          }
+        ],
+        "raspberryPiWiring": [
+          {
+            "pin": "VCC",
+            "conn": "Pin 2 (5V) or Pin 1 (3.3V) per module"
+          },
+          {
+            "pin": "GND",
+            "conn": "Pin 6 (GND)"
+          },
+          {
+            "pin": "OUT",
+            "conn": "Pin 11 (GPIO 17) for edge count / interrupt"
+          }
+        ],
+        "arduinoWiring": [
+          {
+            "pin": "VCC",
+            "conn": "5V"
+          },
+          {
+            "pin": "GND",
+            "conn": "GND"
+          },
+          {
+            "pin": "OUT",
+            "conn": "Arduino D2 (External Interrupt 0)"
+          }
+        ],
+        "stm32Wiring": [
+          {
+            "pin": "OUT",
+            "conn": "STM32 PA0 (TIM2 Input Capture)"
+          }
+        ],
+        "codeSnippet": "volatile unsigned int pulses = 0;\nvoid countPulse() { pulses++; }\nvoid setup() {\n  attachInterrupt(digitalPinToInterrupt(2), countPulse, RISING);\n  Serial.begin(9600);\n}\nvoid loop() {\n  delay(1000);\n  Serial.print(\"Pulses per sec: \"); Serial.println(pulses);\n  pulses = 0;\n}"
+      }
+    }
+  },
+  {
+    "id": "mod-68",
+    "number": "68/69",
+    "name": "YourFun NRF24L01 2.4GHz Wireless Module",
+    "category": "power",
+    "tags": [
+      "Wireless",
+      "NRF24L01",
+      "2.4GHz",
+      "SPI"
+    ],
+    "images": [
+      "assets/inventory/068_YourFun_Robotics_Wireless_Module_Pinout.jpg",
+      "assets/inventory/069_YourFun_Robotics_Wireless_Module_Top.jpg"
+    ],
+    "i18n": {
+      "en": {
+        "title": "YourFun NRF24L01 2.4GHz Wireless Module",
+        "desc": "2.4GHz ISM band RF transceiver module for low-latency wireless communication between remote controllers and robot cars.",
+        "specs": [
+          {
+            "label": "Frequency Band",
+            "val": "2.4GHz - 2.5GHz"
+          },
+          {
+            "label": "Protocol",
+            "val": "Standard SPI Interface"
+          },
+          {
+            "label": "Operating Voltage",
+            "val": "1.9V - 3.6V (Do NOT connect 5V directly!)"
+          }
+        ],
+        "raspberryPiWiring": [
+          {
+            "pin": "VCC",
+            "conn": "Pin 1 (3.3V); never connect 5V"
+          },
+          {
+            "pin": "GND",
+            "conn": "Pin 6 (GND)"
+          },
+          {
+            "pin": "CE",
+            "conn": "Pin 22 (GPIO 25)"
+          },
+          {
+            "pin": "CSN",
+            "conn": "Pin 24 (GPIO 8 / CE0)"
+          },
+          {
+            "pin": "SCK",
+            "conn": "Pin 23 (GPIO 11 / SCLK)"
+          },
+          {
+            "pin": "MOSI",
+            "conn": "Pin 19 (GPIO 10 / MOSI)"
+          },
+          {
+            "pin": "MISO",
+            "conn": "Pin 21 (GPIO 9 / MISO)"
+          }
+        ],
+        "arduinoWiring": [
+          {
+            "pin": "VCC",
+            "conn": "Arduino 3.3V"
+          },
+          {
+            "pin": "CE",
+            "conn": "D9"
+          },
+          {
+            "pin": "CSN",
+            "conn": "D10"
+          },
+          {
+            "pin": "SCK/MOSI/MISO",
+            "conn": "D13/D11/D12"
+          }
+        ],
+        "stm32Wiring": [
+          {
+            "pin": "SPI1 Pins",
+            "conn": "STM32 PA4(CSN), PA5(SCK), PA6(MISO), PA7(MOSI)"
+          }
+        ],
+        "codeSnippet": "// Arduino RF24 Transmit Code\n#include <SPI.h>\n#include <RF24.h>\nRF24 radio(9, 10);\nconst byte address[6] = \"00001\";\nvoid setup() {\n  radio.begin();\n  radio.openWritingPipe(address);\n  radio.stopListening();\n}\nvoid loop() {\n  const char text[] = \"Hello Robot\";\n  radio.write(&text, sizeof(text));\n  delay(1000);\n}"
+      }
+    }
+  },
+  {
+    "id": "mod-70",
+    "number": "70/71",
+    "name": "Waveshare PCA9685 Servo Driver HAT",
+    "category": "motion",
+    "tags": [
+      "Motion",
+      "PCA9685",
+      "PWM",
+      "Servo",
+      "I2C"
+    ],
+    "images": [
+      "assets/inventory/070_Waveshare_PCA9685_Servo_Driver_HAT_Front.jpg",
+      "assets/inventory/071_Waveshare_PCA9685_Servo_Driver_HAT_Back.jpg"
+    ],
+    "i18n": {
+      "en": {
+        "title": "Waveshare PCA9685 Servo Driver HAT",
+        "desc": "16-Channel 12-Bit PWM servo driver expansion board over I2C. Controls up to 16 robotic arm servos simultaneously.",
+        "specs": [
+          {
+            "label": "Channels",
+            "val": "16 Independent PWM Channels"
+          },
+          {
+            "label": "Resolution",
+            "val": "12-bit (4096 Steps)"
+          },
+          {
+            "label": "Interface",
+            "val": "I2C (Supports up to 62 boards cascaded)"
+          }
+        ],
+        "raspberryPiWiring": [
+          {
+            "pin": "HAT 40-Pin",
+            "conn": "Stack on the Raspberry Pi 5 40-pin header"
+          },
+          {
+            "pin": "SDA",
+            "conn": "Pin 3 (GPIO 2 / SDA)"
+          },
+          {
+            "pin": "SCL",
+            "conn": "Pin 5 (GPIO 3 / SCL)"
+          },
+          {
+            "pin": "VCC / GND",
+            "conn": "Pin 2 (5V) / Pin 6 (GND); prefer external servo supply on the terminal"
+          },
+          {
+            "pin": "Note",
+            "conn": "Default I2C 0x40 conflicts with NeZha — change the address jumpers"
+          }
+        ],
+        "arduinoWiring": [
+          {
+            "pin": "SDA/SCL",
+            "conn": "Arduino A4 / A5"
+          }
+        ],
+        "stm32Wiring": [
+          {
+            "pin": "SDA/SCL",
+            "conn": "STM32 PB7 / PB6"
+          }
+        ],
+        "codeSnippet": "// Pair with Adafruit PWM Servo Driver Library"
+      }
+    }
+  },
+  {
+    "id": "mod-82",
+    "number": "82",
+    "name": "Waterproof Metal Push Button Switches",
+    "category": "display_audio",
+    "tags": [
+      "Interface",
+      "Switch",
+      "Button",
+      "LED"
+    ],
+    "images": [
+      "assets/inventory/082_Waterproof_Metal_Push_Button_Switches.jpg"
+    ],
+    "i18n": {
+      "en": {
+        "title": "Waterproof Metal Push Button Switches",
+        "desc": "Heavy-duty waterproof metal push button switch with ring LED indicator for robot chassis power toggle or emergency stop.",
+        "specs": [
+          {
+            "label": "Contact Type",
+            "val": "1NO1NC (1 Normally Open, 1 Normally Closed) / Latching"
+          },
+          {
+            "label": "Ring LED Voltage",
+            "val": "12V / 5V Ring LED"
+          }
+        ],
+        "raspberryPiWiring": [
+          {
+            "pin": "NO contact A",
+            "conn": "Pin 1 (3.3V) with 10k pull-up, or use as a power-path switch"
+          },
+          {
+            "pin": "NO contact B",
+            "conn": "Pin 11 (GPIO 17) input to Pin 6 (GND)"
+          },
+          {
+            "pin": "LED (if present)",
+            "conn": "Via resistor to Pin 2 (5V) and GND — do not drive from GPIO directly"
+          }
+        ],
+        "arduinoWiring": [
+          {
+            "pin": "Switch",
+            "conn": "Controls main VIN power rail"
+          }
+        ],
+        "stm32Wiring": [
+          {
+            "pin": "Switch",
+            "conn": "Triggers main power relay"
+          }
+        ],
+        "codeSnippet": "// Pure Hardware Power Switch"
+      }
+    }
+  },
+  {
+    "id": "mod-83",
+    "number": "83/84/85",
+    "name": "Waveshare MG996R / MG90S / SG90 Servos",
+    "category": "motion",
+    "tags": [
+      "Motion",
+      "Servo",
+      "MG996R",
+      "MG90S",
+      "SG90"
+    ],
+    "images": [
+      "assets/inventory/083_Waveshare_MG996R_Servo_Motor.jpg",
+      "assets/inventory/084_Waveshare_MG90S_Micro_Servos_Set.jpg",
+      "assets/inventory/085_Waveshare_SG90_Micro_Servo.jpg"
+    ],
+    "i18n": {
+      "en": {
+        "title": "Waveshare MG996R / MG90S / SG90 Servos",
+        "desc": "Essential servo actuators for robotic arms and pan-tilts, including high-torque metal gear MG996R (11kg/cm), micro metal gear MG90S (2.2kg/cm), and lightweight SG90.",
+        "specs": [
+          {
+            "label": "MG996R",
+            "val": "4.8V-7.2V, Torque 11kg/cm, Full Metal Gear"
+          },
+          {
+            "label": "MG90S",
+            "val": "4.8V-6V, Torque 2.2kg/cm, Metal Gear"
+          },
+          {
+            "label": "SG90",
+            "val": "4.8V, 9g weight, Plastic Gear"
+          }
+        ],
+        "raspberryPiWiring": [
+          {
+            "pin": "Signal (yellow/orange)",
+            "conn": "Pin 32 (GPIO 12 / PWM0) or Pin 33 (GPIO 13 / PWM1); this project prefers NeZha / PCA9685"
+          },
+          {
+            "pin": "VCC (red)",
+            "conn": "External 5V–6V supply — do not power from GPIO"
+          },
+          {
+            "pin": "GND (brown/black)",
+            "conn": "Share ground with Pi Pin 6 (GND)"
+          }
+        ],
+        "arduinoWiring": [
+          {
+            "pin": "Signal (Yellow/Orange)",
+            "conn": "Arduino PWM Pin (e.g. D9, D10)"
+          },
+          {
+            "pin": "VCC (Red)",
+            "conn": "External 5V-6V Supply"
+          },
+          {
+            "pin": "GND (Brown/Black)",
+            "conn": "GND"
+          }
+        ],
+        "stm32Wiring": [
+          {
+            "pin": "Signal",
+            "conn": "STM32 TIM2 / TIM3 PWM Channel Pin"
+          }
+        ],
+        "codeSnippet": "#include <Servo.h>\nServo myServo;\nvoid setup() {\n  myServo.attach(9);\n}\nvoid loop() {\n  myServo.write(0); delay(1000);\n  myServo.write(90); delay(1000);\n  myServo.write(180); delay(1000);\n}"
+      }
+    }
+  },
+  {
+    "id": "mod-90",
+    "number": "90/22/23",
+    "name": "37-in-1 Sensor Modules Reference Guide",
+    "category": "kit37",
+    "tags": [
+      "Kit",
+      "Sensors",
+      "37in1",
+      "Arduino"
+    ],
+    "images": [
+      "assets/inventory/090_SensorKit_37in1_Reference_Guide_Sheet.jpg",
+      "assets/inventory/022_SensorKit_37in1_Diagram_Chart.jpg",
+      "assets/inventory/023_SensorKit_37in1_Module_Box.jpg"
+    ],
+    "i18n": {
+      "en": {
+        "title": "37-in-1 Sensor Modules Reference Guide",
+        "desc": "Complete reference manual and chart for the 37-in-1 open-source sensor kit (flame, photoresistor, vibration, sound, relay, hall, buzzer, temperature, etc.).",
+        "specs": [
+          {
+            "label": "Included Modules",
+            "val": "DS18B20, DHT11, MPU6050, HC-SR04, Flame, Relay, etc."
+          },
+          {
+            "label": "Voltage",
+            "val": "3.3V - 5V Universal"
+          }
+        ],
+        "raspberryPiWiring": [
+          {
+            "pin": "Digital signals",
+            "conn": "Commonly Pins 11/13/15/16 (GPIO 17/27/22/23)"
+          },
+          {
+            "pin": "I2C modules",
+            "conn": "SDA Pin 3 (GPIO 2), SCL Pin 5 (GPIO 3)"
+          },
+          {
+            "pin": "Analog modules",
+            "conn": "No Pi ADC — use an external ADC over SPI (Pins 19/21/23/24)"
+          },
+          {
+            "pin": "Power",
+            "conn": "3.3V→Pin 1; 5V→Pin 2; GND→Pin 6. Never feed 5V into GPIO"
+          }
+        ],
+        "arduinoWiring": [
+          {
+            "pin": "Pinout",
+            "conn": "See individual module details"
+          }
+        ],
+        "stm32Wiring": [
+          {
+            "pin": "Pinout",
+            "conn": "See individual module details"
+          }
+        ],
+        "codeSnippet": "// 37-in-1 Sensor Library Collection"
+      }
+    }
+  },
+  {
+    "id": "mod-92",
+    "number": "92/93",
+    "name": "Raspberry Pi AI Camera",
+    "category": "sensors",
+    "tags": [
+      "RaspberryPi",
+      "AI",
+      "IMX500",
+      "Camera",
+      "NPU"
+    ],
+    "images": [
+      "assets/inventory/092_RaspberryPi_AI_Camera.jpg",
+      "assets/inventory/093_RaspberryPi_AI_Camera_Info_Card.jpg"
+    ],
+    "i18n": {
+      "en": {
+        "title": "Raspberry Pi AI Camera",
+        "desc": "Official Raspberry Pi AI camera with an integrated Sony IMX500 intelligent vision sensor and on-sensor NPU. Neural network models run directly on the camera hardware, offloading computation from the host CPU for real-time object detection.",
+        "specs": [
+          {
+            "label": "Sensor",
+            "val": "Sony IMX500 Intelligent Vision Sensor (12MP, 1/2.3\")"
+          },
+          {
+            "label": "Field of View",
+            "val": "76°"
+          },
+          {
+            "label": "Focus",
+            "val": "Manually adjustable"
+          },
+          {
+            "label": "AI Accelerator",
+            "val": "Onboard NPU (in-sensor)"
+          },
+          {
+            "label": "Preloaded Model",
+            "val": "MobileNet SSD object detection"
+          },
+          {
+            "label": "Accessories",
+            "val": "200mm FPC cables ×2"
+          }
+        ],
+        "raspberryPiWiring": [
+          {
+            "pin": "CSI cable",
+            "conn": "Connect to the Raspberry Pi 5 CSI (CAM/DISP) connector via the 200mm FPC cable"
+          },
+          {
+            "pin": "Software",
+            "conn": "Drive with rpicam-apps or Picamera2 (rpicam-hello / rpicam-detect)"
+          }
+        ],
+        "arduinoWiring": [],
+        "stm32Wiring": [],
+        "codeSnippet": "# Raspberry Pi AI Camera object detection (rpicam-apps)\nrpicam-hello -t 0\n# or use the preloaded MobileNet SSD model\nrpicam-detect -t 0 --model mobilenet_ssd_v2"
+      }
+    }
+  },
+  {
+    "id": "mod-93",
+    "number": "94",
+    "name": "Waveshare 4010 5V Cooling Fan",
+    "category": "power",
+    "tags": [
+      "RaspberryPi",
+      "Cooling",
+      "Fan",
+      "5V"
+    ],
+    "images": [
+      "assets/inventory/094_Waveshare_4010_5V_Cooling_Fan.jpg"
+    ],
+    "i18n": {
+      "en": {
+        "title": "Waveshare 4010 5V Cooling Fan",
+        "desc": "40×40×10mm 5V cooling fan (Waveshare) for the Raspberry Pi 5. Keeps the CPU cool under sustained load; pair with a heatsink for best results.",
+        "specs": [
+          {
+            "label": "Size",
+            "val": "40 × 40 × 10 mm"
+          },
+          {
+            "label": "Voltage",
+            "val": "DC 5V"
+          },
+          {
+            "label": "Compatibility",
+            "val": "Raspberry Pi 5 (with heatsink mounting)"
+          }
+        ],
+        "raspberryPiWiring": [
+          {
+            "pin": "Fan header",
+            "conn": "Plug into the Raspberry Pi 5 onboard 4-pin fan header (PWM speed control)"
+          },
+          {
+            "pin": "GPIO wiring",
+            "conn": "Red to Pin 4 (5V), black to Pin 6 (GND)"
+          }
+        ],
+        "arduinoWiring": [],
+        "stm32Wiring": [],
+        "codeSnippet": "// Pure cooling hardware, no code needed"
+      }
+    }
+  },
+  {
+    "id": "mod-94",
+    "number": "95/96/97",
+    "name": "NVIDIA Jetson Nano 2GB Developer Kit",
+    "category": "controllers",
+    "tags": [
+      "NVIDIA",
+      "Jetson",
+      "AI",
+      "Embedded",
+      "GPU"
+    ],
+    "images": [
+      "assets/inventory/095_Jetson_Nano_2GB_Carrier_Board_P3541_Front_Back.jpg",
+      "assets/inventory/096_Jetson_Nano_2GB_Developer_Kit_Info_Card.jpg",
+      "assets/inventory/097_Jetson_Nano_2GB_Carrier_Board_P3541_Front.jpg"
+    ],
+    "i18n": {
+      "en": {
+        "title": "NVIDIA Jetson Nano 2GB Developer Kit",
+        "desc": "NVIDIA's entry-level AI edge-computing developer kit, built around the Jetson Nano 2GB module (carrier board P3541). A 128-core Maxwell GPU and quad-core Arm Cortex-A57 CPU run machine-learning inference directly on the device.",
+        "specs": [
+          {
+            "label": "CPU/GPU",
+            "val": "Quad-core Arm Cortex-A57 + 128-core NVIDIA Maxwell GPU"
+          },
+          {
+            "label": "Memory",
+            "val": "2GB LPDDR4"
+          },
+          {
+            "label": "Storage",
+            "val": "microSD slot (required to boot)"
+          },
+          {
+            "label": "Power",
+            "val": "USB-C 5V / 3A"
+          },
+          {
+            "label": "I/O",
+            "val": "40-pin GPIO, MIPI CSI-2, Gigabit Ethernet, HDMI, USB 3.1 / 2.0"
+          }
+        ],
+        "raspberryPiWiring": [
+          {
+            "pin": "UART",
+            "conn": "Communicate with Raspberry Pi 5 over UART (share GND; Jetson uses 3.3V logic)"
+          },
+          {
+            "pin": "GPIO",
+            "conn": "Exchange digital signals with the Pi via the 40-pin header (3.3V levels)"
+          }
+        ],
+        "arduinoWiring": [],
+        "stm32Wiring": [],
+        "codeSnippet": "# Common Jetson inference example (TensorRT / jetson-inference)\n# Real-time object detection:\n#   detectnet --network=ssd-mobilenet-v2 csi://0"
+      }
+    }
+  },
+  {
+    "id": "mod-97",
+    "number": "98/99",
+    "name": "NVIDIA Jetson Nano Developer Kit (4GB)",
+    "category": "controllers",
+    "tags": [
+      "NVIDIA",
+      "Jetson",
+      "AI",
+      "Embedded",
+      "GPU"
+    ],
+    "images": [
+      "assets/inventory/099_Jetson_Nano_Carrier_Board_P3450_Front.jpg",
+      "assets/inventory/098_Jetson_Nano_Developer_Kit_Info_Card.jpg"
+    ],
+    "i18n": {
+      "en": {
+        "title": "NVIDIA Jetson Nano Developer Kit (4GB)",
+        "desc": "The original NVIDIA Jetson Nano Developer Kit (carrier board P3450) with 4GB LPDDR4 memory, powered via Micro-USB 5V/2A. Offers 4K display output and four USB 3.0 ports for AI edge-computing and robotics development.",
+        "specs": [
+          {
+            "label": "CPU/GPU",
+            "val": "Quad-core Arm Cortex-A57 + 128-core NVIDIA Maxwell GPU"
+          },
+          {
+            "label": "Memory",
+            "val": "4GB LPDDR4"
+          },
+          {
+            "label": "Power",
+            "val": "Micro-USB 5V / 2A or DC Jack 5V"
+          },
+          {
+            "label": "Display",
+            "val": "4K-capable HDMI + DisplayPort"
+          },
+          {
+            "label": "I/O",
+            "val": "4x USB 3.0, Gigabit Ethernet, 40-pin GPIO, MIPI-CSI"
+          }
+        ],
+        "raspberryPiWiring": [
+          {
+            "pin": "UART",
+            "conn": "Communicate with Raspberry Pi 5 over UART (share GND; Jetson uses 3.3V logic)"
+          },
+          {
+            "pin": "GPIO",
+            "conn": "Exchange digital signals with the Pi via the 40-pin header (3.3V levels)"
+          }
+        ],
+        "arduinoWiring": [],
+        "stm32Wiring": [],
+        "codeSnippet": "# Common Jetson inference example (TensorRT / jetson-inference)\n# Real-time object detection:\n#   detectnet --network=ssd-mobilenet-v2 csi://0"
+      }
+    }
+  },
+  {
+    "id": "mod-99",
+    "number": "100",
+    "name": "Camera Module with FPC Cable",
+    "category": "sensors",
+    "tags": [
+      "Camera",
+      "FPC",
+      "Vision"
+    ],
+    "images": [
+      "assets/inventory/100_Camera_Module_With_FPC_Cable.jpg"
+    ],
+    "i18n": {
+      "en": {
+        "title": "Camera Module with FPC Cable",
+        "desc": "Generic camera module supplied with an FPC cable. Onboard silkscreen shows SDA/SCL/INT (I2C control and interrupt) and a suspected FSYNC frame-sync signal. Model is unmarked — verify the sensor and pinout before use.",
+        "specs": [
+          {
+            "label": "Interface",
+            "val": "FPC cable (included)"
+          },
+          {
+            "label": "Control",
+            "val": "I2C (SDA / SCL) + INT interrupt"
+          },
+          {
+            "label": "Frame Sync",
+            "val": "Suspected FSYNC (to be verified)"
+          }
+        ],
+        "raspberryPiWiring": [
+          {
+            "pin": "FPC cable",
+            "conn": "Pinout unmarked — verify with a multimeter/datasheet before connecting"
+          },
+          {
+            "pin": "I2C control",
+            "conn": "If supported, SDA/SCL to Pi Pin 3 / Pin 5, INT to any GPIO (3.3V logic)"
+          }
+        ],
+        "arduinoWiring": [],
+        "stm32Wiring": [],
+        "codeSnippet": "// Model TBD — no example yet"
+      }
+    }
+  },
+  {
+    "id": "mod-100",
+    "number": "101",
+    "name": "Yahboom Line Tracking Track (Folding Map)",
+    "category": "sensors",
+    "tags": [
+      "Yahboom",
+      "LineTracking",
+      "Track"
+    ],
+    "images": [
+      "assets/inventory/101_Yahboom_Line_Tracking_Track_Instructions.jpg"
+    ],
+    "i18n": {
+      "en": {
+        "title": "Yahboom Line Tracking Track (Folding Map)",
+        "desc": "Folding track map included with the Yahboom line-tracking car. Printed play instructions: lay it flat and trace every path; fold it to expose only the circular loop; or place obstacles near the start zone and drive around them.",
+        "specs": [
+          {
+            "label": "Play 1",
+            "val": "Lay flat, trace all paths from the start zone"
+          },
+          {
+            "label": "Play 2",
+            "val": "Fold to expose only the left circular path"
+          },
+          {
+            "label": "Play 3",
+            "val": "Place obstacles on the horizontal path, drive around and rejoin the route"
+          }
+        ],
+        "raspberryPiWiring": [
+          {
+            "pin": "N/A",
+            "conn": "Pure accessory (folding map) for use with line-tracking sensors/cars"
+          }
+        ],
+        "arduinoWiring": [],
+        "stm32Wiring": [],
+        "codeSnippet": "// Pure accessory, no code needed"
+      }
+    }
+  },
+  {
+    "id": "mod-80",
+    "number": "80",
+    "name": "Jetson Nano Interface Adapter",
+    "category": "power",
+    "tags": [
+      "NVIDIA",
+      "Jetson",
+      "Adapter",
+      "GPIO"
+    ],
+    "images": [
+      "assets/inventory/080_Jetson_Nano_Interface_Adapter.jpg"
+    ],
+    "i18n": {
+      "en": {
+        "title": "Jetson Nano Interface Adapter",
+        "desc": "Interface adapter board for the NVIDIA Jetson Nano, used to break out or convert the Jetson carrier board's headers/ports for external sensors and peripherals. Only the model name is printed; consult vendor documentation for the exact pinout.",
+        "specs": [
+          {
+            "label": "Compatibility",
+            "val": "NVIDIA Jetson Nano family"
+          },
+          {
+            "label": "Interface",
+            "val": "Breaks out Jetson 40-pin GPIO / peripherals (verify against the board)"
+          }
+        ],
+        "raspberryPiWiring": [
+          {
+            "pin": "N/A",
+            "conn": "A Jetson accessory, not wired to the Raspberry Pi; use UART/GPIO with 3.3V logic for Pi interop"
+          }
+        ],
+        "arduinoWiring": [],
+        "stm32Wiring": [],
+        "codeSnippet": "// Pure hardware adapter, no code needed"
+      }
+    }
+  },
+  {
+    "id": "mod-81",
+    "number": "81",
+    "name": "Waveshare Jetson Nano MicroSD Adapter",
+    "category": "power",
+    "tags": [
+      "NVIDIA",
+      "Jetson",
+      "Waveshare",
+      "MicroSD",
+      "Adapter"
+    ],
+    "images": [
+      "assets/inventory/081_Waveshare_Jetson_Nano_MicroSD_Adapter.jpg"
+    ],
+    "i18n": {
+      "en": {
+        "title": "Waveshare Jetson Nano MicroSD Adapter",
+        "desc": "MicroSD card adapter for the NVIDIA Jetson Nano from Waveshare, used to extend or convert the Jetson Nano's MicroSD storage interface.",
+        "specs": [
+          {
+            "label": "Brand",
+            "val": "Waveshare"
+          },
+          {
+            "label": "Compatibility",
+            "val": "NVIDIA Jetson Nano (MicroSD interface)"
+          }
+        ],
+        "raspberryPiWiring": [
+          {
+            "pin": "N/A",
+            "conn": "A Jetson accessory, not wired to the Raspberry Pi"
+          }
+        ],
+        "arduinoWiring": [],
+        "stm32Wiring": [],
+        "codeSnippet": "// Pure hardware adapter, no code needed"
+      }
+    }
+  },
+  {
+    "id": "mod-102",
+    "number": "102",
+    "name": "Raspberry Pi Pico W (Wireless WiFi)",
+    "category": "controllers",
+    "tags": [
+      "RaspberryPi",
+      "Pico",
+      "RP2040",
+      "WiFi",
+      "MCU"
+    ],
+    "images": [
+      "assets/inventory/102_RaspberryPi_Pico_SC0918_W_Wireless_Wifi_MCU.jpg"
+    ],
+    "i18n": {
+      "en": {
+        "title": "Raspberry Pi Pico W (Wireless WiFi)",
+        "desc": "Microcontroller board based on the RP2040 dual-core Arm Cortex-M0+, with an onboard Infineon CYW43439 wireless chip (2.4GHz Wi-Fi 4 and Bluetooth 5.2). Programmable with MicroPython or the C/C++ SDK — ideal for wireless sensing, robotics, and IoT (SKU SC0918).",
+        "specs": [
+          {
+            "label": "MCU",
+            "val": "RP2040 (Dual-core Arm Cortex-M0+, 133MHz)"
+          },
+          {
+            "label": "Memory",
+            "val": "264KB SRAM, 2MB onboard Flash"
+          },
+          {
+            "label": "Wireless",
+            "val": "Infineon CYW43439 (Wi-Fi 4 802.11n / Bluetooth 5.2)"
+          },
+          {
+            "label": "GPIO",
+            "val": "26 digital GPIO (3.3V logic, incl. ADC/UART/SPI/I2C)"
+          },
+          {
+            "label": "Power & Flashing",
+            "val": "Micro-USB 5V (BOOTSEL drag-and-drop flashing)"
+          }
+        ],
+        "raspberryPiWiring": [
+          {
+            "pin": "USB",
+            "conn": "Connect to Raspberry Pi 5 USB-A for power and REPL/serial communication"
+          },
+          {
+            "pin": "UART",
+            "conn": "GPIO 0 (TX) / GPIO 1 (RX) to Pi Pin 8 / Pin 10 (3.3V, do not feed 5V)"
+          },
+          {
+            "pin": "I2C",
+            "conn": "GPIO 4 (SDA) / GPIO 5 (SCL) to Pi Pin 3 / Pin 5 for shared sensor bus"
+          }
+        ],
+        "arduinoWiring": [
+          {
+            "pin": "UART",
+            "conn": "Talk to an Arduino over USB-Serial"
+          }
+        ],
+        "stm32Wiring": [
+          {
+            "pin": "UART",
+            "conn": "GPIO 0/1 to STM32 USART with TX/RX crossed (shared GND)"
+          }
+        ],
+        "codeSnippet": "# Raspberry Pi Pico W - MicroPython WiFi scan\nimport network\nwlan = network.WLAN(network.STA_IF)\nwlan.active(True)\nprint(wlan.scan())  # scan nearby WiFi"
+      }
+    }
+  },
+  {
+    "id": "mod-103",
+    "number": "103",
+    "name": "YourFun NeZha Motor & Servo Controller Board",
+    "category": "motion",
+    "tags": [
+      "NeZha",
+      "STM32",
+      "I2C",
+      "MotorDriver",
+      "ServoDriver",
+      "PWM"
+    ],
+    "images": [
+      "assets/inventory/103_YourFun_NeZha_Breakout_Driver_Board.jpg"
+    ],
+    "i18n": {
+      "en": {
+        "title": "YourFun NeZha Motor & Servo Controller Board",
+        "desc": "I2C bus motor and servo driver board designed for smart cars and robotic arms. Features on-board MCU, 4 DC motor channels (M1-M4), 4 servo PWM ports (S1-S4), and 4 RGB LEDs controlled over I2C (default address 0x40).",
+        "specs": [
+          {
+            "label": "Controller & Interface",
+            "val": "I2C Bus (Default Linux 7-bit address 0x40)"
+          },
+          {
+            "label": "Motor Outputs",
+            "val": "4 DC Motor Channels (M1, M2, M3, M4)"
+          },
+          {
+            "label": "Servo Outputs",
+            "val": "4 Servo PWM Ports (S1, S2, S3, S4)"
+          },
+          {
+            "label": "On-board Lighting",
+            "val": "4 Full-color RGB LEDs (LED1-LED4)"
+          },
+          {
+            "label": "Operating Voltage",
+            "val": "DC 6V ~ 12V Screw Terminal Input"
+          }
+        ],
+        "codeSnippet": "# Python example: Control NeZha board over I2C (0x40)\nfrom carbot.nezha import NeZhaBoard\n\nnezha = NeZhaBoard(bus=1, address=0x40)\nnezha.set_motor(1, 50)   # Set M1 DC motor to 50% speed\nnezha.set_servo(1, 90)   # Set S1 servo angle to 90°",
+        "raspberryPiWiring": [
+          {
+            "pin": "VCC / Power Input",
+            "conn": "Connect 11.1V battery (DC 6V-12V) to blue terminal block"
+          },
+          {
+            "pin": "G (GND)",
+            "conn": "Raspberry Pi 5 Pin 6 (GND) — Common ground"
+          },
+          {
+            "pin": "SDA",
+            "conn": "Raspberry Pi 5 Pin 3 (GPIO 2 / SDA)"
+          },
+          {
+            "pin": "SCL",
+            "conn": "Raspberry Pi 5 Pin 5 (GPIO 3 / SCL)"
+          },
+          {
+            "pin": "5V",
+            "conn": "⚠️ Do NOT connect NeZha 5V pin to Pi GPIO 5V when board is battery powered (avoids dual power conflict)"
+          }
+        ],
+        "arduinoWiring": [
+          {
+            "pin": "SDA",
+            "conn": "Arduino A4 / SDA"
+          },
+          {
+            "pin": "SCL",
+            "conn": "Arduino A5 / SCL"
+          },
+          {
+            "pin": "GND",
+            "conn": "Arduino GND"
+          }
+        ],
+        "stm32Wiring": [
+          {
+            "pin": "SDA",
+            "conn": "STM32 PB7 (I2C1_SDA)"
+          },
+          {
+            "pin": "SCL",
+            "conn": "STM32 PB6 (I2C1_SCL)"
+          },
+          {
+            "pin": "GND",
+            "conn": "STM32 GND"
+          }
+        ]
+      }
+    }
+  }
+]
