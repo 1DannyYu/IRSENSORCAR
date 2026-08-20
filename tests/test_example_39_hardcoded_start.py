@@ -182,6 +182,14 @@ def test_phase3_completion_requires_turn_before_centred_exit_confirmation() -> N
     assert gate.update((0, 1, 1, 0), "on_line", "follow", 0.4) == "phase4"
 
 
+def test_phase3_default_exit_gate_accepts_the_observed_half_second_p0110_window() -> None:
+    gate = PHASE3_COMPLETION_GATE()
+    gate.update((1, 0, 0, 0), "drift", "follow", 0.1)
+    for _ in range(4):
+        assert gate.update((0, 1, 1, 0), "on_line", "follow", 0.1) is None
+    assert gate.update((0, 1, 1, 0), "on_line", "follow", 0.1) == "phase4"
+
+
 def test_phase3_completion_requires_stable_phase4_following() -> None:
     gate = PHASE3_COMPLETION_GATE(exit_confirm_s=0.1, phase4_proof_s=2.0)
     gate.update((0, 1, 0, 0), "drift", "follow", 0.1)

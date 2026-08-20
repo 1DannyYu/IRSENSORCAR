@@ -350,7 +350,7 @@ stop. Logs print `pc=disabled` so this behavior cannot be confused with an older
 
 The intended test envelope was then clarified as Phase 2 tail -> all of Phase 3 -> the opening of
 Phase 4, not "hold left until 20 seconds." Phase 3 now requires real left-curve evidence after its
-lead-in, then 0.8s of continuous centred `P0110` before switching from the left-only ARC policy to
+lead-in, then 0.5s of continuous centred `P0110` before switching from the left-only ARC policy to
 ordinary unrestricted Phase 4 line following. It must then accumulate 2.0s of valid ON_LINE/DRIFT
 FOLLOW; SEARCH, REVERSE, or a non-localising reading resets that proof interval. Completion sends
 an explicit zero-wheel STOPPED command. The 20-second duration remains the ceiling for the entire
@@ -394,7 +394,7 @@ Phase 3 transition test. The required test envelope is now explicit:
 1. place the car at any stable `P0110` point on the Phase 2 eastbound straight, heading east;
 2. follow Phase 2 normally and detect the real ARC 1 entry;
 3. run the left-only Phase 3 controller without a command-distance stop;
-4. after observed left-curve evidence, require 0.8s of centred `P0110` to enter Phase 4;
+4. after observed left-curve evidence, require 0.5s of centred `P0110` to enter Phase 4;
 5. follow Phase 4 normally for 2.0s of uninterrupted ON_LINE/DRIFT evidence, then stop;
 6. treat the 20-second whole-test timeout as failure, not completion.
 
@@ -423,9 +423,25 @@ that recreates root commits; otherwise it can again make ordinary fast-forward p
 Next-session motor test command (operator beside the car and ready to cut power):
 
 ```bash
-ssh -t carpi 'cd ~/Car-and-Robotic-Arm && mkdir -p scratch/ir-sensor-tracking && LOG="scratch/ir-sensor-tracking/$(date +%Y-%m-%d-%H%M%S)-phase02-03-04-transition-20s.log" && echo "COMMIT=$(git rev-parse --short HEAD) LOG=$LOG" && PYTHONPATH=src python3 -u examples/40_map1_ir_phase_test.py --phase 3 --duration 20 --start-acquire-timeout-s 5 --phase3-lead-in-timeout-s 5 --phase3-exit-confirm-s 0.8 --phase4-proof-s 2 --heartbeat-s 0.5 --log-every --log-min-interval-s 0.1 --speed 150 2>&1 | tee "$LOG"'
+ssh -t carpi 'cd ~/Car-and-Robotic-Arm && mkdir -p scratch/ir-sensor-tracking && LOG="scratch/ir-sensor-tracking/$(date +%Y-%m-%d-%H%M%S)-phase02-03-04-transition-20s.log" && echo "COMMIT=$(git rev-parse --short HEAD) LOG=$LOG" && PYTHONPATH=src python3 -u examples/40_map1_ir_phase_test.py --phase 3 --duration 20 --start-acquire-timeout-s 5 --phase3-lead-in-timeout-s 5 --phase3-exit-confirm-s 0.5 --phase4-proof-s 2 --heartbeat-s 0.5 --log-every --log-min-interval-s 0.1 --speed 150 2>&1 | tee "$LOG"'
 ```
 
 A passing log must contain `Phase 3 ARC 1 detected`,
 `Phase 3 ARC 1 sensor exit confirmed -> Phase 4 North straight`, and
 `Phase 4 proof complete`. `Duration limit reached (20.0s)` is a failed/incomplete test.
+
+### 07:26 transition-test failure after closeout
+
+The operator ran the prepared test once more and reported that the chassis left the map. Log
+`scratch/ir-sensor-tracking/2026-08-21-072629-phase02-03-04-transition-20s.log` proves that the
+lead-in was correct: it detected `P0100 -> P0000 -> P1000` after 2.11s. During ARC control, left
+evidence was followed by centred `P0110` from approximately 3.5s through 4.0s. That roughly 0.6s
+window was physically sufficient to reach the ARC exit, but the 0.8s confirmation gate did not
+open. From 4.1s the line progressed rightward through `P0111 -> P0011 -> P0001`; LEFT ONLY rejected
+all of it and continued a left command until the chassis reached carpet `P1111` at 6.0s. The run
+timed out with `mode=arc`, three reverse replays, and 55.3% noise/hold frames.
+
+The Phase 3 exit confirmation is now 0.5s, so the observed centred window switches to ordinary
+Phase 4 control before the rightward departure. This calibration is software-tested but has not
+yet been physically verified; do not treat it as a passed route segment until the next log reaches
+`Phase 4 proof complete` on the black line.

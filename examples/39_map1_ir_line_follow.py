@@ -192,7 +192,7 @@ def phase3_lead_in_transition(
 class Phase3CompletionGate:
     """Sensor-event completion gate for ARC 1 followed by a short Phase 4 proof."""
 
-    exit_confirm_s: float = 0.8
+    exit_confirm_s: float = 0.5
     phase4_proof_s: float = 2.0
     mode: str = "arc"
     arc_turn_observed: bool = False
@@ -450,9 +450,9 @@ def main() -> int:
     parser.add_argument(
         "--phase3-exit-confirm-s",
         type=float,
-        default=0.8,
+        default=0.5,
         help="stable centred P0110 required after observed ARC turning before switching to "
-        "Phase 4 straight control (default 0.8s)",
+        "Phase 4 straight control (default 0.5s, calibrated from the 07:26 hardware run)",
     )
     parser.add_argument(
         "--phase4-proof-s",

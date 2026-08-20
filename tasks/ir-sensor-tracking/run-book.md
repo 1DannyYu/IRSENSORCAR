@@ -131,7 +131,7 @@ ARC 尚未走完時提前停車；LOG 會顯示 `pc=disabled`。Phase 5/7 的距
 取消，必須等各自實測後再決定。
 
 完整 Phase 3 測試的成功流程是 Phase 2 後段 → Phase 3 全段 → Phase 4 前段。ARC 控制內
-必須先看到真實左彎訊號，再連續看到 0.8 秒 `P0110` 才切回 Phase 4 普通循線；Phase 4
+必須先看到真實左彎訊號，再連續看到 0.5 秒 `P0110` 才切回 Phase 4 普通循線；Phase 4
 必須再有 2 秒有效 ON_LINE/DRIFT 才自動停車。SEARCH、REVERSE 或非定位訊號會讓這 2 秒
 重新計算。20 秒包含起始 acquisition 與 lead-in，只是安全 timeout；跑到 timeout 不算
 通過。
