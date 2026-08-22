@@ -39,7 +39,6 @@ Car-and-Robotic-Arm/
 │   ├── adr/               Architecture decision records (why, not just what)
 │   ├── progress/          Dated logs of completed, verified work
 │   ├── reflections/       Project reflection and engineering-role write-ups
-│   ├── Mechatronics Folio and Journal/   School assessment materials
 │   └── project-reference.md   Full technical/operator reference
 ├── src/carbot/            The importable Python driver and control package
 ├── examples/              Runnable, numbered scripts that exercise real hardware
@@ -56,7 +55,6 @@ See [CONVENTIONS.md](CONVENTIONS.md) for the full layout and naming rules.
 
 This repository is also the submission for an 11 Software Engineering assessment.
 
-- [docs/Mechatronics Folio and Journal/](docs/Mechatronics%20Folio%20and%20Journal/) — the assessment folio and task notification
 - [docs/reflections/](docs/reflections/) — engineering-role and project-roadmap reflections
 - [docs/progress/](docs/progress/) — dated, verified evidence of work as it happened, in order
 - [docs/adr/](docs/adr/) — the significant design decisions and the reasoning behind them
