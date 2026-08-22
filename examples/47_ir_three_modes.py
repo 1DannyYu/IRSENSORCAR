@@ -4,9 +4,9 @@
 Modes:
   auto-tracing       Follow the 16-state table; motion is forward or left correction only.
   phase1-to-phase2   Drive forward 17 cm, spin right 90 degrees, then auto-trace Phase 2.
-  circle             Auto-trace for the first 22 seconds; P1110 then triggers one right turn
-                     into the roundabout and auto-tracing continues.
-  chained             Phase 1 -> Phase 2 -> auto-tracing -> circle entry at 22 seconds total.
+  circle             Enter at 22 seconds on P1110, auto-trace inside, then exit on the verified
+                     P0111 -> P0101 -> P0100 -> P0110 sequence.
+  chained             Phase 1 -> Phase 2 -> auto-tracing -> split circle mode.
 
 Motor-moving. The operator must stand beside the car, secure the chassis or lift the wheels,
 and be able to cut power instantly.
@@ -21,10 +21,10 @@ from carbot.ir_geometry import Kind
 from carbot.ir_line_nav import detect_ir_line
 from carbot.ir_modes import (
     CIRCLE_MODE_START_S,
+    CircleModeState,
     DriveMode,
     ModeCommand,
     auto_tracing_command,
-    circle_triggered,
     phase1_to_phase2_timing,
 )
 
@@ -46,8 +46,8 @@ def main() -> int:
         print(f"Phase 1: forward 17 cm for {forward_s:.2f}s, then right 90 degrees for {turn_s:.2f}s")
     if mode in (DriveMode.CIRCLE, DriveMode.CHAINED):
         print(
-            f"Circle mode: auto-trace until {CIRCLE_MODE_START_S:.0f}s, "
-            "then P1110 triggers one right turn"
+            f"Circle mode: P1110 entry after {CIRCLE_MODE_START_S:.0f}s, "
+            "auto-trace inside, then exit on P0111 -> P0101 -> P0100 -> P0110"
         )
 
     if not args.dry_run and input(
@@ -82,7 +82,7 @@ def main() -> int:
         last = started
         previous_command: ModeCommand | None = None
         previous_localising = None
-        entered = False
+        circle_state = CircleModeState()
         while time.monotonic() - started < args.duration:
             now = time.monotonic()
             elapsed = now - started
@@ -90,11 +90,21 @@ def main() -> int:
             if reading.state.kind in (Kind.ON_LINE, Kind.DRIFT):
                 previous_localising = reading.physical
 
-            if mode in (DriveMode.CIRCLE, DriveMode.CHAINED) and circle_triggered(
-                elapsed_s=elapsed, bits=reading.physical, entered=entered
-            ):
-                entered = True
-                print(f"{elapsed:.1f}s: P1110 detected; turning right into roundabout", flush=True)
+            circle_event = None
+            if mode in (DriveMode.CIRCLE, DriveMode.CHAINED):
+                circle_event = circle_state.observe(elapsed_s=elapsed, bits=reading.physical)
+            if circle_event == "enter":
+                print(f"{elapsed:.1f}s: P1110 detected; entering roundabout", flush=True)
+                if car:
+                    car.move_for(turn_s, args.speed, -args.speed)
+                previous_command = None
+                last = time.monotonic()
+                continue
+            if circle_event == "exit":
+                print(
+                    f"{elapsed:.1f}s: roundabout exit sequence confirmed; turning right to exit",
+                    flush=True,
+                )
                 if car:
                     car.move_for(turn_s, args.speed, -args.speed)
                 previous_command = None

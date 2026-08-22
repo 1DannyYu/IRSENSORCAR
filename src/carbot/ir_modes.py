@@ -9,6 +9,12 @@ from carbot.ir_geometry import IRState, Kind, resolve_blind, wheel_speeds
 
 LEFT_CORRECTION_RATIO_SCALE = 0.0
 CIRCLE_MODE_START_S = 22.0
+ROUNDABOUT_EXIT_SEQUENCE = (
+    (0, 1, 1, 1),
+    (0, 1, 0, 1),
+    (0, 1, 0, 0),
+    (0, 1, 1, 0),
+)
 
 
 class DriveMode(str, Enum):
@@ -16,6 +22,44 @@ class DriveMode(str, Enum):
     PHASE1_TO_PHASE2 = "phase1-to-phase2"
     CIRCLE = "circle"
     CHAINED = "chained"
+
+
+class CirclePhase(str, Enum):
+    WAITING = "waiting-for-entry"
+    INSIDE = "inside-roundabout"
+    EXITED = "exited-roundabout"
+
+
+@dataclass
+class CircleModeState:
+    phase: CirclePhase = CirclePhase.WAITING
+    exit_sequence_index: int = 0
+
+    def observe(self, *, elapsed_s: float, bits: tuple[int, int, int, int]) -> str | None:
+        """Return ``enter`` or ``exit`` on the confirmed custom-mode transitions."""
+        if self.phase is CirclePhase.WAITING:
+            if elapsed_s >= CIRCLE_MODE_START_S and bits == (1, 1, 1, 0):
+                self.phase = CirclePhase.INSIDE
+                self.exit_sequence_index = 0
+                return "enter"
+            return None
+
+        if self.phase is CirclePhase.EXITED:
+            return None
+
+        expected = ROUNDABOUT_EXIT_SEQUENCE[self.exit_sequence_index]
+        if bits == expected:
+            self.exit_sequence_index += 1
+            if self.exit_sequence_index == len(ROUNDABOUT_EXIT_SEQUENCE):
+                self.phase = CirclePhase.EXITED
+                return "exit"
+            return None
+
+        if bits == ROUNDABOUT_EXIT_SEQUENCE[0]:
+            self.exit_sequence_index = 1
+        elif bits != expected:
+            self.exit_sequence_index = 0
+        return None
 
 
 @dataclass(frozen=True)

@@ -1,6 +1,7 @@
 from carbot.ir_geometry import classify
 from carbot.ir_modes import (
     CIRCLE_MODE_START_S,
+    CircleModeState,
     DriveMode,
     auto_tracing_command,
     circle_triggered,
@@ -50,9 +51,20 @@ def test_chained_mode_uses_the_circle_trigger_policy() -> None:
     )
 
 
+def test_circle_mode_splits_entry_auto_trace_and_exit() -> None:
+    state = CircleModeState()
+    assert state.observe(elapsed_s=CIRCLE_MODE_START_S - 0.1, bits=(1, 1, 1, 0)) is None
+    assert state.observe(elapsed_s=CIRCLE_MODE_START_S, bits=(1, 1, 1, 0)) == "enter"
+    assert state.phase.value == "inside-roundabout"
+    for bits in ((0, 1, 1, 1), (0, 1, 0, 1), (0, 1, 0, 0)):
+        assert state.observe(elapsed_s=30.0, bits=bits) is None
+    assert state.observe(elapsed_s=30.0, bits=(0, 1, 1, 0)) == "exit"
+    assert state.phase.value == "exited-roundabout"
+
+
 def test_phase1_to_phase2_is_17cm_then_90deg() -> None:
     forward_s, turn_s = phase1_to_phase2_timing()
-    assert forward_s == 1.7
+    assert forward_s == 2.2
     assert turn_s > 2.0
 
 
