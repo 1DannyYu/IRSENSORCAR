@@ -1,7 +1,7 @@
 from pathlib import Path
 from runpy import run_path
 
-SCRIPT = Path(__file__).parents[1] / "examples" / "46_map1_ir_transition_drive.py"
+SCRIPT = Path(__file__).parents[2] / "examples" / "46_map1_ir_transition_drive.py"
 NAMESPACE = run_path(str(SCRIPT))
 EXAMPLE39_ARGUMENTS = NAMESPACE["example39_arguments"]
 

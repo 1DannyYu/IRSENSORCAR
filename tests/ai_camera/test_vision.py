@@ -28,7 +28,7 @@ from carbot.vision import (
     wall_tag_rotation_world_from_tag,
 )
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 CALIBRATION_PATH = (
     ROOT / "assets/reference/camera-calibration/2026-08-14-imx500-4056x3040/calibration.json"
 )
