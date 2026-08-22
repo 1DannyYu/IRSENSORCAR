@@ -4,8 +4,8 @@ from carbot.ir_modes import (
     CircleModeState,
     DriveMode,
     auto_tracing_command,
-    circle_triggered,
     phase1_to_phase2_timing,
+    roundabout_entry_turn_s,
 )
 
 
@@ -35,26 +35,13 @@ def test_p1000_is_a_hard_left_pivot() -> None:
     assert (command.left, command.right) == (-150, 150)
 
 
-def test_circle_trigger_is_delayed_and_one_shot() -> None:
-    assert not circle_triggered(
-        elapsed_s=CIRCLE_MODE_START_S - 0.1, bits=(1, 1, 1, 0), entered=False
-    )
-    assert circle_triggered(
-        elapsed_s=CIRCLE_MODE_START_S, bits=(1, 1, 1, 0), entered=False
-    )
-    assert not circle_triggered(elapsed_s=50.0, bits=(1, 1, 1, 0), entered=True)
-
-
-def test_chained_mode_uses_the_circle_trigger_policy() -> None:
-    assert circle_triggered(
-        elapsed_s=CIRCLE_MODE_START_S, bits=(1, 1, 1, 0), entered=False
-    )
-
-
 def test_circle_mode_splits_entry_auto_trace_and_exit() -> None:
     state = CircleModeState()
-    assert state.observe(elapsed_s=CIRCLE_MODE_START_S - 0.1, bits=(1, 1, 1, 0)) is None
-    assert state.observe(elapsed_s=CIRCLE_MODE_START_S, bits=(1, 1, 1, 0)) == "enter"
+    assert state.observe(elapsed_s=CIRCLE_MODE_START_S - 0.1, bits=(1, 1, 1, 1)) is None
+    assert state.observe(elapsed_s=CIRCLE_MODE_START_S, bits=(1, 1, 1, 0)) is None
+    assert state.observe(elapsed_s=CIRCLE_MODE_START_S, bits=(1, 1, 1, 1)) is None
+    assert state.observe(elapsed_s=CIRCLE_MODE_START_S, bits=(1, 0, 0, 1)) is None
+    assert state.observe(elapsed_s=CIRCLE_MODE_START_S, bits=(0, 0, 0, 0)) == "enter"
     assert state.phase.value == "inside-roundabout"
     for bits in ((0, 1, 1, 1), (0, 1, 0, 1), (0, 1, 0, 0)):
         assert state.observe(elapsed_s=30.0, bits=bits) is None
@@ -70,3 +57,8 @@ def test_phase1_to_phase2_is_17cm_then_90deg() -> None:
 
 def test_chained_mode_is_available() -> None:
     assert DriveMode.CHAINED.value == "chained"
+
+
+def test_roundabout_entry_turn_is_shorter_than_phase1_turn() -> None:
+    _, phase1_turn_s = phase1_to_phase2_timing()
+    assert 1.4 < roundabout_entry_turn_s() < phase1_turn_s

@@ -44,28 +44,30 @@ drift and right-side junction readings are treated as forward motion.
 
 ## 2. Enter roundabout mode
 
-Enter roundabout mode becomes eligible after 22 seconds in the chained run. The
-operator-requested `P1110` trigger causes one right turn into the roundabout. Before
-the trigger, all other readings use the auto-tracing action.
+Enter roundabout mode becomes eligible after 22 seconds in the chained run. It then
+requires the ordered entry sequence `P1111 -> P1001 -> P0000`. Only after that
+sequence is confirmed does the car turn right about 42.5 degrees into the
+roundabout. This prevents a pre-entry `P1110` left-curve reading from triggering an
+early 90-degree turn.
 
 | State | Canonical meaning | Enter roundabout action |
 |---|---|---|
-| `P0000` | Blind band or line lost | Resolve previous position; forward or left recovery |
+| `P0000` | Blind band or line lost | Entry sequence step 3 after `P1111 -> P1001`; confirm entry and turn right about 42.5 degrees |
 | `P0001` | Far right, outer sensor only | Forward; do not turn right |
 | `P0010` | Slight right drift | Forward; do not turn right |
 | `P0011` | Right pair / junction evidence | Forward; wait for the entry trigger |
 | `P0100` | Slight left drift | Strong left correction |
 | `P0101` | Non-contiguous noise | Hold/continue forward policy |
 | `P0110` | Centred on line | Forward |
-| `P0111` | Left branch / curve evidence | Strong left correction; not the entry trigger |
+| `P0111` | Left branch / curve evidence | Strong left correction; not an entry-sequence step |
 | `P1000` | Far left, outer sensor only | Hard left pivot |
-| `P1001` | Outer pair only / noise | Hold/continue forward policy |
+| `P1001` | Outer pair only / noise | Entry sequence step 2 after `P1111`; hold while tracking |
 | `P1010` | Non-contiguous noise | Hold/continue forward policy |
 | `P1011` | Non-contiguous noise | Hold/continue forward policy |
 | `P1100` | Left pair / junction evidence | Strong left correction |
 | `P1101` | Non-contiguous noise | Hold/continue forward policy |
-| `P1110` | Left branch / curve evidence | After 22s, turn right once to enter the roundabout |
-| `P1111` | Symmetric crossbar | Forward/hold; not the custom entry trigger |
+| `P1110` | Left branch / curve evidence | Strong left correction; never the entry trigger |
+| `P1111` | Symmetric crossbar | Entry sequence step 1 after 22s; begin entry tracking |
 
 ## 3. Exit roundabout mode
 
@@ -115,6 +117,6 @@ the movement during the hardcoded manoeuvre:
 - Hardware runner: [`examples/47_ir_three_modes.py`](../../examples/47_ir_three_modes.py)
 - Verified route sequences: [`2026-08-20-map1-junction-signal-sequences.md`](../progress/2026-08-20-map1-junction-signal-sequences.md)
 
-The verified historical route notes describe a separate physical roundabout-entry
-sequence (`P1111 -> P1001 -> P0000`). Example 47 currently uses the operator-requested
-custom `P1110` entry trigger after 22 seconds.
+Example 47 uses the verified physical roundabout-entry sequence
+`P1111 -> P1001 -> P0000` after 22 seconds. The entry turn is about 42.5 degrees;
+the 90-degree hardcoded turn belongs to Phase 1 -> Phase 2, not roundabout entry.

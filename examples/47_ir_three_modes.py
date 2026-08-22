@@ -4,8 +4,8 @@
 Modes:
   auto-tracing       Follow the 16-state table; motion is forward or left correction only.
   phase1-to-phase2   Drive forward 17 cm, spin right 90 degrees, then auto-trace Phase 2.
-  circle             Enter at 22 seconds on P1110, auto-trace inside, then exit on the verified
-                     P0111 -> P0101 -> P0100 -> P0110 sequence.
+  circle             After 22 seconds, confirm P1111 -> P1001 -> P0000, turn into the roundabout,
+                     auto-trace inside, then exit on the verified P0111 -> P0101 -> P0100 -> P0110.
   chained             Phase 1 -> Phase 2 -> auto-tracing -> split circle mode.
 
 Motor-moving. The operator must stand beside the car, secure the chassis or lift the wheels,
@@ -26,6 +26,7 @@ from carbot.ir_modes import (
     ModeCommand,
     auto_tracing_command,
     phase1_to_phase2_timing,
+    roundabout_entry_turn_s,
 )
 
 
@@ -41,13 +42,15 @@ def main() -> int:
 
     mode = DriveMode(args.mode)
     forward_s, turn_s = phase1_to_phase2_timing()
+    entry_turn_s = roundabout_entry_turn_s()
     print(f"Mode: {mode.value}; duration: {args.duration:.1f}s; speed: {args.speed}")
     if mode in (DriveMode.PHASE1_TO_PHASE2, DriveMode.CHAINED):
         print(f"Phase 1: forward 17 cm for {forward_s:.2f}s, then right 90 degrees for {turn_s:.2f}s")
     if mode in (DriveMode.CIRCLE, DriveMode.CHAINED):
         print(
-            f"Circle mode: P1110 entry after {CIRCLE_MODE_START_S:.0f}s, "
-            "auto-trace inside, then exit on P0111 -> P0101 -> P0100 -> P0110"
+            f"Circle mode: after {CIRCLE_MODE_START_S:.0f}s confirm "
+            "P1111 -> P1001 -> P0000, turn about 42.5 degrees, auto-trace inside, "
+            "then exit on P0111 -> P0101 -> P0100 -> P0110"
         )
 
     if not args.dry_run and input(
@@ -94,9 +97,13 @@ def main() -> int:
             if mode in (DriveMode.CIRCLE, DriveMode.CHAINED):
                 circle_event = circle_state.observe(elapsed_s=elapsed, bits=reading.physical)
             if circle_event == "enter":
-                print(f"{elapsed:.1f}s: P1110 detected; entering roundabout", flush=True)
+                print(
+                    f"{elapsed:.1f}s: P1111 -> P1001 -> P0000 confirmed; "
+                    "turning right into roundabout",
+                    flush=True,
+                )
                 if car:
-                    car.move_for(turn_s, args.speed, -args.speed)
+                    car.move_for(entry_turn_s, args.speed, -args.speed)
                 previous_command = None
                 last = time.monotonic()
                 continue

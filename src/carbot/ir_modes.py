@@ -9,6 +9,12 @@ from carbot.ir_geometry import IRState, Kind, resolve_blind, wheel_speeds
 
 LEFT_CORRECTION_RATIO_SCALE = 0.0
 CIRCLE_MODE_START_S = 22.0
+ROUNDABOUT_ENTRY_SEQUENCE = (
+    (1, 1, 1, 1),
+    (1, 0, 0, 1),
+    (0, 0, 0, 0),
+)
+ROUNDABOUT_ENTRY_TURN_DEG = 42.5
 ROUNDABOUT_EXIT_SEQUENCE = (
     (0, 1, 1, 1),
     (0, 1, 0, 1),
@@ -33,15 +39,26 @@ class CirclePhase(str, Enum):
 @dataclass
 class CircleModeState:
     phase: CirclePhase = CirclePhase.WAITING
+    entry_sequence_index: int = 0
     exit_sequence_index: int = 0
 
     def observe(self, *, elapsed_s: float, bits: tuple[int, int, int, int]) -> str | None:
         """Return ``enter`` or ``exit`` on the confirmed custom-mode transitions."""
         if self.phase is CirclePhase.WAITING:
-            if elapsed_s >= CIRCLE_MODE_START_S and bits == (1, 1, 1, 0):
+            if elapsed_s < CIRCLE_MODE_START_S:
+                return None
+            expected = ROUNDABOUT_ENTRY_SEQUENCE[self.entry_sequence_index]
+            if bits == expected:
+                self.entry_sequence_index += 1
+                if self.entry_sequence_index != len(ROUNDABOUT_ENTRY_SEQUENCE):
+                    return None
                 self.phase = CirclePhase.INSIDE
                 self.exit_sequence_index = 0
                 return "enter"
+            if bits == ROUNDABOUT_ENTRY_SEQUENCE[0]:
+                self.entry_sequence_index = 1
+            else:
+                self.entry_sequence_index = 0
             return None
 
         if self.phase is CirclePhase.EXITED:
@@ -111,13 +128,13 @@ def auto_tracing_command(
     return _forward(speed, "centred or right drift; forward-only policy")
 
 
-def circle_triggered(*, elapsed_s: float, bits: tuple[int, int, int, int], entered: bool) -> bool:
-    """Return true once circle mode is active and P1110 is seen for the first time."""
-    return elapsed_s >= CIRCLE_MODE_START_S and not entered and bits == (1, 1, 1, 0)
-
-
 def phase1_to_phase2_timing() -> tuple[float, float]:
     """Return calibrated seconds for 17 cm forward followed by a 90-degree right spin."""
     forward_s = 22.0 / 10.0
     turn_s = 0.41 + 90.0 / 39.7
     return forward_s, turn_s
+
+
+def roundabout_entry_turn_s() -> float:
+    """Return the calibrated open-loop time for the documented 42.5-degree entry turn."""
+    return 0.41 + ROUNDABOUT_ENTRY_TURN_DEG / 39.7
