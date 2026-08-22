@@ -7,7 +7,8 @@ from enum import Enum
 
 from carbot.ir_geometry import IRState, Kind, resolve_blind, wheel_speeds
 
-LEFT_CORRECTION_RATIO_SCALE = 0.60
+LEFT_CORRECTION_RATIO_SCALE = 0.0
+CIRCLE_MODE_START_S = 22.0
 
 
 class DriveMode(str, Enum):
@@ -58,13 +59,15 @@ def auto_tracing_command(
     if state.kind is Kind.NOISE:
         return _forward(speed, f"{state.label}; forward-only policy")
     if state.kind is Kind.JUNCTION:
+        if state.direction < 0:
+            return _left_from_state(state, speed, f"{state.label}; stronger left curve correction")
         return _forward(speed, f"{state.label}; no right turns in auto-tracing")
     return _forward(speed, "centred or right drift; forward-only policy")
 
 
 def circle_triggered(*, elapsed_s: float, bits: tuple[int, int, int, int], entered: bool) -> bool:
     """Return true once circle mode is active and P1110 is seen for the first time."""
-    return elapsed_s >= 46.0 and not entered and bits == (1, 1, 1, 0)
+    return elapsed_s >= CIRCLE_MODE_START_S and not entered and bits == (1, 1, 1, 0)
 
 
 def phase1_to_phase2_timing() -> tuple[float, float]:

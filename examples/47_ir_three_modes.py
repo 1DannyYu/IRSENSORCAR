@@ -4,9 +4,9 @@
 Modes:
   auto-tracing       Follow the 16-state table; motion is forward or left correction only.
   phase1-to-phase2   Drive forward 17 cm, spin right 90 degrees, then auto-trace Phase 2.
-  circle             Auto-trace for the first 46 seconds; P1110 then triggers one right turn
+  circle             Auto-trace for the first 22 seconds; P1110 then triggers one right turn
                      into the roundabout and auto-tracing continues.
-  chained             Phase 1 -> Phase 2 -> auto-tracing -> circle entry at 46 seconds total.
+  chained             Phase 1 -> Phase 2 -> auto-tracing -> circle entry at 22 seconds total.
 
 Motor-moving. The operator must stand beside the car, secure the chassis or lift the wheels,
 and be able to cut power instantly.
@@ -20,6 +20,7 @@ import time
 from carbot.ir_geometry import Kind
 from carbot.ir_line_nav import detect_ir_line
 from carbot.ir_modes import (
+    CIRCLE_MODE_START_S,
     DriveMode,
     ModeCommand,
     auto_tracing_command,
@@ -44,7 +45,10 @@ def main() -> int:
     if mode in (DriveMode.PHASE1_TO_PHASE2, DriveMode.CHAINED):
         print(f"Phase 1: forward 17 cm for {forward_s:.2f}s, then right 90 degrees for {turn_s:.2f}s")
     if mode in (DriveMode.CIRCLE, DriveMode.CHAINED):
-        print("Circle mode: auto-trace until 46s, then P1110 triggers one right turn")
+        print(
+            f"Circle mode: auto-trace until {CIRCLE_MODE_START_S:.0f}s, "
+            "then P1110 triggers one right turn"
+        )
 
     if not args.dry_run and input(
         "Operator beside car, chassis secured, power ready to cut? (yes/no) "
