@@ -49,7 +49,7 @@ COLMAP is used via the pip-installed **`pycolmap`** wheel
 colmap`, because the agent sandbox cannot write `~/.homebrew` and the wheel
 is self-contained. `scripts/run_colmap_sfm.py` wraps feature extraction →
 exhaustive matching → incremental mapping and exports camera poses.
-`examples/16_cam_room_capture.py` captures the overlapping frame set on the Pi.
+`examples/ai_camera/16_cam_room_capture.py` captures the overlapping frame set on the Pi.
 
 ## Consequences
 
@@ -62,5 +62,5 @@ exhaustive matching → incremental mapping and exports camera poses.
 - The scale-anchor step (derive metres/pixel from the 70 mm tag inside the
   reconstruction) is the next software task after a room sweep reconstructs.
 - `docs/setup/gate-b-manual-pose-measurement.md` and
-  `examples/15_cam_gate_b_pose_log.py` remain available if a later decision needs
+  `examples/ai_camera/15_cam_gate_b_pose_log.py` remain available if a later decision needs
   the ultrasonic+vision fusion path, but are no longer on the critical path.

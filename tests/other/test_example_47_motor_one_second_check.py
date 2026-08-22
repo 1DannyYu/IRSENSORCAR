@@ -3,7 +3,7 @@ from runpy import run_path
 
 import pytest
 
-SCRIPT = Path(__file__).parents[2] / "examples" / "48_motor_one_second_check.py"
+SCRIPT = Path(__file__).parents[2] / "examples" / "other" / "48_motor_one_second_check.py"
 NAMESPACE = run_path(str(SCRIPT))
 RUN_ONE_SECOND = NAMESPACE["run_one_second"]
 

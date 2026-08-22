@@ -3,7 +3,7 @@
 This document records the verified wiring and signal convention for the Yahboom
 4-channel IR tracing (line-follower) module in `assets/inventory/` (photos
 `041`/`042`). **Verified on the real car (2026-08-17)** — tested with
-`examples/36_ir_tracing_check.py`.
+`examples/other/36_ir_tracing_check.py`.
 
 ## Overview
 
@@ -63,7 +63,7 @@ belongs to which *physical sensor position* — and they are not in order.
 
 So the physical left-to-right order is **`Out2, Out1, Out3, Out4`**.
 
-Measured with [examples/42_ir_geometry_sweep.py](../../examples/42_ir_geometry_sweep.py):
+Measured with [examples/other/42_ir_geometry_sweep.py](../../examples/other/42_ir_geometry_sweep.py):
 a black card swept left to right tripped the channels in that order, and the
 card's *trailing* edge released them in the same order — two independent edges
 agreeing. The operator separately confirmed `Out4` is the rightmost sensor.
@@ -141,7 +141,7 @@ readings = sensor.read()  # (1, 0, 1, 0): 1 = black, 0 = white, in Out order
 Test on hardware (no motors, safe over SSH):
 
 ```bash
-PYTHONPATH=src python3 examples/36_ir_tracing_check.py --pins 24,25,22,23 --invert 0,1,2,3
+PYTHONPATH=src python3 examples/other/36_ir_tracing_check.py --pins 24,25,22,23 --invert 0,1,2,3
 ```
 
 **Calibration result (2026-08-17):** All four channels verified with the
@@ -194,7 +194,7 @@ Potentiometer polarity is sensitive to the CW/CCW sweep endpoint, not just a
 gradual gain change: turning **all the way CW** pinned every channel HIGH
 regardless of surface, and **all the way CCW** pinned every channel LOW
 regardless of surface. The working range is between those extremes — verify
-with `examples/36_ir_tracing_check.py` after any pot adjustment, since the
+with `examples/other/36_ir_tracing_check.py` after any pot adjustment, since the
 polarity is not guaranteed to stay the same across retuning sessions.
 
 Tune each potentiometer with the car powered but wheels lifted, watching the

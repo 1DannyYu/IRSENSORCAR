@@ -15,7 +15,7 @@ versions are recoverable with `git show b75b740:tasks/ir-sensor-tracking/`.
 |---|---|
 | [design.md](design.md) | Sensor model, all 16 readings, route, junction sequencing |
 | [run-book.md](run-book.md) | Operator procedure from startup through supervised track runs |
-| [../../examples/46_map1_ir_transition_drive.py](../../examples/46_map1_ir_transition_drive.py) | One-command bounded Phase 2 -> ARC 1 -> Phase 4 run using the 2026-08-21 trace-derived settings |
+| [../../examples/other/46_map1_ir_transition_drive.py](../../examples/other/46_map1_ir_transition_drive.py) | One-command bounded Phase 2 -> ARC 1 -> Phase 4 run using the 2026-08-21 trace-derived settings |
 
 Stable facts live outside this directory and are the source of truth:
 

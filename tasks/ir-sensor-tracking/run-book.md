@@ -40,7 +40,7 @@ scripts/map1-phase1-ir-check.sh
 🔴 **先把四個輪子抬離地面或用卡具固定底盤。**
 
 ```bash
-PYTHONPATH=src python3 examples/37_map1_motor_test.py
+PYTHONPATH=src python3 examples/other/37_map1_motor_test.py
 ```
 
 確認四顆馬達轉向正確、沒有異音。
@@ -52,7 +52,7 @@ PYTHONPATH=src python3 examples/37_map1_motor_test.py
 車放在起點線上，**不接馬達電**：
 
 ```bash
-PYTHONPATH=src python3 examples/39_map1_ir_line_follow.py --dry-run --duration 60
+PYTHONPATH=src python3 examples/other/39_map1_ir_line_follow.py --dry-run --duration 60
 ```
 
 手動推著車沿線走，看每一幀的輸出。要確認的是：
@@ -77,13 +77,13 @@ PYTHONPATH=src python3 examples/39_map1_ir_line_follow.py --dry-run --duration 6
 ```bash
 # 發車盲走 + 右轉，預設 20 秒證據窗口。
 # 直行預設 PWM 150 / 2.2s；右轉同樣用 PWM 150，90° 目標加 5° 補償，約 2.80s。
-PYTHONPATH=src python3 -u examples/40_map1_ir_phase_test.py --phase 1
+PYTHONPATH=src python3 -u examples/other/40_map1_ir_phase_test.py --phase 1
 
 # 車放在 Phase 2 起點、車頭朝東，只測東向 15.5cm 循線
-PYTHONPATH=src python3 -u examples/40_map1_ir_phase_test.py --phase 2
+PYTHONPATH=src python3 -u examples/other/40_map1_ir_phase_test.py --phase 2
 
 # Phase 3 可放在 Phase 2 任意穩定 P0110 處、車頭朝東；程式自行偵測 ARC 1
-PYTHONPATH=src python3 -u examples/40_map1_ir_phase_test.py --phase 3
+PYTHONPATH=src python3 -u examples/other/40_map1_ir_phase_test.py --phase 3
 ```
 
 Phase 1 的直行與右轉 PWM 已分開：`--phase1-forward-speed` 只改直線扭力，`--speed`
@@ -99,7 +99,7 @@ Phase 1 的直行與右轉 PWM 已分開：`--phase1-forward-speed` 只改直線
 如需單獨微調直行，只改一個參數並記錄實際距離，例如：
 
 ```bash
-PYTHONPATH=src python3 -u examples/40_map1_ir_phase_test.py --phase 1 \
+PYTHONPATH=src python3 -u examples/other/40_map1_ir_phase_test.py --phase 1 \
   --phase1-forward-speed 150 --phase1-forward-s 2.2
 ```
 
@@ -174,7 +174,7 @@ ARC 3/5/7 現在持續 `P1111/P0000` 0.3 秒就開始 recovery，保留 3 秒命
 先跑這個 —— 車放在**東西向的線上、車頭朝東**，跳過發車區支線：
 
 ```bash
-PYTHONPATH=src python3 -u examples/39_map1_ir_line_follow.py --duration 120 --start-on-loop --laps 1
+PYTHONPATH=src python3 -u examples/other/39_map1_ir_line_follow.py --duration 120 --start-on-loop --laps 1
 ```
 
 先驗迴圈邏輯，不讓一次性的支線 T 路口攪進來。log 每行第三欄會印**下一個預期路口**，
@@ -187,7 +187,7 @@ roundabout entry (右轉) → roundabout exit (右轉) → T junction (直行) �
 通過之後才換成從發車區起跑（車頭朝北）：
 
 ```bash
-PYTHONPATH=src python3 -u examples/39_map1_ir_line_follow.py --duration 120 --laps 1
+PYTHONPATH=src python3 -u examples/other/39_map1_ir_line_follow.py --duration 120 --laps 1
 ```
 
 `-u` 不能省 —— 沒有它 stdout 會被 block buffer 住，程式跑完才吐 log，中途看不到任何東西。

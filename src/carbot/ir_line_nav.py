@@ -178,7 +178,7 @@ class IRNavPolicy:
     #                                                     closed-loop on 0110 now, not timed.
     #                                                     If it does, spin_rate_deg_per_s/
     #                                                     spin_dead_time_s are themselves off;
-    #                                                     re-run examples/41_motor_spin_angle_sweep.py
+    #                                                     re-run examples/other/41_motor_spin_angle_sweep.py
     #   Turn never ends, runs to the timeout           -> turn_timeout_scale ^ (if a slow but
     #     ("... timeout, 0110 never seen" in the log)      genuine turn just needs longer), OR
     #                                                     check wheel/axle alignment -- a
@@ -216,7 +216,7 @@ class IRNavPolicy:
     # carbot.ir_route.RouteJunction.turn_direction) -- Task-1 never actually reaches this.
     turn_direction: int = 1
     # Measured directly on the Task-1 map paper at speed=150, on carpet
-    # underneath the paper (verified 2026-08-20, examples/41_motor_spin_angle_sweep.py,
+    # underneath the paper (verified 2026-08-20, examples/other/41_motor_spin_angle_sweep.py,
     # 5-point sweep 2-10s, all 5 confirmed a true in-place pivot -- no chassis
     # drift -- before being recorded; linear fit angle = rate*(duration -
     # dead_time)): rate 42.0 deg/s, dead_time 0.41s. See
@@ -228,7 +228,7 @@ class IRNavPolicy:
     # underneath (carpet vs. whatever the 08-18 measurement sat on) or
     # mechanical wear/realignment from the chassis issue above, not a fixed
     # property of the car. NOT extrapolated from the camera-based calibration
-    # (examples/23_cam_spin_rate_check.py, measured on a different, textured
+    # (examples/ai_camera/23_cam_spin_rate_check.py, measured on a different, textured
     # surface elsewhere in the room) — friction differs by surface, so that
     # number does not transfer here. These two constants are only valid at
     # `speed=150` on this paper, on this surface; re-run the sweep before

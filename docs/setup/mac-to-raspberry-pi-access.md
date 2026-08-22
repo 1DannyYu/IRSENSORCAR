@@ -247,20 +247,20 @@ robot.**
 **除非有人實際站在機器旁邊，否則不要透過遠端 session 執行馬達或舵機腳本。**
 
 This is not a general caution, it is how the scripts are built.
-[`examples/04_servo_check.py`](../../examples/04_servo_check.py) pauses before every movement and
+[`examples/other/04_servo_check.py`](../../examples/other/04_servo_check.py) pauses before every movement and
 tells the operator to cut main power if anything looks wrong. That instruction assumes a person
 within arm's reach of the power switch. A browser tab in another city cannot do that.
 
 這不是泛泛的提醒，而是腳本本身的設計前提。
-[`examples/04_servo_check.py`](../../examples/04_servo_check.py) 在每一次移動前都會暫停，
+[`examples/other/04_servo_check.py`](../../examples/other/04_servo_check.py) 在每一次移動前都會暫停，
 並要求操作者「有異常請直接關閉主電源」。這句話預設有人伸手就搆得到電源開關 —
 在另一個城市的瀏覽器分頁做不到這件事。
 
 | Safe over a remote session 遠端可做 | Requires someone at the robot 需要有人在機器旁 |
 |---|---|
-| `git pull`, `uv sync`, editing config | `examples/02_motor_check.py` |
-| `uv run pytest` | `examples/03_motor_drive.py` |
-| `examples/01_i2c_probe.py` (communication only, flashes an LED)<br>只測通訊，僅閃一下 LED | `examples/04_servo_check.py` |
+| `git pull`, `uv sync`, editing config | `examples/other/02_motor_check.py` |
+| `uv run pytest` | `examples/other/03_motor_drive.py` |
+| `examples/other/01_i2c_probe.py` (communication only, flashes an LED)<br>只測通訊，僅閃一下 LED | `examples/other/04_servo_check.py` |
 | `i2cdetect -y 1`, `vcgencmd get_throttled` | Anything after Step 5 of [raspberry-pi-first-run.md](raspberry-pi-first-run.md) |
 
 Related: the wiring and power rules in [CLAUDE.md](../../CLAUDE.md) and the safety notes in

@@ -11,12 +11,12 @@ on the Pi must live under `examples/`; see the repository `CONVENTIONS.md` and
 
 ## Script
 
-[`examples/35_cam_object_id_check.py`](../../examples/35_cam_object_id_check.py)
+[`examples/ai_camera/35_cam_object_id_check.py`](../../examples/ai_camera/35_cam_object_id_check.py)
 
 Run on the Pi:
 
 ```bash
-PYTHONPATH=src python3 examples/35_cam_object_id_check.py
+PYTHONPATH=src python3 examples/ai_camera/35_cam_object_id_check.py
 ```
 
 This measures IMX500 on-sensor object detection using SSD MobileNetV2 FPN-Lite; YOLO is not

@@ -137,7 +137,7 @@ authoritative.
 
 Exact placement may vary as long as the tag avoids the track and graphics, its north arrow is
 oriented correctly, and its measured centre is written to the tag-map JSON. The static validation
-tool is `examples/31_cam_ground_tag_pose.py`; it does not move the motors.
+tool is `examples/ai_camera/31_cam_ground_tag_pose.py`; it does not move the motors.
 
 ### Control Behaviour After Localization Is Available
 

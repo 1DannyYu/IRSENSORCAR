@@ -272,7 +272,7 @@ def test_anchor_tags_not_visible():
 def test_anchor_tags_duplicate_detection_is_visible_to_caller():
     """Two detections of the anchor ID must be distinguishable from one."""
     hits = anchor_tags([_tag_pose(0), _tag_pose(0)], 0)
-    assert len(hits) == 2  # examples/13_cam_room_pose.py rejects this as duplicate-anchor
+    assert len(hits) == 2  # examples/ai_camera/13_cam_room_pose.py rejects this as duplicate-anchor
 
 
 def test_anchor_not_visible_in_synthetic_blank_image():

@@ -19,7 +19,7 @@ Nobody stands in the drive path. The scripts never access motors.
 ## 2. Prerequisites
 
 - Gate A committed and the Pi synced to `origin/main` (HEAD `efb5347` or newer).
-- Battery charged: run `examples/14_all_sensors_preflight_check.py`; the power check must
+- Battery charged: run `examples/other/14_all_sensors_preflight_check.py`; the power check must
   not show `get_throttled=0x50000` before any later motion gate (for Gate B
   itself the battery state does not matter — no motors run).
 - The fixed wall anchor (AprilTag ID 0 + ChArUco) is unchanged and fully
@@ -52,7 +52,7 @@ the straight-line distance and direction and decompose.
 
 ```bash
 cd ~/Car-and-Robotic-Arm
-PYTHONPATH=src python3 examples/15_cam_gate_b_pose_log.py --positions 5 --anchor-height-cm 14.65
+PYTHONPATH=src python3 examples/ai_camera/15_cam_gate_b_pose_log.py --positions 5 --anchor-height-cm 14.65
 ```
 
 The script waits at each location: place the (stopped) car on mark *i*, press
@@ -112,7 +112,7 @@ console output and the accepted vs rejected frames, then commit.
 
 ## 5. Files
 
-- `examples/15_cam_gate_b_pose_log.py` — live or `--input-dir` pose logging.
+- `examples/ai_camera/15_cam_gate_b_pose_log.py` — live or `--input-dir` pose logging.
 - `src/carbot/frames.py` — `SensorExtrinsics` contract the values fill in.
-- `examples/13_cam_room_pose.py` — single-location static pose (source of the
+- `examples/ai_camera/13_cam_room_pose.py` — single-location static pose (source of the
   per-location logic).

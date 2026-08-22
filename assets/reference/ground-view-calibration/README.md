@@ -4,7 +4,7 @@ Printable floor rectangles of known real-world size, used to calibrate the bird'
 Print at **100% / actual size — not "fit to page"** and measure the printed rectangle with a ruler
 before taping it down; a print-scale error silently corrupts every downstream measurement.
 
-Consumed by [examples/27_cam_ground_view_calibrate.py](../../../examples/27_cam_ground_view_calibrate.py)
+Consumed by [examples/ai_camera/27_cam_ground_view_calibrate.py](../../../examples/ai_camera/27_cam_ground_view_calibrate.py)
 via `--corners`, whose value is produced by clicking the four crosshairs in TL, TR, BR, BL order
 with [scripts/pick_ground_view_corners.py](../../../scripts/pick_ground_view_corners.py).
 

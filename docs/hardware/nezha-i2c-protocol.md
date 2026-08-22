@@ -161,7 +161,7 @@ The vendor manual and vendor source comments disagree about the meaning of `moto
 | `NeZha.c` comments | `motor_a` is reverse, `motor_b` is forward |
 
 The byte order is consistent across both sources. The disagreement is only in interpretation, which
-means the real hardware must be tested. Run `examples/02_motor_check.py` and flip
+means the real hardware must be tested. Run `examples/other/02_motor_check.py` and flip
 `FORWARD_IS_MOTOR_A` in `src/carbot/nezha.py` only if the observed directions do not match.
 
 ## Connector Quick Reference

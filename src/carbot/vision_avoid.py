@@ -3,7 +3,7 @@
 A single forward HC-SR04 cannot see thin chair legs or an overhead tabletop, so
 the car drove under a chair and stuck on its underside
 (`docs/progress/2026-08-14-visual-mapping-and-patrol.md`, pitfall 6).
-`examples/20_cam_detection_check.py` proved on the Pi that the IMX500
+`examples/ai_camera/20_cam_detection_check.py` proved on the Pi that the IMX500
 on-sensor SSD detector does see them. This module holds that verdict logic and
 the sonar fusion around it as pure functions, so the patrol's stop/turn
 decision can be unit-tested with synthetic detections — no camera, no motors.
@@ -224,7 +224,7 @@ def detections_from_metadata(
     """Read one IMX500 inference result out of a frame's metadata.
 
     The only hardware-facing function in this module; ported from
-    `examples/20_cam_detection_check.py` after it was verified on the Pi.
+    `examples/ai_camera/20_cam_detection_check.py` after it was verified on the Pi.
     Returns an empty list when the frame carries no inference output, which
     happens on the first frames after the network is uploaded. Class names come
     from ``intrinsics.labels`` — the network's own list — never from a table in

@@ -211,4 +211,4 @@ def measure_distance():
 - [docs/hardware/ir-obstacle-sensor.md](ir-obstacle-sensor.md) — IR obstacle sensor, wired to avoid these pins
 - [assets/reference/raspberry-pi-5/car-sensor-wiring-diagram.svg](../../assets/reference/raspberry-pi-5/car-sensor-wiring-diagram.svg) — Full-system wiring diagram
 - `src/carbot/ultrasonic.py` — Python driver module (to be implemented)
-- `examples/06_ultrasonic_avoidance.py` — Usage example (to be implemented)
+- `examples/other/06_ultrasonic_avoidance.py` — Usage example (to be implemented)

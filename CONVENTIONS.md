@@ -27,13 +27,14 @@ Car-and-Robotic-Arm/
 │   ├── adr/               Architecture decision records
 │   ├── reflections/       Project reflection and engineering role reports
 │   ├── handoff-*.md       Current continuation notes for another developer/agent
-│   ├── Mechatronics Folio and Journal/   School assessment materials (name kept as-is)
 │   ├── robot-base-platform-research.md   Research background report (modular robot base platform)
 │   └── project-terminology.md            English project glossary
 │
 ├── src/carbot/            Importable Python package
-├── tests/                 Automated tests
-├── examples/              Runnable example and verification scripts
+├── tests/                 Automated tests, split into ai_camera/ (vision-dependent) and other/
+├── examples/              Runnable example and verification scripts, split the same way:
+│   ├── ai_camera/         Scripts that read the Raspberry Pi AI Camera (IMX500) — the `cam` tag
+│   └── other/             Everything else — motor, servo, I2C, sonar, IR, power, multi-sensor
 ├── scripts/               One-off tools and validators
 │
 ├── tasks/                 Per-task working notes, plans, and run books
@@ -194,14 +195,18 @@ good: assets/inventory/091_HXS_18650_Battery_Pack_Label.jpg
 Exceptions:
 
 - `vendor/`, where original filenames are preserved for traceability.
-- `docs/Mechatronics Folio and Journal/`, whose directory name and school-provided source filenames
-  are preserved so they match the assessment. First-party derivatives inside it still use
-  `lower-kebab-case`, for example `11se-assessment-2-folio.html`.
 
 ### 3.6 Runnable Scripts in `examples/`: `NN_<tool>_<function>[_<mode>].py`
 
 A reader scanning `ls examples/` must be able to tell **which hardware a script drives** without
 opening it. The filename therefore names the tool before it names the task.
+
+`examples/` itself is split into two folders on the same axis used for `tests/`: `ai_camera/` for
+every script that actually reads the IMX500 (including ones that fuse it with another sensor, e.g.
+`22_cam_sonar_patrol_capture.py`), and `other/` for everything else. A script keeps its `cam` tag
+even if placed in `other/` when it does not actually import a camera module — that is a naming bug
+to fix (tag and filename together), not a placement decision; `30_cam_motion_calibrate.py` is the
+current example (it calibrates from operator-measured tape distance, not from the camera).
 
 ```
 good: 26_cam_line_follow_drive.py       camera-guided line following

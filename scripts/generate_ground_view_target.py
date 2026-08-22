@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Generate a printable floor rectangle for ground-view calibration.
 
-``examples/27_cam_ground_view_calibrate.py --corners`` needs four floor points of
+``examples/ai_camera/27_cam_ground_view_calibrate.py --corners`` needs four floor points of
 known real-world size. Taping a rectangle by hand and measuring it is fiddly;
 this prints a rectangle with axis tick marks and labelled corners (TL, TR,
 BR, BL — the same order ``scripts/pick_ground_view_corners.py`` expects) so
@@ -136,7 +136,7 @@ def draw_target(c: canvas.Canvas, width_mm: float, height_mm: float) -> None:
         y0 - 37 * mm,
         "Click corners in order TL, TR, BR, BL "
         "(scripts/pick_ground_view_corners.py) to build the --corners value "
-        "for examples/27_cam_ground_view_calibrate.py.",
+        "for examples/ai_camera/27_cam_ground_view_calibrate.py.",
     )
 
 

@@ -1,7 +1,7 @@
 """Guarded servo check for the arm's three servos (S2, S3, S4).
 
 The sequence and its safety gate used to live inside
-``examples/04_servo_check.py``. That put unit-testable behaviour — the
+``examples/other/04_servo_check.py``. That put unit-testable behaviour — the
 exact-``yes`` clearance gate, the one-channel-at-a-time ordering, and the
 guarantee that the board is closed with ``stop_motors=False`` on every exit
 path — in a file that cannot be imported, because ``04_servo_check`` is not a

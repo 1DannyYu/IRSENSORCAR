@@ -136,7 +136,7 @@ the movement during the hardcoded manoeuvre:
 
 - Canonical meanings: [`src/carbot/ir_geometry.py`](../../src/carbot/ir_geometry.py)
 - Mode policy and circle state machine: [`src/carbot/ir_modes.py`](../../src/carbot/ir_modes.py)
-- Hardware runner: [`examples/47_ir_three_modes.py`](../../examples/47_ir_three_modes.py)
+- Hardware runner: [`examples/other/47_ir_three_modes.py`](../../examples/other/47_ir_three_modes.py)
 - Verified route sequences: [`2026-08-20-map1-junction-signal-sequences.md`](../progress/2026-08-20-map1-junction-signal-sequences.md)
 
 Example 47 starts the roundabout entry turn after 25.6 seconds when it detects
