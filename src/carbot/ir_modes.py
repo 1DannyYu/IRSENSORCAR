@@ -30,6 +30,8 @@ def _forward(speed: int, reason: str) -> ModeCommand:
 
 
 def _left_from_state(state: IRState, speed: int, reason: str) -> ModeCommand:
+    if state.inner_ratio < 0:
+        return ModeCommand(-speed, speed, reason)
     inner_ratio = max(0.0, min(1.0, state.inner_ratio * LEFT_CORRECTION_RATIO_SCALE))
     left, right = wheel_speeds(speed, -1, inner_ratio)
     return ModeCommand(left, right, reason)

@@ -127,7 +127,9 @@ STATE_TABLE: dict[tuple[int, int, int, int], IRState] = {
     (0, 0, 1, 0): _s((0, 0, 1, 0), Kind.DRIFT, +1.0, 0.73, "drifting right, slight"),
     (0, 1, 0, 0): _s((0, 1, 0, 0), Kind.DRIFT, -1.0, 0.73, "drifting left, slight"),
     (0, 0, 0, 1): _s((0, 0, 0, 1), Kind.DRIFT, +3.2, 0.13, "far right, outer sensor only"),
-    (1, 0, 0, 0): _s((1, 0, 0, 0), Kind.DRIFT, -3.2, 0.13, "far left, outer sensor only"),
+    (1, 0, 0, 0): _s(
+        (1, 0, 0, 0), Kind.DRIFT, -3.2, -1.00, "far left, outer sensor only; hard left"
+    ),
     (0, 0, 0, 0): _s((0, 0, 0, 0), Kind.AMBIGUOUS, None, 0.40, "blind band or line lost"),
     # -- needs a second dark feature, or a badly skewed pass over a curve -----
     (1, 1, 1, 1): _s((1, 1, 1, 1), Kind.JUNCTION, 0.0, 1.00, "symmetric crossbar"),

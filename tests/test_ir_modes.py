@@ -27,6 +27,13 @@ def test_left_curve_junction_turns_left_instead_of_holding_straight() -> None:
     assert command.right == 150
 
 
+def test_p1000_is_a_hard_left_pivot() -> None:
+    state = classify((1, 0, 0, 0), physical=True)
+    command = auto_tracing_command(state, speed=150)
+    assert state.inner_ratio == -1.0
+    assert (command.left, command.right) == (-150, 150)
+
+
 def test_circle_trigger_is_delayed_and_one_shot() -> None:
     assert not circle_triggered(
         elapsed_s=CIRCLE_MODE_START_S - 0.1, bits=(1, 1, 1, 0), entered=False
