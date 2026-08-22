@@ -1,0 +1,127 @@
+#!/usr/bin/env python3
+"""Run one of the three operator-selected IR driving modes.
+
+Modes:
+  auto-tracing       Follow the 16-state table; motion is forward or left correction only.
+  phase1-to-phase2   Drive forward 17 cm, spin right 90 degrees, then auto-trace Phase 2.
+  circle             Auto-trace for the first 46 seconds; P1110 then triggers one right turn
+                     into the roundabout and auto-tracing continues.
+  chained             Phase 1 -> Phase 2 -> auto-tracing -> circle entry at 46 seconds total.
+
+Motor-moving. The operator must stand beside the car, secure the chassis or lift the wheels,
+and be able to cut power instantly.
+"""
+
+from __future__ import annotations
+
+import argparse
+import time
+
+from carbot.ir_geometry import Kind
+from carbot.ir_line_nav import detect_ir_line
+from carbot.ir_modes import (
+    DriveMode,
+    ModeCommand,
+    auto_tracing_command,
+    circle_triggered,
+    phase1_to_phase2_timing,
+)
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description="Three IR driving modes")
+    parser.add_argument("--mode", choices=[mode.value for mode in DriveMode], required=True)
+    parser.add_argument("--duration", type=float, default=120.0)
+    parser.add_argument("--speed", type=int, default=150)
+    parser.add_argument("--dry-run", action="store_true", help="print commands without motors")
+    args = parser.parse_args()
+    if args.duration <= 0 or not 1 <= args.speed <= 1000:
+        parser.error("duration must be positive and speed must be in [1, 1000]")
+
+    mode = DriveMode(args.mode)
+    forward_s, turn_s = phase1_to_phase2_timing()
+    print(f"Mode: {mode.value}; duration: {args.duration:.1f}s; speed: {args.speed}")
+    if mode in (DriveMode.PHASE1_TO_PHASE2, DriveMode.CHAINED):
+        print(f"Phase 1: forward 17 cm for {forward_s:.2f}s, then right 90 degrees for {turn_s:.2f}s")
+    if mode in (DriveMode.CIRCLE, DriveMode.CHAINED):
+        print("Circle mode: auto-trace until 46s, then P1110 triggers one right turn")
+
+    if not args.dry_run and input(
+        "Operator beside car, chassis secured, power ready to cut? (yes/no) "
+    ).strip().lower() != "yes":
+        print("Re-run when ready.")
+        return 1
+
+    from RPi import GPIO
+
+    from carbot import Car, NeZhaError
+    from carbot.ir_tracing import IRTracingSensor
+
+    GPIO.setmode(GPIO.BCM)
+    pins = (24, 25, 22, 23)
+    for pin in pins:
+        GPIO.setup(pin, GPIO.IN)
+    sensor = IRTracingSensor(pins, GPIO, invert={0, 1, 2, 3})
+    car = None
+    try:
+        chain_started = time.monotonic() if mode is DriveMode.CHAINED else None
+        if not args.dry_run:
+            car = Car()
+            if mode in (DriveMode.PHASE1_TO_PHASE2, DriveMode.CHAINED):
+                print("Phase 1 starting: forward 17 cm", flush=True)
+                car.move_for(forward_s, args.speed, args.speed)
+                print("Phase 1 complete: turning right 90 degrees", flush=True)
+                car.move_for(turn_s, args.speed, -args.speed)
+                print("Phase 2 starting: auto-tracing", flush=True)
+
+        started = chain_started or time.monotonic()
+        last = started
+        previous_command: ModeCommand | None = None
+        previous_localising = None
+        entered = False
+        while time.monotonic() - started < args.duration:
+            now = time.monotonic()
+            elapsed = now - started
+            reading = detect_ir_line(sensor, speed=args.speed)
+            if reading.state.kind in (Kind.ON_LINE, Kind.DRIFT):
+                previous_localising = reading.physical
+
+            if mode is DriveMode.CIRCLE and circle_triggered(
+                elapsed_s=elapsed, bits=reading.physical, entered=entered
+            ):
+                entered = True
+                print(f"{elapsed:.1f}s: P1110 detected; turning right into roundabout", flush=True)
+                if car:
+                    car.move_for(turn_s, args.speed, -args.speed)
+                previous_command = None
+                last = time.monotonic()
+                continue
+
+            command = auto_tracing_command(
+                reading.state,
+                speed=args.speed,
+                previous_command=previous_command,
+                previous_localising=previous_localising,
+            )
+            if car:
+                car.drive(command.left, command.right)
+            bits = "".join(str(bit) for bit in reading.physical)
+            print(f"{elapsed:6.1f}s P{bits} -> L{command.left} R{command.right}: {command.reason}", flush=True)
+            previous_command = command
+            last = now
+            time.sleep(max(0.0, 0.01 - (time.monotonic() - last)))
+    except KeyboardInterrupt:
+        print("Stopped by operator")
+    except NeZhaError as exc:
+        print(f"Motor/I2C error: {exc}")
+        return 1
+    finally:
+        if car:
+            car.stop(best_effort=True)
+            car.close()
+        GPIO.cleanup()
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
