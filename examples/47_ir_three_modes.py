@@ -4,8 +4,8 @@
 Modes:
   auto-tracing       Follow the 16-state table; motion is forward or left correction only.
   phase1-to-phase2   Drive forward 17 cm, spin right 90 degrees, then auto-trace Phase 2.
-  circle             After 22 seconds, confirm P1111 -> P1001 -> P0000, turn into the roundabout,
-                     auto-trace inside, then exit on the verified P0111 -> P0101 -> P0100 -> P0110.
+  circle             After 22 seconds, turn into the roundabout, auto-trace inside, then exit on
+                     the verified P0111 -> P0101 -> P0100 -> P0110.
   chained             Phase 1 -> Phase 2 -> auto-tracing -> split circle mode.
 
 Motor-moving. The operator must stand beside the car, secure the chassis or lift the wheels,
@@ -54,8 +54,8 @@ def main() -> int:
         print(f"Phase 1: forward 17 cm for {forward_s:.2f}s, then right 90 degrees for {turn_s:.2f}s")
     if mode in (DriveMode.CIRCLE, DriveMode.CHAINED):
         print(
-            f"Circle mode: after {CIRCLE_MODE_START_S:.0f}s confirm "
-            "P1111 -> P1001 -> P0000, turn about 42.5 degrees, auto-trace inside, "
+            f"Circle mode: after {CIRCLE_MODE_START_S:.0f}s turn right about 42.5 degrees, "
+            "auto-trace inside, "
             "then exit on P0111 -> P0101 -> P0100 -> P0110"
         )
 
@@ -154,7 +154,7 @@ def main() -> int:
                 circle_event = circle_state.observe(elapsed_s=elapsed, bits=reading.physical)
             if circle_event == "enter":
                 print(
-                    f"{elapsed:.1f}s: P1111 -> P1001 -> P0000 confirmed; "
+                    f"{elapsed:.1f}s: timed circle entry at {CIRCLE_MODE_START_S:.0f}s; "
                     "turning right into roundabout",
                     flush=True,
                 )

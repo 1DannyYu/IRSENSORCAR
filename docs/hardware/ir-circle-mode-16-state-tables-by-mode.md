@@ -44,15 +44,14 @@ drift and right-side junction readings are treated as forward motion.
 
 ## 2. Enter roundabout mode
 
-Enter roundabout mode becomes eligible after 22 seconds in the chained run. While
-waiting for the ordered entry sequence `P1111 -> P1001 -> P0000`, every sensor
-state commands a right pivot so the car does not steer away from the roundabout.
-Only after that sequence is confirmed does the car complete the calibrated
-right turn into the roundabout.
+Enter roundabout mode starts at 22 seconds in the chained run. It does not use an
+entry sensor trigger because the signal observed at the physical roundabout entry
+is inconsistent. At 22 seconds the car completes the calibrated right turn into
+the roundabout regardless of the current sensor reading.
 
 | State | Canonical meaning | Enter roundabout action |
 |---|---|---|
-| `P0000` | Blind band or line lost | Right pivot; sequence step 3 can confirm entry |
+| `P0000` | Blind band or line lost | Right pivot; timed entry starts |
 | `P0001` | Far right, outer sensor only | Right pivot |
 | `P0010` | Slight right drift | Right pivot |
 | `P0011` | Right pair / junction evidence | Right pivot |
@@ -61,13 +60,13 @@ right turn into the roundabout.
 | `P0110` | Centred on line | Right pivot |
 | `P0111` | Left branch / curve evidence | Right pivot; not an entry-sequence step |
 | `P1000` | Far left, outer sensor only | Right pivot |
-| `P1001` | Outer pair only / noise | Right pivot; sequence step 2 after `P1111` |
+| `P1001` | Outer pair only / noise | Right pivot |
 | `P1010` | Non-contiguous noise | Right pivot |
 | `P1011` | Non-contiguous noise | Right pivot |
 | `P1100` | Left pair / junction evidence | Right pivot |
 | `P1101` | Non-contiguous noise | Right pivot |
 | `P1110` | Left branch / curve evidence | Right pivot; never the entry trigger |
-| `P1111` | Symmetric crossbar | Right pivot; sequence step 1 after 22s |
+| `P1111` | Symmetric crossbar | Right pivot |
 
 ## 3. Exit roundabout mode
 
@@ -117,6 +116,6 @@ the movement during the hardcoded manoeuvre:
 - Hardware runner: [`examples/47_ir_three_modes.py`](../../examples/47_ir_three_modes.py)
 - Verified route sequences: [`2026-08-20-map1-junction-signal-sequences.md`](../progress/2026-08-20-map1-junction-signal-sequences.md)
 
-Example 47 uses the verified physical roundabout-entry sequence
-`P1111 -> P1001 -> P0000` after 22 seconds. The entry turn is about 42.5 degrees;
-the 90-degree hardcoded turn belongs to Phase 1 -> Phase 2, not roundabout entry.
+Example 47 starts the roundabout entry turn at 22 seconds without a sensor trigger.
+The entry turn is about 42.5 degrees; the 90-degree hardcoded turn belongs to
+Phase 1 -> Phase 2, not roundabout entry.
