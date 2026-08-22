@@ -3,20 +3,20 @@
 Bits use physical sensor order `P1 P2 P3 P4`, left to right across the sensor
 bar. `1` means black line detected and `0` means no black line detected.
 
-Example 47 has four modes:
+Example 47 has five modes:
 
 1. Phase 1 -> Phase 2
-2. Auto tracing
+2. Auto tracing 2-6
 3. Enter roundabout
 4. Exit roundabout
+5. Auto tracing after exit
 
 Phase 1 -> Phase 2 has no 16-state table because it is deliberately sensor-blind:
 the car drives its calibrated forward distance, turns right, and only then enables
 sensor control.
 
-The other three modes each have a complete table below. Circle transitions are
-sequence-aware, so the tables include both the single-reading action and the
-sequence role where applicable.
+The other four modes each have a complete table below. The Phase 1 -> Phase 2
+movement remains sensor-blind.
 
 ## 1. Auto tracing mode
 
@@ -95,7 +95,32 @@ immediately triggers the exit action. The car drives forward 5 cm and turns righ
 | `P1110` | Left branch / curve evidence | Strong left correction; continue auto tracing |
 | `P1111` | Symmetric crossbar | Forward/hold; continue auto tracing |
 
-## 4. Phase 1 -> Phase 2
+## 4. Auto tracing after exit
+
+After the sustained `P1001` exit action, the car uses the original table until
+the run stops. Unlike Auto tracing 2-6, this table permits both left and right
+corrections.
+
+| State | Canonical meaning | Original-table action |
+|---|---|---|
+| `P0000` | Blind band or line lost | Resolve previous position; continue forward or steer by the original correction |
+| `P0001` | Far right, outer sensor only | Right correction: `L=+speed, R=0.13×speed` |
+| `P0010` | Slight right drift | Right correction: `L=+speed, R=0.73×speed` |
+| `P0011` | Right pair / junction evidence | Right correction: `L=+speed, R=0.40×speed` |
+| `P0100` | Slight left drift | Left correction: `L=0.73×speed, R=+speed` |
+| `P0101` | Non-contiguous noise | Hold previous command or continue forward |
+| `P0110` | Centred on line | Forward: `L=+speed, R=+speed` |
+| `P0111` | Left branch / curve evidence | Left correction: `L=0.40×speed, R=+speed` |
+| `P1000` | Far left, outer sensor only | Hard left pivot: `L=-speed, R=+speed` |
+| `P1001` | Outer pair only / noise | Hold previous command or continue forward |
+| `P1010` | Non-contiguous noise | Hold previous command or continue forward |
+| `P1011` | Non-contiguous noise | Hold previous command or continue forward |
+| `P1100` | Left pair / junction evidence | Left correction: `L=0.40×speed, R=+speed` |
+| `P1101` | Non-contiguous noise | Hold previous command or continue forward |
+| `P1110` | Left branch / curve evidence | Left correction: `L=0.40×speed, R=+speed` |
+| `P1111` | Symmetric crossbar | Forward: `L=+speed, R=+speed` |
+
+## 5. Phase 1 -> Phase 2
 
 There is intentionally no sensor-state table for this mode. Sensors do not control
 the movement during the hardcoded manoeuvre:

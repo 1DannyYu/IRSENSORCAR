@@ -4,6 +4,7 @@ from carbot.ir_modes import (
     CircleModeState,
     DriveMode,
     auto_tracing_command,
+    auto_tracing_original_command,
     enter_roundabout_command,
     line_search_required,
     phase1_to_phase2_timing,
@@ -38,6 +39,12 @@ def test_p1000_is_a_hard_left_pivot() -> None:
     assert (command.left, command.right) == (-150, 150)
 
 
+def test_original_auto_tracing_turns_right_for_right_drift() -> None:
+    command = auto_tracing_original_command(classify((0, 0, 1, 0), physical=True), speed=150)
+    assert command.left == 150
+    assert command.right < command.left
+
+
 def test_circle_mode_splits_entry_auto_trace_and_exit() -> None:
     state = CircleModeState()
     assert state.observe(elapsed_s=CIRCLE_MODE_START_S - 0.1, bits=(1, 1, 1, 1)) is None
@@ -68,6 +75,8 @@ def test_phase1_to_phase2_is_17cm_then_90deg() -> None:
 
 def test_chained_mode_is_available() -> None:
     assert DriveMode.CHAINED.value == "chained"
+    assert DriveMode.AUTO_TRACING_2_6.value == "auto-tracing-2-6"
+    assert DriveMode.AUTO_TRACING_AFTER_EXIT.value == "auto-tracing-after-exit"
 
 
 def test_roundabout_entry_turn_is_shorter_than_phase1_turn() -> None:

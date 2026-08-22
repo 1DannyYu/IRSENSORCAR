@@ -23,7 +23,8 @@ ROUNDABOUT_ENTRY_TURN_DEG = 42.5
 
 
 class DriveMode(str, Enum):
-    AUTO_TRACING = "auto-tracing"
+    AUTO_TRACING_2_6 = "auto-tracing-2-6"
+    AUTO_TRACING_AFTER_EXIT = "auto-tracing-after-exit"
     PHASE1_TO_PHASE2 = "phase1-to-phase2"
     CIRCLE = "circle"
     CHAINED = "chained"
@@ -116,6 +117,34 @@ def auto_tracing_command(
             return _left_from_state(state, speed, f"{state.label}; stronger left curve correction")
         return _forward(speed, f"{state.label}; no right turns in auto-tracing")
     return _forward(speed, "centred or right drift; forward-only policy")
+
+
+def auto_tracing_original_command(
+    state: IRState,
+    *,
+    speed: int,
+    previous_command: ModeCommand | None = None,
+    previous_localising: tuple[int, int, int, int] | None = None,
+) -> ModeCommand:
+    """Follow the original 16-state table, including right corrections."""
+    if state.kind is Kind.DRIFT and state.direction != 0:
+        left, right = wheel_speeds(speed, state.direction, state.inner_ratio)
+        return ModeCommand(left, right, f"{state.label}; original-table correction")
+    if state.kind is Kind.AMBIGUOUS:
+        verdict, offset = resolve_blind(previous_localising)
+        if verdict == "blind" and offset is not None:
+            direction = 1 if offset > 0 else -1
+            left, right = wheel_speeds(speed, direction, state.inner_ratio)
+            return ModeCommand(left, right, "blind band; original-table correction")
+        if verdict == "hold" and previous_command is not None:
+            return previous_command
+        return _forward(speed, f"{state.label}; original-table forward")
+    if state.kind is Kind.JUNCTION and state.direction != 0:
+        left, right = wheel_speeds(speed, state.direction, state.inner_ratio)
+        return ModeCommand(left, right, f"{state.label}; original-table junction correction")
+    if state.kind is Kind.NOISE and previous_command is not None:
+        return previous_command
+    return _forward(speed, "centred or unresolved; original-table forward")
 
 
 def enter_roundabout_command(state: IRState, *, speed: int) -> ModeCommand:

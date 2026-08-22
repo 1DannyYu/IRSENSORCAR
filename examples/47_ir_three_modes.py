@@ -2,7 +2,8 @@
 """Run one of the three operator-selected IR driving modes.
 
 Modes:
-  auto-tracing       Follow the 16-state table; motion is forward or left correction only.
+  auto-tracing-2-6   Follow the changed 16-state table; motion is forward or left correction only.
+  auto-tracing-after-exit  Follow the original 16-state table with right corrections.
   phase1-to-phase2   Drive forward 17 cm, spin right 90 degrees, then auto-trace Phase 2.
   circle             After 25.6 seconds and P1110/P1111, turn into the roundabout, auto-trace inside, then
                      enter exit mode on sustained P1001.
@@ -32,6 +33,7 @@ from carbot.ir_modes import (
     DriveMode,
     ModeCommand,
     auto_tracing_command,
+    auto_tracing_original_command,
     phase1_to_phase2_timing,
     roundabout_p1001_action_timing,
     roundabout_entry_turn_s,
@@ -220,7 +222,12 @@ def main() -> int:
                 last = time.monotonic()
                 continue
 
-            command = auto_tracing_command(
+            use_original_table = (
+                mode is DriveMode.AUTO_TRACING_AFTER_EXIT
+                or circle_state.phase is CirclePhase.EXITED
+            )
+            tracing_policy = auto_tracing_original_command if use_original_table else auto_tracing_command
+            command = tracing_policy(
                 reading.state,
                 speed=args.speed,
                 previous_command=previous_command,
