@@ -45,7 +45,7 @@ drift and right-side junction readings are treated as forward motion.
 ## 2. Enter roundabout mode
 
 Enter roundabout mode starts only when both conditions are true: elapsed time is
-past 25 seconds and the physical reading is `P1110` or `P1111`. The car then
+past 26 seconds and the physical reading is `P1110` or `P1111`. The car then
 completes the calibrated right turn into the roundabout. Before that trigger, the
 car remains in normal auto tracing.
 
@@ -65,8 +65,8 @@ car remains in normal auto tracing.
 | `P1011` | Non-contiguous noise | Right pivot |
 | `P1100` | Left pair / junction evidence | Right pivot |
 | `P1101` | Non-contiguous noise | Right pivot |
-| `P1110` | Left branch / curve evidence | Right-turn entry trigger after 25s |
-| `P1111` | Symmetric crossbar | Right-turn entry trigger after 25s |
+| `P1110` | Left branch / curve evidence | Right-turn entry trigger after 26s |
+| `P1111` | Symmetric crossbar | Right-turn entry trigger after 26s |
 
 ## 3. Exit roundabout mode
 
@@ -116,6 +116,6 @@ the movement during the hardcoded manoeuvre:
 - Hardware runner: [`examples/47_ir_three_modes.py`](../../examples/47_ir_three_modes.py)
 - Verified route sequences: [`2026-08-20-map1-junction-signal-sequences.md`](../progress/2026-08-20-map1-junction-signal-sequences.md)
 
-Example 47 starts the roundabout entry turn after 25 seconds when it detects
+Example 47 starts the roundabout entry turn after 26 seconds when it detects
 `P1110` or `P1111`. The entry turn is about 42.5 degrees; the 90-degree hardcoded turn belongs to
 Phase 1 -> Phase 2, not roundabout entry.

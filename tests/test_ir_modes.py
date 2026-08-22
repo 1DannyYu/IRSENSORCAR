@@ -58,7 +58,7 @@ def test_enter_roundabout_turns_right_for_every_state() -> None:
 
 def test_phase1_to_phase2_is_17cm_then_90deg() -> None:
     forward_s, turn_s = phase1_to_phase2_timing()
-    assert forward_s == 2.2
+    assert forward_s == 2.1
     assert turn_s > 2.0
 
 
