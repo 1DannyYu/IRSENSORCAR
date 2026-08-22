@@ -4,7 +4,7 @@
 Modes:
   auto-tracing       Follow the 16-state table; motion is forward or left correction only.
   phase1-to-phase2   Drive forward 17 cm, spin right 90 degrees, then auto-trace Phase 2.
-  circle             After 23 seconds and P1110/P1111, turn into the roundabout, auto-trace inside, then exit on
+  circle             After 25 seconds and P1110/P1111, turn into the roundabout, auto-trace inside, then exit on
                      the verified P0111 -> P0101 -> P0100 -> P0110.
   chained             Phase 1 -> Phase 2 -> auto-tracing -> split circle mode.
 
