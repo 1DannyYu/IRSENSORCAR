@@ -74,6 +74,6 @@ def circle_triggered(*, elapsed_s: float, bits: tuple[int, int, int, int], enter
 
 def phase1_to_phase2_timing() -> tuple[float, float]:
     """Return calibrated seconds for 17 cm forward followed by a 90-degree right spin."""
-    forward_s = 17.0 / 10.0
+    forward_s = 22.0 / 10.0
     turn_s = 0.41 + 90.0 / 39.7
     return forward_s, turn_s
