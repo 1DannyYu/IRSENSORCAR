@@ -430,7 +430,7 @@ operator standing within reach of the main power switch.
 | [examples/](../examples/) | Runnable hardware verification scripts |
 | [site/](../site/) | Astro source for the project website |
 | [assets/](../assets/) | Photos, diagrams, and other project assets |
-| [vendor/](../vendor/) | Vendor material kept for reference |
+| [vendor/](../vendor/) | Reserved for third-party material, read-only when used; empty as of 2026-08-22 (see [CONVENTIONS.md §4](../CONVENTIONS.md#4-vendor-import-rules)) |
 
 ## Website
 

@@ -56,9 +56,10 @@ Car-and-Robotic-Arm/
 ├── astro.config.mjs       Build configuration (`_site/` output is not committed)
 ├── package.json
 │
-└── vendor/                Vendor material, kept read-only
-    ├── yourfun-nezha/     NeZha SDK, manual, wiring — source of the I2C protocol
-    └── raspberry-pi/      BCM2711 peripherals datasheet (Pi 4 SoC, see its README)
+└── vendor/                Third-party material, kept read-only when present (empty as of 2026-08-22 —
+                             the NeZha SDK/manual and the BCM2711 datasheet were removed; the I2C
+                             facts they sourced are preserved in docs/hardware/nezha-i2c-protocol.md
+                             and docs/adr/0004-nezha-python-driver-port.md)
 ```
 
 ## 2. Decide Placement by Asking One Question
@@ -376,7 +377,7 @@ This repository contains many binary assets. Keep these limits in mind:
 | `.git` history | ~102MB | GitHub recommends under 1GB |
 | Largest file | ~2.4MB | GitHub hard limit is 100MB |
 | `assets/` | ~45MB | GitHub Pages publish limit is 1GB |
-| `vendor/` | ~7MB | Import only what the project actually cites |
+| `vendor/` | Empty (2026-08-22) | Import only what the project actually cites |
 
 Rules:
 
