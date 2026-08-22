@@ -18,6 +18,9 @@ Car-and-Robotic-Arm/
 ├── pyproject.toml         Python project definition (managed with uv)
 │
 ├── docs/                  First-party project documentation
+│   ├── project-reference.md   Full technical/operator reference (hardware bring-up, example
+│   │                          script table, IR workflow runbook, SSH access); README.md is the
+│   │                          short entry point and links here for detail
 │   ├── hardware/          Hardware specs, protocol notes, wiring
 │   ├── setup/             Bring-up and environment setup guides
 │   ├── progress/          Verified progress logs from real hardware work
