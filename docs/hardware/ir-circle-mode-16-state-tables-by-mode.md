@@ -92,7 +92,7 @@ the normal centred state.
 | `P0110` | Centred on line | Sequence step 4 confirms exit; turn right, then resume tracing |
 | `P0111` | Left branch / curve evidence | Sequence step 1; begin exit tracking |
 | `P1000` | Far left, outer sensor only | Hard left pivot |
-| `P1001` | Outer pair only / noise | Hold/continue auto-tracing policy |
+| `P1001` | Outer pair only / noise | If continuous for over 0.2s inside the roundabout: drive 5cm, then turn right 40 degrees (one-shot) |
 | `P1010` | Non-contiguous noise | Hold/continue auto-tracing policy |
 | `P1011` | Non-contiguous noise | Hold/continue auto-tracing policy |
 | `P1100` | Left pair / junction evidence | Strong left correction; not an exit step |

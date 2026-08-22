@@ -12,6 +12,9 @@ CIRCLE_MODE_START_S = 25.6
 SEARCH_SWEEP_ANGLES_DEG = (5.0, 20.0, 45.0)
 SEARCH_REPLAY_S = 2.0
 LINE_LOSS_CONFIRM_S = 1.0
+ROUNDABOUT_P1001_HOLD_S = 0.2
+ROUNDABOUT_P1001_FORWARD_CM = 5.0
+ROUNDABOUT_P1001_TURN_DEG = 40.0
 SPIN_RATE_DEG_PER_S = 39.7
 SPIN_DEAD_TIME_S = 0.41
 ROUNDABOUT_ENTRY_TRIGGERS = {(1, 1, 1, 0), (1, 1, 1, 1)}
@@ -138,7 +141,20 @@ def phase1_to_phase2_timing() -> tuple[float, float]:
 
 def roundabout_entry_turn_s() -> float:
     """Return the calibrated open-loop time for the documented 42.5-degree entry turn."""
-    return 0.41 + ROUNDABOUT_ENTRY_TURN_DEG / 39.7
+    return roundabout_turn_s(ROUNDABOUT_ENTRY_TURN_DEG)
+
+
+def roundabout_turn_s(angle_deg: float) -> float:
+    """Return calibrated open-loop time for a right spin at the configured speed."""
+    if angle_deg <= 0:
+        raise ValueError("turn angle must be positive")
+    return SPIN_DEAD_TIME_S + angle_deg / SPIN_RATE_DEG_PER_S
+
+
+def roundabout_p1001_action_timing() -> tuple[float, float]:
+    """Return forward and right-turn times for the sustained-P1001 action."""
+    forward_s = phase1_to_phase2_timing()[0] * ROUNDABOUT_P1001_FORWARD_CM / 17.0
+    return forward_s, roundabout_turn_s(ROUNDABOUT_P1001_TURN_DEG)
 
 
 def search_sweep_turn_s(angle_deg: float) -> float:

@@ -23,13 +23,16 @@ from carbot.ir_line_nav import detect_ir_line
 from carbot.ir_modes import (
     CIRCLE_MODE_START_S,
     LINE_LOSS_CONFIRM_S,
+    ROUNDABOUT_P1001_HOLD_S,
     SEARCH_REPLAY_S,
     SEARCH_SWEEP_ANGLES_DEG,
+    CirclePhase,
     CircleModeState,
     DriveMode,
     ModeCommand,
     auto_tracing_command,
     phase1_to_phase2_timing,
+    roundabout_p1001_action_timing,
     roundabout_entry_turn_s,
     search_sweep_turn_s,
 )
@@ -48,13 +51,14 @@ def main() -> int:
     mode = DriveMode(args.mode)
     forward_s, turn_s = phase1_to_phase2_timing()
     entry_turn_s = roundabout_entry_turn_s()
+    p1001_forward_s, p1001_turn_s = roundabout_p1001_action_timing()
     print(f"Mode: {mode.value}; duration: {args.duration:.1f}s; speed: {args.speed}")
     if mode in (DriveMode.PHASE1_TO_PHASE2, DriveMode.CHAINED):
         print(f"Phase 1: forward 17 cm for {forward_s:.2f}s, then right 90 degrees for {turn_s:.2f}s")
     if mode in (DriveMode.CIRCLE, DriveMode.CHAINED):
         print(
             f"Circle mode: after {CIRCLE_MODE_START_S:.0f}s and P1110/P1111 turn right about 42.5 degrees, "
-            "auto-trace inside, "
+            f"auto-trace inside; sustained P1001 ({ROUNDABOUT_P1001_HOLD_S:.1f}s) drives 5 cm and turns right 40 degrees; "
             "then exit on P0111 -> P0101 -> P0100 -> P0110"
         )
 
@@ -92,6 +96,8 @@ def main() -> int:
         previous_localising = None
         circle_state = CircleModeState()
         p0000_since: float | None = None
+        p1001_since: float | None = None
+        p1001_action_done = False
         command_history: deque[tuple[int, int, float]] = deque()
         command_history_s = 0.0
 
@@ -146,6 +152,16 @@ def main() -> int:
                     _, _, old_dt = command_history.popleft()
                     command_history_s -= old_dt
             reading = detect_ir_line(sensor, speed=args.speed)
+            if (
+                mode in (DriveMode.CIRCLE, DriveMode.CHAINED)
+                and circle_state.phase is CirclePhase.INSIDE
+                and not p1001_action_done
+                and reading.physical == (1, 0, 0, 1)
+            ):
+                if p1001_since is None:
+                    p1001_since = now
+            else:
+                p1001_since = None
             if reading.physical == (0, 0, 0, 0):
                 if p0000_since is None:
                     p0000_since = now
@@ -165,6 +181,24 @@ def main() -> int:
                 )
                 if car:
                     car.move_for(entry_turn_s, args.speed, -args.speed)
+                previous_command = None
+                last = time.monotonic()
+                continue
+            if (
+                p1001_since is not None
+                and now - p1001_since > ROUNDABOUT_P1001_HOLD_S
+                and not p1001_action_done
+            ):
+                print(
+                    f"{elapsed:.1f}s: P1001 held for over {ROUNDABOUT_P1001_HOLD_S:.1f}s; "
+                    "driving forward 5 cm, then turning right 40 degrees",
+                    flush=True,
+                )
+                if car:
+                    car.move_for(p1001_forward_s, args.speed, args.speed)
+                    car.move_for(p1001_turn_s, args.speed, -args.speed)
+                p1001_action_done = True
+                p1001_since = None
                 previous_command = None
                 last = time.monotonic()
                 continue
