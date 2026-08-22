@@ -16,10 +16,10 @@ reliably here. Iterate directly on the track.
 
 Usage:
     # start with a rough guess, e.g. from spin_deg_per_s_at_200=53.5 -> ~2.24s for 90 deg at speed 150
-    PYTHONPATH=src python3 examples/other/40_motor_spin_duration_check.py --speed 150 --duration-s 2.24 --direction right
+    PYTHONPATH=src python3 examples/other/41.1_motor_spin_duration_check.py --speed 150 --duration-s 2.24 --direction right
 
     # too far / not far enough -> adjust and re-run
-    PYTHONPATH=src python3 examples/other/40_motor_spin_duration_check.py --speed 150 --duration-s 1.80 --direction right
+    PYTHONPATH=src python3 examples/other/41.1_motor_spin_duration_check.py --speed 150 --duration-s 1.80 --direction right
 """
 
 from __future__ import annotations

@@ -15,8 +15,8 @@ for the camera feature-matcher) would not transfer reliably here.
 **Motor-moving. Operator must stand beside the car able to cut main power instantly.**
 
 Usage:
-    PYTHONPATH=src python3 examples/other/41_motor_spin_angle_sweep.py --speed 150
-    PYTHONPATH=src python3 examples/other/41_motor_spin_angle_sweep.py --speed 150 --durations 2,4,6,8,10
+    PYTHONPATH=src python3 examples/other/41.2_motor_spin_angle_sweep.py --speed 150
+    PYTHONPATH=src python3 examples/other/41.2_motor_spin_angle_sweep.py --speed 150 --durations 2,4,6,8,10
 """
 
 from __future__ import annotations
