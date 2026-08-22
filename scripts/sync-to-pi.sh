@@ -9,7 +9,7 @@ REMOTE="${REMOTE:-danny}"
 PI_HOST="${PI_HOST:-carpi}"
 PI_REPO="${PI_REPO:-\$HOME/Car-and-Robotic-Arm}"
 BRANCH="${BRANCH:-main}"
-COMMIT_MESSAGE="${*:-Sync repository changes}"
+COMMIT_MESSAGE="$(date '+%Y-%m-%d %H:%M:%S %z')"
 
 cd "$REPO_ROOT"
 
