@@ -5,7 +5,8 @@ The script performs the calibrated Phase 1 forward movement and 90-degree
 right turn without sensor control. It then uses the original auto-tracing
 policy, including both left and right corrections. A sustained P1001 reading
 enters the Example 47 exit mode once: drive forward 5 cm, then turn right 50
-degrees, and continue with the original auto-tracing policy.
+degrees, and continue with the original auto-tracing policy. From 45 seconds
+onward, sustained P0111 drives forward 5 cm, stops, and ends the run.
 
 Motor-moving. The operator must stand beside the car, secure the chassis or
 lift the wheels, and be able to cut power instantly.
@@ -23,6 +24,9 @@ from carbot.ir_modes import (
     phase1_to_phase2_timing,
     roundabout_p1001_action_timing,
 )
+
+P0111_STOP_START_S = 45.0
+P0111_STOP_HOLD_S = 0.2
 
 
 def main() -> int:
@@ -77,17 +81,34 @@ def main() -> int:
         previous_command = None
         previous_localising = None
         p1001_since: float | None = None
+        p0111_since: float | None = None
         exit_action_done = False
         while time.monotonic() - started < args.duration:
             now = time.monotonic()
+            elapsed = now - started
             reading = detect_ir_line(sensor, speed=args.speed)
             if not exit_action_done and reading.physical == (1, 0, 0, 1):
                 if p1001_since is None:
                     p1001_since = now
             else:
                 p1001_since = None
+            if elapsed >= P0111_STOP_START_S and reading.physical == (0, 1, 1, 1):
+                if p0111_since is None:
+                    p0111_since = now
+            else:
+                p0111_since = None
             if reading.state.kind.value in ("on_line", "drift"):
                 previous_localising = reading.physical
+            if p0111_since is not None and now - p0111_since > P0111_STOP_HOLD_S:
+                print(
+                    f"{elapsed:6.1f}s P0111 held for over {P0111_STOP_HOLD_S:.1f}s; "
+                    "driving forward 5 cm, then stopping",
+                    flush=True,
+                )
+                if car:
+                    car.move_for(p1001_forward_s, args.speed, args.speed)
+                    car.stop(best_effort=True)
+                return 0
             if p1001_since is not None and now - p1001_since > ROUNDABOUT_P1001_HOLD_S:
                 print(
                     f"{now - started:6.1f}s P1001 held for over "

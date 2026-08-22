@@ -27,6 +27,7 @@ from carbot.ir_modes import (
     ROUNDABOUT_ENTRY_PAIR_WINDOW_S,
     ROUNDABOUT_P1001_HOLD_S,
     ROUNDABOUT_POST_EXIT_P0111_HOLD_S,
+    P0111_STOP_START_S,
     SEARCH_REPLAY_S,
     SEARCH_SWEEP_ANGLES_DEG,
     CircleModeState,
@@ -170,11 +171,7 @@ def main() -> int:
                     p1001_since = now
             else:
                 p1001_since = None
-            if (
-                mode in (DriveMode.CIRCLE, DriveMode.CHAINED)
-                and circle_state.phase is CirclePhase.EXITED
-                and reading.physical == (0, 1, 1, 1)
-            ):
+            if elapsed >= P0111_STOP_START_S and reading.physical == (0, 1, 1, 1):
                 if post_exit_p0111_since is None:
                     post_exit_p0111_since = now
             else:
@@ -207,7 +204,7 @@ def main() -> int:
             ):
                 print(
                     f"{elapsed:.1f}s: P0111 held for over "
-                    f"{ROUNDABOUT_POST_EXIT_P0111_HOLD_S:.1f}s after circle exit; "
+                    f"{ROUNDABOUT_POST_EXIT_P0111_HOLD_S:.1f}s after 45s; "
                     "driving forward 5 cm, then stopping",
                     flush=True,
                 )
