@@ -90,7 +90,7 @@ def main() -> int:
             if reading.state.kind in (Kind.ON_LINE, Kind.DRIFT):
                 previous_localising = reading.physical
 
-            if mode is DriveMode.CIRCLE and circle_triggered(
+            if mode in (DriveMode.CIRCLE, DriveMode.CHAINED) and circle_triggered(
                 elapsed_s=elapsed, bits=reading.physical, entered=entered
             ):
                 entered = True

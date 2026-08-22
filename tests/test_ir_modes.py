@@ -44,6 +44,12 @@ def test_circle_trigger_is_delayed_and_one_shot() -> None:
     assert not circle_triggered(elapsed_s=50.0, bits=(1, 1, 1, 0), entered=True)
 
 
+def test_chained_mode_uses_the_circle_trigger_policy() -> None:
+    assert circle_triggered(
+        elapsed_s=CIRCLE_MODE_START_S, bits=(1, 1, 1, 0), entered=False
+    )
+
+
 def test_phase1_to_phase2_is_17cm_then_90deg() -> None:
     forward_s, turn_s = phase1_to_phase2_timing()
     assert forward_s == 1.7
