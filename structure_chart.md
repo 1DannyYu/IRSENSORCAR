@@ -15,56 +15,27 @@
 
 ## Structure Chart Diagram
 
+Current target: `examples/39_map1_ir_line_follow.py` ("Example 39"), aligned with the staged
+Phase 1-10 controller introduced on 2026-08-21.
+
 ```mermaid
-%%{init: {'flowchart': {'curve': 'linear'}}}%%
-flowchart TD
-    %% Level 0 - Main Module
-    Main["Main Control Module"]
+flowchart TB
+    Main["Main Control Module"] -- "● Init Ready Flag" --> Init["System Initialization"]
+    Main -- "↻ Main Loop | ○ Line Offset | ● Line Detected Flag" --> Sense["Sensory Processing"]
+    Main -- "↻ Main Loop | ○ Steering Command" --> Nav["Navigation & Guidance Engine"]
+    Main -- "↻ Main Loop | ● Motor Output Sent" --> Motor["Motor Drive Controller"]
+    Init -- "● Power OK Flag" --> PwrCheck["Check Power Health"]
+    Init -- "● Drivers Active Flag" --> DrvConfig["Configure Hardware Drivers"]
+    Sense -- "○ Raw Signals" --> ReadIR["Read Sensor Channels"]
+    Sense -- "○ Sensor State" --> MapIR["Map & Normalize Inputs"]
+    Sense -- "○ Line Offset | ● Line Detected Flag" --> CalcPos["Calculate Line Offset"]
+    Nav -- "◇ Line Visible | ○ Steering Angle" --> TrackLine["Compute Tracking Steering"]
+    Nav -- "◇ Blind Spot | ○ Creep Vector" --> CreepGap["Maintain Creep in Blind Spot"]
+    Nav -- "◇ Line Lost | ○ Sweep Direction | ● Search Timeout" --> SearchLine["Execute Line Recovery Search"]
+    Nav -- "◇ Junction Detected | ○ Turn Direction | ● Destination Reached" --> ExecJunct["Execute Junction Maneuver"]
+    Motor -- "○ Left/Right Velocities" --> CalcSpeeds["Compute Wheel Speeds"]
+    Motor -- "Transmit Command" --> SendDrive["Transmit Motor Commands"]
 
-    %% Level 1 Sub-modules
-    Init["System Initialization"]
-    Sense["Sensory Processing"]
-    Nav["Navigation & Guidance Engine"]
-    Motor["Motor Drive Controller"]
-
-    %% Level 0 -> Level 1 Invocation & Couples
-    Main -->|"● Init Ready Flag"| Init
-    Main -->|"↻ Main Loop<br>○ Line Offset<br>● Line Detected Flag"| Sense
-    Main -->|"↻ Main Loop<br>○ Steering Command"| Nav
-    Main -->|"↻ Main Loop<br>● Motor Output Sent"| Motor
-
-    %% Level 1 -> Level 2: System Initialization
-    PwrCheck["Check Power Health"]
-    DrvConfig["Configure Hardware Drivers"]
-    Init -->|"● Power OK Flag"| PwrCheck
-    Init -->|"● Drivers Active Flag"| DrvConfig
-
-    %% Level 1 -> Level 2: Sensory Processing
-    ReadIR["Read Sensor Channels"]
-    MapIR["Map & Normalize Inputs"]
-    CalcPos["Calculate Line Offset"]
-    Sense -->|"○ Raw Signals"| ReadIR
-    Sense -->|"○ Sensor State"| MapIR
-    Sense -->|"○ Line Offset<br>● Line Detected Flag"| CalcPos
-
-    %% Level 1 -> Level 2: Navigation & Guidance
-    TrackLine["Compute Tracking Steering"]
-    CreepGap["Maintain Creep in Blind Spot"]
-    SearchLine["Execute Line Recovery Search"]
-    ExecJunct["Execute Junction Maneuver"]
-
-    Nav -->|"◇ Line Visible<br>○ Steering Angle"| TrackLine
-    Nav -->|"◇ Blind Spot<br>○ Creep Vector"| CreepGap
-    Nav -->|"◇ Line Lost<br>○ Sweep Direction<br>● Search Timeout"| SearchLine
-    Nav -->|"◇ Junction Detected<br>○ Turn Direction<br>● Destination Reached"| ExecJunct
-
-    %% Level 1 -> Level 2: Motor Drive Controller
-    CalcSpeeds["Compute Wheel Speeds"]
-    SendDrive["Transmit Motor Commands"]
-    Motor -->|"○ Left/Right Velocities"| CalcSpeeds
-    Motor -->|"Transmit Command"| SendDrive
-
-    %% Styling
     classDef main fill:#1e293b,stroke:#3b82f6,stroke-width:2px,color:#ffffff
     classDef l1 fill:#0f172a,stroke:#38bdf8,stroke-width:1.5px,color:#f8fafc
     classDef l2 fill:#1e1e38,stroke:#a855f7,stroke-width:1.5px,color:#f3e8ff
