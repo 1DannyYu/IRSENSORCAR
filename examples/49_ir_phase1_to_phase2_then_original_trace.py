@@ -6,7 +6,7 @@ right turn without sensor control. It then uses the original auto-tracing
 policy, including both left and right corrections. A sustained P1001 reading
 enters the Example 47 exit mode once: drive forward 5 cm, then turn right 50
 degrees, and continue with the original auto-tracing policy. From 45 seconds
-onward, any P0111 reading drives forward 5 cm, stops, and ends the run.
+onward, any P0111 reading drives forward for 1.2 seconds, stops, and ends the run.
 
 Motor-moving. The operator must stand beside the car, secure the chassis or
 lift the wheels, and be able to cut power instantly.
@@ -26,6 +26,7 @@ from carbot.ir_modes import (
 )
 
 P0111_STOP_START_S = 40.0
+P0111_STOP_FORWARD_S = 1.2
 
 
 def main() -> int:
@@ -95,11 +96,11 @@ def main() -> int:
             if elapsed >= P0111_STOP_START_S and reading.physical == (0, 1, 1, 1):
                 print(
                     f"{elapsed:6.1f}s P0111 detected after {P0111_STOP_START_S:.0f}s; "
-                    "driving forward 5 cm, then stopping",
+                    f"driving forward for {P0111_STOP_FORWARD_S:.1f}s, then stopping",
                     flush=True,
                 )
                 if car:
-                    car.move_for(p1001_forward_s, args.speed, args.speed)
+                    car.move_for(P0111_STOP_FORWARD_S, args.speed, args.speed)
                     car.stop(best_effort=True)
                 return 0
             if p1001_since is not None and now - p1001_since > ROUNDABOUT_P1001_HOLD_S:
