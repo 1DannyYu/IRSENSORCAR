@@ -44,30 +44,30 @@ drift and right-side junction readings are treated as forward motion.
 
 ## 2. Enter roundabout mode
 
-Enter roundabout mode becomes eligible after 22 seconds in the chained run. It then
-requires the ordered entry sequence `P1111 -> P1001 -> P0000`. Only after that
-sequence is confirmed does the car turn right about 42.5 degrees into the
-roundabout. This prevents a pre-entry `P1110` left-curve reading from triggering an
-early 90-degree turn.
+Enter roundabout mode becomes eligible after 22 seconds in the chained run. While
+waiting for the ordered entry sequence `P1111 -> P1001 -> P0000`, every sensor
+state commands a right pivot so the car does not steer away from the roundabout.
+Only after that sequence is confirmed does the car complete the calibrated
+right turn into the roundabout.
 
 | State | Canonical meaning | Enter roundabout action |
 |---|---|---|
-| `P0000` | Blind band or line lost | Entry sequence step 3 after `P1111 -> P1001`; confirm entry and turn right about 42.5 degrees |
-| `P0001` | Far right, outer sensor only | Forward; do not turn right |
-| `P0010` | Slight right drift | Forward; do not turn right |
-| `P0011` | Right pair / junction evidence | Forward; wait for the entry trigger |
-| `P0100` | Slight left drift | Strong left correction |
-| `P0101` | Non-contiguous noise | Hold/continue forward policy |
-| `P0110` | Centred on line | Forward |
-| `P0111` | Left branch / curve evidence | Strong left correction; not an entry-sequence step |
-| `P1000` | Far left, outer sensor only | Hard left pivot |
-| `P1001` | Outer pair only / noise | Entry sequence step 2 after `P1111`; hold while tracking |
-| `P1010` | Non-contiguous noise | Hold/continue forward policy |
-| `P1011` | Non-contiguous noise | Hold/continue forward policy |
-| `P1100` | Left pair / junction evidence | Strong left correction |
-| `P1101` | Non-contiguous noise | Hold/continue forward policy |
-| `P1110` | Left branch / curve evidence | Strong left correction; never the entry trigger |
-| `P1111` | Symmetric crossbar | Entry sequence step 1 after 22s; begin entry tracking |
+| `P0000` | Blind band or line lost | Right pivot; sequence step 3 can confirm entry |
+| `P0001` | Far right, outer sensor only | Right pivot |
+| `P0010` | Slight right drift | Right pivot |
+| `P0011` | Right pair / junction evidence | Right pivot |
+| `P0100` | Slight left drift | Right pivot |
+| `P0101` | Non-contiguous noise | Right pivot |
+| `P0110` | Centred on line | Right pivot |
+| `P0111` | Left branch / curve evidence | Right pivot; not an entry-sequence step |
+| `P1000` | Far left, outer sensor only | Right pivot |
+| `P1001` | Outer pair only / noise | Right pivot; sequence step 2 after `P1111` |
+| `P1010` | Non-contiguous noise | Right pivot |
+| `P1011` | Non-contiguous noise | Right pivot |
+| `P1100` | Left pair / junction evidence | Right pivot |
+| `P1101` | Non-contiguous noise | Right pivot |
+| `P1110` | Left branch / curve evidence | Right pivot; never the entry trigger |
+| `P1111` | Symmetric crossbar | Right pivot; sequence step 1 after 22s |
 
 ## 3. Exit roundabout mode
 

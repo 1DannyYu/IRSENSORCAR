@@ -28,6 +28,7 @@ from carbot.ir_modes import (
     DriveMode,
     ModeCommand,
     auto_tracing_command,
+    enter_roundabout_command,
     line_search_required,
     phase1_to_phase2_timing,
     roundabout_entry_turn_s,
@@ -182,12 +183,19 @@ def main() -> int:
                 last = time.monotonic()
                 continue
 
-            command = auto_tracing_command(
-                reading.state,
-                speed=args.speed,
-                previous_command=previous_command,
-                previous_localising=previous_localising,
-            )
+            if (
+                mode in (DriveMode.CIRCLE, DriveMode.CHAINED)
+                and elapsed >= CIRCLE_MODE_START_S
+                and circle_state.phase.value == "waiting-for-entry"
+            ):
+                command = enter_roundabout_command(reading.state, speed=args.speed)
+            else:
+                command = auto_tracing_command(
+                    reading.state,
+                    speed=args.speed,
+                    previous_command=previous_command,
+                    previous_localising=previous_localising,
+                )
             if car:
                 car.drive(command.left, command.right)
             bits = "".join(str(bit) for bit in reading.physical)

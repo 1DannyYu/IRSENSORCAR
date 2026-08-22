@@ -132,6 +132,17 @@ def auto_tracing_command(
     return _forward(speed, "centred or right drift; forward-only policy")
 
 
+def enter_roundabout_command(state: IRState, *, speed: int) -> ModeCommand:
+    """Use the entry table's right-turn action for every sensor state.
+
+    Entry is deliberately biased toward the roundabout: even readings that
+    normally produce a left correction are commanded as a right pivot.  The
+    confirmed entry sequence still decides when the open-loop entry turn is
+    completed.
+    """
+    return ModeCommand(speed, -speed, f"{state.label}; enter-roundabout right turn")
+
+
 def phase1_to_phase2_timing() -> tuple[float, float]:
     """Return calibrated seconds for 17 cm forward followed by a 90-degree right spin."""
     forward_s = 22.0 / 10.0

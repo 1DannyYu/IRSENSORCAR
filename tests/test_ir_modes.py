@@ -4,6 +4,7 @@ from carbot.ir_modes import (
     CircleModeState,
     DriveMode,
     auto_tracing_command,
+    enter_roundabout_command,
     line_search_required,
     phase1_to_phase2_timing,
     roundabout_entry_turn_s,
@@ -49,6 +50,12 @@ def test_circle_mode_splits_entry_auto_trace_and_exit() -> None:
         assert state.observe(elapsed_s=30.0, bits=bits) is None
     assert state.observe(elapsed_s=30.0, bits=(0, 1, 1, 0)) == "exit"
     assert state.phase.value == "exited-roundabout"
+
+
+def test_enter_roundabout_turns_right_for_every_state() -> None:
+    for bits in [(a, b, c, d) for a in (0, 1) for b in (0, 1) for c in (0, 1) for d in (0, 1)]:
+        command = enter_roundabout_command(classify(bits, physical=True), speed=150)
+        assert (command.left, command.right) == (150, -150)
 
 
 def test_phase1_to_phase2_is_17cm_then_90deg() -> None:
