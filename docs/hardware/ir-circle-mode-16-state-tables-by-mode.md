@@ -44,14 +44,14 @@ drift and right-side junction readings are treated as forward motion.
 
 ## 2. Enter roundabout mode
 
-Enter roundabout mode starts at 22 seconds in the chained run. It does not use an
-entry sensor trigger because the signal observed at the physical roundabout entry
-is inconsistent. At 22 seconds the car completes the calibrated right turn into
-the roundabout regardless of the current sensor reading.
+Enter roundabout mode starts only when both conditions are true: elapsed time is
+past 23 seconds and the physical reading is `P1110` or `P1111`. The car then
+completes the calibrated right turn into the roundabout. Before that trigger, the
+car remains in normal auto tracing.
 
 | State | Canonical meaning | Enter roundabout action |
 |---|---|---|
-| `P0000` | Blind band or line lost | Right pivot; timed entry starts |
+| `P0000` | Blind band or line lost | Normal auto tracing; no entry trigger |
 | `P0001` | Far right, outer sensor only | Right pivot |
 | `P0010` | Slight right drift | Right pivot |
 | `P0011` | Right pair / junction evidence | Right pivot |
@@ -65,8 +65,8 @@ the roundabout regardless of the current sensor reading.
 | `P1011` | Non-contiguous noise | Right pivot |
 | `P1100` | Left pair / junction evidence | Right pivot |
 | `P1101` | Non-contiguous noise | Right pivot |
-| `P1110` | Left branch / curve evidence | Right pivot; never the entry trigger |
-| `P1111` | Symmetric crossbar | Right pivot |
+| `P1110` | Left branch / curve evidence | Right-turn entry trigger after 23s |
+| `P1111` | Symmetric crossbar | Right-turn entry trigger after 23s |
 
 ## 3. Exit roundabout mode
 
@@ -116,6 +116,6 @@ the movement during the hardcoded manoeuvre:
 - Hardware runner: [`examples/47_ir_three_modes.py`](../../examples/47_ir_three_modes.py)
 - Verified route sequences: [`2026-08-20-map1-junction-signal-sequences.md`](../progress/2026-08-20-map1-junction-signal-sequences.md)
 
-Example 47 starts the roundabout entry turn at 22 seconds without a sensor trigger.
-The entry turn is about 42.5 degrees; the 90-degree hardcoded turn belongs to
+Example 47 starts the roundabout entry turn after 23 seconds when it detects
+`P1110` or `P1111`. The entry turn is about 42.5 degrees; the 90-degree hardcoded turn belongs to
 Phase 1 -> Phase 2, not roundabout entry.

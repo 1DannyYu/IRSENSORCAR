@@ -8,11 +8,12 @@ from enum import Enum
 from carbot.ir_geometry import IRState, Kind, resolve_blind, wheel_speeds
 
 LEFT_CORRECTION_RATIO_SCALE = 0.0
-CIRCLE_MODE_START_S = 22.0
+CIRCLE_MODE_START_S = 23.0
 SEARCH_SWEEP_ANGLES_DEG = (5.0, 20.0, 45.0)
 SEARCH_REPLAY_S = 2.0
 SPIN_RATE_DEG_PER_S = 39.7
 SPIN_DEAD_TIME_S = 0.41
+ROUNDABOUT_ENTRY_TRIGGERS = {(1, 1, 1, 0), (1, 1, 1, 1)}
 ROUNDABOUT_ENTRY_TURN_DEG = 42.5
 ROUNDABOUT_EXIT_SEQUENCE = (
     (0, 1, 1, 1),
@@ -41,9 +42,9 @@ class CircleModeState:
     exit_sequence_index: int = 0
 
     def observe(self, *, elapsed_s: float, bits: tuple[int, int, int, int]) -> str | None:
-        """Return ``enter`` at the timed boundary, or ``exit`` on its sequence."""
+        """Return ``enter`` after 23 seconds on either approved entry reading."""
         if self.phase is CirclePhase.WAITING:
-            if elapsed_s < CIRCLE_MODE_START_S:
+            if elapsed_s <= CIRCLE_MODE_START_S or bits not in ROUNDABOUT_ENTRY_TRIGGERS:
                 return None
             self.phase = CirclePhase.INSIDE
             self.exit_sequence_index = 0

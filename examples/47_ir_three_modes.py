@@ -4,7 +4,7 @@
 Modes:
   auto-tracing       Follow the 16-state table; motion is forward or left correction only.
   phase1-to-phase2   Drive forward 17 cm, spin right 90 degrees, then auto-trace Phase 2.
-  circle             After 22 seconds, turn into the roundabout, auto-trace inside, then exit on
+  circle             After 23 seconds and P1110/P1111, turn into the roundabout, auto-trace inside, then exit on
                      the verified P0111 -> P0101 -> P0100 -> P0110.
   chained             Phase 1 -> Phase 2 -> auto-tracing -> split circle mode.
 
@@ -28,7 +28,6 @@ from carbot.ir_modes import (
     DriveMode,
     ModeCommand,
     auto_tracing_command,
-    enter_roundabout_command,
     line_search_required,
     phase1_to_phase2_timing,
     roundabout_entry_turn_s,
@@ -54,7 +53,7 @@ def main() -> int:
         print(f"Phase 1: forward 17 cm for {forward_s:.2f}s, then right 90 degrees for {turn_s:.2f}s")
     if mode in (DriveMode.CIRCLE, DriveMode.CHAINED):
         print(
-            f"Circle mode: after {CIRCLE_MODE_START_S:.0f}s turn right about 42.5 degrees, "
+            f"Circle mode: after {CIRCLE_MODE_START_S:.0f}s and P1110/P1111 turn right about 42.5 degrees, "
             "auto-trace inside, "
             "then exit on P0111 -> P0101 -> P0100 -> P0110"
         )
@@ -183,19 +182,12 @@ def main() -> int:
                 last = time.monotonic()
                 continue
 
-            if (
-                mode in (DriveMode.CIRCLE, DriveMode.CHAINED)
-                and elapsed >= CIRCLE_MODE_START_S
-                and circle_state.phase.value == "waiting-for-entry"
-            ):
-                command = enter_roundabout_command(reading.state, speed=args.speed)
-            else:
-                command = auto_tracing_command(
-                    reading.state,
-                    speed=args.speed,
-                    previous_command=previous_command,
-                    previous_localising=previous_localising,
-                )
+            command = auto_tracing_command(
+                reading.state,
+                speed=args.speed,
+                previous_command=previous_command,
+                previous_localising=previous_localising,
+            )
             if car:
                 car.drive(command.left, command.right)
             bits = "".join(str(bit) for bit in reading.physical)

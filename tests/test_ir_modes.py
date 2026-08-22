@@ -40,8 +40,9 @@ def test_p1000_is_a_hard_left_pivot() -> None:
 
 def test_circle_mode_splits_entry_auto_trace_and_exit() -> None:
     state = CircleModeState()
-    assert state.observe(elapsed_s=CIRCLE_MODE_START_S - 0.1, bits=(1, 1, 1, 1)) is None
-    assert state.observe(elapsed_s=CIRCLE_MODE_START_S, bits=(1, 1, 1, 0)) == "enter"
+    assert state.observe(elapsed_s=CIRCLE_MODE_START_S + 0.1, bits=(1, 0, 1, 1)) is None
+    assert state.observe(elapsed_s=CIRCLE_MODE_START_S, bits=(1, 1, 1, 1)) is None
+    assert state.observe(elapsed_s=CIRCLE_MODE_START_S + 0.1, bits=(1, 1, 1, 0)) == "enter"
     assert state.phase.value == "inside-roundabout"
     for bits in ((0, 1, 1, 1), (0, 1, 0, 1), (0, 1, 0, 0)):
         assert state.observe(elapsed_s=30.0, bits=bits) is None
