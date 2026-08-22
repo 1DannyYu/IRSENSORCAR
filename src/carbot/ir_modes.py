@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import Enum
 
 from carbot.ir_geometry import IRState, Kind, resolve_blind, wheel_speeds
@@ -14,7 +14,8 @@ SEARCH_REPLAY_S = 2.0
 LINE_LOSS_CONFIRM_S = 1.0
 ROUNDABOUT_P1001_HOLD_S = 0.2
 ROUNDABOUT_P1001_FORWARD_CM = 5.0
-ROUNDABOUT_P1001_TURN_DEG = 40.0
+ROUNDABOUT_P1001_TURN_DEG = 50.0
+ROUNDABOUT_ENTRY_PAIR_WINDOW_S = 1.0
 SPIN_RATE_DEG_PER_S = 39.7
 SPIN_DEAD_TIME_S = 0.41
 ROUNDABOUT_ENTRY_TRIGGERS = {(1, 1, 1, 0), (1, 1, 1, 1)}
@@ -44,11 +45,30 @@ class CirclePhase(str, Enum):
 class CircleModeState:
     phase: CirclePhase = CirclePhase.WAITING
     exit_sequence_index: int = 0
+    entry_window_started_s: float | None = None
+    entry_window_bits: set[tuple[int, int, int, int]] = field(default_factory=set)
 
     def observe(self, *, elapsed_s: float, bits: tuple[int, int, int, int]) -> str | None:
-        """Return ``enter`` after 25.6 seconds on either approved entry reading."""
+        """Enter after 25.6s on one trigger or both triggers within one second."""
         if self.phase is CirclePhase.WAITING:
-            if elapsed_s < CIRCLE_MODE_START_S or bits not in ROUNDABOUT_ENTRY_TRIGGERS:
+            if bits in ROUNDABOUT_ENTRY_TRIGGERS:
+                if (
+                    self.entry_window_started_s is None
+                    or elapsed_s - self.entry_window_started_s > ROUNDABOUT_ENTRY_PAIR_WINDOW_S
+                ):
+                    self.entry_window_started_s = elapsed_s
+                    self.entry_window_bits.clear()
+                self.entry_window_bits.add(bits)
+            elif (
+                self.entry_window_started_s is not None
+                and elapsed_s - self.entry_window_started_s > ROUNDABOUT_ENTRY_PAIR_WINDOW_S
+            ):
+                self.entry_window_started_s = None
+                self.entry_window_bits.clear()
+
+            pair_triggered = self.entry_window_bits == ROUNDABOUT_ENTRY_TRIGGERS
+            timed_triggered = elapsed_s >= CIRCLE_MODE_START_S and bits in ROUNDABOUT_ENTRY_TRIGGERS
+            if not pair_triggered and not timed_triggered:
                 return None
             self.phase = CirclePhase.INSIDE
             self.exit_sequence_index = 0

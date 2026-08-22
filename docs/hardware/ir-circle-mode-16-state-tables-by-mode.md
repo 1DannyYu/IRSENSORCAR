@@ -44,10 +44,11 @@ drift and right-side junction readings are treated as forward motion.
 
 ## 2. Enter roundabout mode
 
-Enter roundabout mode starts only when both conditions are true: elapsed time is
-past 25.6 seconds and the physical reading is `P1110` or `P1111`. The car then
-completes the calibrated right turn into the roundabout. Before that trigger, the
-car remains in normal auto tracing.
+Enter roundabout mode starts either when elapsed time is at least 25.6 seconds
+and the physical reading is `P1110` or `P1111`, or when both `P1110` and `P1111`
+are detected within a one-second window. The car then completes the calibrated
+right turn into the roundabout. Before that trigger, the car remains in normal
+auto tracing.
 
 | State | Canonical meaning | Enter roundabout action |
 |---|---|---|
@@ -65,8 +66,8 @@ car remains in normal auto tracing.
 | `P1011` | Non-contiguous noise | Right pivot |
 | `P1100` | Left pair / junction evidence | Right pivot |
 | `P1101` | Non-contiguous noise | Right pivot |
-| `P1110` | Left branch / curve evidence | Right-turn entry trigger after 25.6s |
-| `P1111` | Symmetric crossbar | Right-turn entry trigger after 25.6s |
+| `P1110` | Left branch / curve evidence | Right-turn entry trigger after 25.6s, or pair-window step |
+| `P1111` | Symmetric crossbar | Right-turn entry trigger after 25.6s, or pair-window step |
 
 ## 3. Exit roundabout mode
 
@@ -92,7 +93,7 @@ the normal centred state.
 | `P0110` | Centred on line | Sequence step 4 confirms exit; turn right, then resume tracing |
 | `P0111` | Left branch / curve evidence | Sequence step 1; begin exit tracking |
 | `P1000` | Far left, outer sensor only | Hard left pivot |
-| `P1001` | Outer pair only / noise | If continuous for over 0.2s inside the roundabout: drive 5cm, then turn right 40 degrees (one-shot) |
+| `P1001` | Outer pair only / noise | If continuous for over 0.2s inside the roundabout: drive 5cm, then turn right 50 degrees (one-shot) |
 | `P1010` | Non-contiguous noise | Hold/continue auto-tracing policy |
 | `P1011` | Non-contiguous noise | Hold/continue auto-tracing policy |
 | `P1100` | Left pair / junction evidence | Strong left correction; not an exit step |
@@ -117,5 +118,6 @@ the movement during the hardcoded manoeuvre:
 - Verified route sequences: [`2026-08-20-map1-junction-signal-sequences.md`](../progress/2026-08-20-map1-junction-signal-sequences.md)
 
 Example 47 starts the roundabout entry turn after 25.6 seconds when it detects
-`P1110` or `P1111`. The entry turn is about 42.5 degrees; the 90-degree hardcoded turn belongs to
+`P1110` or `P1111`, or earlier when both readings occur within one second. The
+entry turn is about 42.5 degrees; the 90-degree hardcoded turn belongs to
 Phase 1 -> Phase 2, not roundabout entry.

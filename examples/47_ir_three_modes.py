@@ -24,6 +24,7 @@ from carbot.ir_modes import (
     CIRCLE_MODE_START_S,
     LINE_LOSS_CONFIRM_S,
     ROUNDABOUT_P1001_HOLD_S,
+    ROUNDABOUT_ENTRY_PAIR_WINDOW_S,
     SEARCH_REPLAY_S,
     SEARCH_SWEEP_ANGLES_DEG,
     CirclePhase,
@@ -57,8 +58,9 @@ def main() -> int:
         print(f"Phase 1: forward 17 cm for {forward_s:.2f}s, then right 90 degrees for {turn_s:.2f}s")
     if mode in (DriveMode.CIRCLE, DriveMode.CHAINED):
         print(
-            f"Circle mode: after {CIRCLE_MODE_START_S:.0f}s and P1110/P1111 turn right about 42.5 degrees, "
-            f"auto-trace inside; sustained P1001 ({ROUNDABOUT_P1001_HOLD_S:.1f}s) drives 5 cm and turns right 40 degrees; "
+            f"Circle mode: after {CIRCLE_MODE_START_S:.1f}s on P1110/P1111, or both within "
+            f"{ROUNDABOUT_ENTRY_PAIR_WINDOW_S:.1f}s, turn right about 42.5 degrees; "
+            f"auto-trace inside; sustained P1001 ({ROUNDABOUT_P1001_HOLD_S:.1f}s) drives 5 cm and turns right 50 degrees; "
             "then exit on P0111 -> P0101 -> P0100 -> P0110"
         )
 
@@ -175,7 +177,7 @@ def main() -> int:
                 circle_event = circle_state.observe(elapsed_s=elapsed, bits=reading.physical)
             if circle_event == "enter":
                 print(
-                    f"{elapsed:.1f}s: timed circle entry at {CIRCLE_MODE_START_S:.0f}s; "
+                    f"{elapsed:.1f}s: circle entry trigger confirmed; "
                     "turning right into roundabout",
                     flush=True,
                 )
