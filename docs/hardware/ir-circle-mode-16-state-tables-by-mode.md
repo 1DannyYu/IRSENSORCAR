@@ -76,6 +76,9 @@ mode has no multi-reading sequence: continuous `P1001` for over 0.1 seconds
 immediately triggers the exit action. The car drives forward 5 cm and turns right
 50 degrees, then the roundabout mode is marked exited.
 
+After the roundabout is marked exited, continuous `P0111` for over 0.2 seconds
+triggers one final 5 cm forward move, then the runner stops and terminates.
+
 | State | Canonical meaning | Exit roundabout action |
 |---|---|---|
 | `P0000` | Blind band or line lost | Continue auto tracing/recovery; search only after 1s continuous `P0000` |

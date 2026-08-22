@@ -3,8 +3,9 @@
 
 The script performs the calibrated Phase 1 forward movement and 90-degree
 right turn without sensor control. It then uses the original auto-tracing
-policy, including both left and right corrections, until the duration expires
-or the operator stops it.
+policy, including both left and right corrections. A sustained P1001 reading
+enters the Example 47 exit mode once: drive forward 5 cm, then turn right 50
+degrees, and continue with the original auto-tracing policy.
 
 Motor-moving. The operator must stand beside the car, secure the chassis or
 lift the wheels, and be able to cut power instantly.
@@ -16,7 +17,12 @@ import argparse
 import time
 
 from carbot.ir_line_nav import detect_ir_line
-from carbot.ir_modes import auto_tracing_original_command, phase1_to_phase2_timing
+from carbot.ir_modes import (
+    ROUNDABOUT_P1001_HOLD_S,
+    auto_tracing_original_command,
+    phase1_to_phase2_timing,
+    roundabout_p1001_action_timing,
+)
 
 
 def main() -> int:
@@ -33,7 +39,12 @@ def main() -> int:
         f"Phase 1 -> Phase 2: forward 17 cm for {forward_s:.2f}s, "
         f"then right 90 degrees for {turn_s:.2f}s"
     )
-    print(f"Original auto tracing: {args.duration:.1f}s at speed {args.speed}")
+    p1001_forward_s, p1001_turn_s = roundabout_p1001_action_timing()
+    print(
+        f"Auto tracing mode: original 16-state table, including right corrections; "
+        f"exit mode on sustained P1001 over {ROUNDABOUT_P1001_HOLD_S:.1f}s "
+        "(forward 5 cm, right 50 degrees)"
+    )
 
     if not args.dry_run and input(
         "Operator beside car, chassis secured, power ready to cut? (yes/no) "
@@ -65,11 +76,32 @@ def main() -> int:
         last = started
         previous_command = None
         previous_localising = None
+        p1001_since: float | None = None
+        exit_action_done = False
         while time.monotonic() - started < args.duration:
             now = time.monotonic()
             reading = detect_ir_line(sensor, speed=args.speed)
+            if not exit_action_done and reading.physical == (1, 0, 0, 1):
+                if p1001_since is None:
+                    p1001_since = now
+            else:
+                p1001_since = None
             if reading.state.kind.value in ("on_line", "drift"):
                 previous_localising = reading.physical
+            if p1001_since is not None and now - p1001_since > ROUNDABOUT_P1001_HOLD_S:
+                print(
+                    f"{now - started:6.1f}s P1001 held for over "
+                    f"{ROUNDABOUT_P1001_HOLD_S:.1f}s; entering exit mode",
+                    flush=True,
+                )
+                if car:
+                    car.move_for(p1001_forward_s, args.speed, args.speed)
+                    car.move_for(p1001_turn_s, args.speed, -args.speed)
+                exit_action_done = True
+                p1001_since = None
+                previous_command = None
+                last = time.monotonic()
+                continue
             command = auto_tracing_original_command(
                 reading.state,
                 speed=args.speed,

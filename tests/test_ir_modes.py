@@ -9,6 +9,7 @@ from carbot.ir_modes import (
     line_search_required,
     phase1_to_phase2_timing,
     roundabout_entry_turn_s,
+    roundabout_post_exit_p0111_forward_s,
     search_sweep_turn_s,
 )
 
@@ -82,6 +83,10 @@ def test_chained_mode_is_available() -> None:
 def test_roundabout_entry_turn_is_shorter_than_phase1_turn() -> None:
     _, phase1_turn_s = phase1_to_phase2_timing()
     assert 1.4 < roundabout_entry_turn_s() < phase1_turn_s
+
+
+def test_post_exit_p0111_move_is_calibrated_for_5cm() -> None:
+    assert roundabout_post_exit_p0111_forward_s() == 2.1 * 5.0 / 17.0
 
 
 def test_search_starts_only_for_genuine_p0000_line_loss() -> None:

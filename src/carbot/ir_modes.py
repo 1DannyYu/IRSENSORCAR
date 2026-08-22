@@ -15,6 +15,8 @@ LINE_LOSS_CONFIRM_S = 1.0
 ROUNDABOUT_P1001_HOLD_S = 0.1
 ROUNDABOUT_P1001_FORWARD_CM = 5.0
 ROUNDABOUT_P1001_TURN_DEG = 50.0
+ROUNDABOUT_POST_EXIT_P0111_HOLD_S = 0.2
+ROUNDABOUT_POST_EXIT_P0111_FORWARD_CM = 5.0
 ROUNDABOUT_ENTRY_PAIR_WINDOW_S = 1.0
 SPIN_RATE_DEG_PER_S = 39.7
 SPIN_DEAD_TIME_S = 0.41
@@ -181,6 +183,11 @@ def roundabout_p1001_action_timing() -> tuple[float, float]:
     """Return forward and right-turn times for the sustained-P1001 action."""
     forward_s = phase1_to_phase2_timing()[0] * ROUNDABOUT_P1001_FORWARD_CM / 17.0
     return forward_s, roundabout_turn_s(ROUNDABOUT_P1001_TURN_DEG)
+
+
+def roundabout_post_exit_p0111_forward_s() -> float:
+    """Return the calibrated time for the post-exit 5 cm forward move."""
+    return phase1_to_phase2_timing()[0] * ROUNDABOUT_POST_EXIT_P0111_FORWARD_CM / 17.0
 
 
 def search_sweep_turn_s(angle_deg: float) -> float:

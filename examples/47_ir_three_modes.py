@@ -24,19 +24,21 @@ from carbot.ir_line_nav import detect_ir_line
 from carbot.ir_modes import (
     CIRCLE_MODE_START_S,
     LINE_LOSS_CONFIRM_S,
-    ROUNDABOUT_P1001_HOLD_S,
     ROUNDABOUT_ENTRY_PAIR_WINDOW_S,
+    ROUNDABOUT_P1001_HOLD_S,
+    ROUNDABOUT_POST_EXIT_P0111_HOLD_S,
     SEARCH_REPLAY_S,
     SEARCH_SWEEP_ANGLES_DEG,
-    CirclePhase,
     CircleModeState,
+    CirclePhase,
     DriveMode,
     ModeCommand,
     auto_tracing_command,
     auto_tracing_original_command,
     phase1_to_phase2_timing,
-    roundabout_p1001_action_timing,
     roundabout_entry_turn_s,
+    roundabout_p1001_action_timing,
+    roundabout_post_exit_p0111_forward_s,
     search_sweep_turn_s,
 )
 
@@ -55,6 +57,7 @@ def main() -> int:
     forward_s, turn_s = phase1_to_phase2_timing()
     entry_turn_s = roundabout_entry_turn_s()
     p1001_forward_s, p1001_turn_s = roundabout_p1001_action_timing()
+    post_exit_p0111_forward_s = roundabout_post_exit_p0111_forward_s()
     print(f"Mode: {mode.value}; duration: {args.duration:.1f}s; speed: {args.speed}")
     if mode in (DriveMode.PHASE1_TO_PHASE2, DriveMode.CHAINED):
         print(f"Phase 1: forward 17 cm for {forward_s:.2f}s, then right 90 degrees for {turn_s:.2f}s")
@@ -101,6 +104,7 @@ def main() -> int:
         circle_state = CircleModeState()
         p0000_since: float | None = None
         p1001_since: float | None = None
+        post_exit_p0111_since: float | None = None
         p1001_action_done = False
         command_history: deque[tuple[int, int, float]] = deque()
         command_history_s = 0.0
@@ -166,6 +170,15 @@ def main() -> int:
                     p1001_since = now
             else:
                 p1001_since = None
+            if (
+                mode in (DriveMode.CIRCLE, DriveMode.CHAINED)
+                and circle_state.phase is CirclePhase.EXITED
+                and reading.physical == (0, 1, 1, 1)
+            ):
+                if post_exit_p0111_since is None:
+                    post_exit_p0111_since = now
+            else:
+                post_exit_p0111_since = None
             if reading.physical == (0, 0, 0, 0):
                 if p0000_since is None:
                     p0000_since = now
@@ -188,6 +201,20 @@ def main() -> int:
                 previous_command = None
                 last = time.monotonic()
                 continue
+            if (
+                post_exit_p0111_since is not None
+                and now - post_exit_p0111_since > ROUNDABOUT_POST_EXIT_P0111_HOLD_S
+            ):
+                print(
+                    f"{elapsed:.1f}s: P0111 held for over "
+                    f"{ROUNDABOUT_POST_EXIT_P0111_HOLD_S:.1f}s after circle exit; "
+                    "driving forward 5 cm, then stopping",
+                    flush=True,
+                )
+                if car:
+                    car.move_for(post_exit_p0111_forward_s, args.speed, args.speed)
+                    car.stop(best_effort=True)
+                break
             if (
                 p1001_since is not None
                 and now - p1001_since > ROUNDABOUT_P1001_HOLD_S
