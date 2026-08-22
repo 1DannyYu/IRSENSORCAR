@@ -25,7 +25,7 @@ drift and right-side junction readings are treated as forward motion.
 
 | State | Canonical meaning | Auto tracing action |
 |---|---|---|
-| `P0000` | Blind band or line lost | Resolve from previous position; forward or left recovery |
+| `P0000` | Blind band or line lost | Resolve from previous position; forward or left recovery; search only after 1s continuous `P0000` |
 | `P0001` | Far right, outer sensor only | Forward; no right correction |
 | `P0010` | Slight right drift | Forward; no right correction |
 | `P0011` | Right pair / junction evidence | Forward; no right turn |
@@ -51,7 +51,7 @@ car remains in normal auto tracing.
 
 | State | Canonical meaning | Enter roundabout action |
 |---|---|---|
-| `P0000` | Blind band or line lost | Normal auto tracing; no entry trigger |
+| `P0000` | Blind band or line lost | Normal auto tracing; search only after 1s continuous `P0000` |
 | `P0001` | Far right, outer sensor only | Right pivot |
 | `P0010` | Slight right drift | Right pivot |
 | `P0011` | Right pair / junction evidence | Right pivot |
@@ -83,7 +83,7 @@ the normal centred state.
 
 | State | Canonical meaning | Exit roundabout action |
 |---|---|---|
-| `P0000` | Blind band or line lost | Resolve previous position; continue auto tracing/recovery |
+| `P0000` | Blind band or line lost | Continue auto tracing/recovery; search only after 1s continuous `P0000` |
 | `P0001` | Far right, outer sensor only | Forward; no right correction |
 | `P0010` | Slight right drift | Forward; no right correction |
 | `P0011` | Right pair / junction evidence | Forward; do not confirm exit |

@@ -22,13 +22,13 @@ from carbot.ir_geometry import Kind
 from carbot.ir_line_nav import detect_ir_line
 from carbot.ir_modes import (
     CIRCLE_MODE_START_S,
+    LINE_LOSS_CONFIRM_S,
     SEARCH_REPLAY_S,
     SEARCH_SWEEP_ANGLES_DEG,
     CircleModeState,
     DriveMode,
     ModeCommand,
     auto_tracing_command,
-    line_search_required,
     phase1_to_phase2_timing,
     roundabout_entry_turn_s,
     search_sweep_turn_s,
@@ -91,6 +91,7 @@ def main() -> int:
         previous_command: ModeCommand | None = None
         previous_localising = None
         circle_state = CircleModeState()
+        p0000_since: float | None = None
         command_history: deque[tuple[int, int, float]] = deque()
         command_history_s = 0.0
 
@@ -145,6 +146,11 @@ def main() -> int:
                     _, _, old_dt = command_history.popleft()
                     command_history_s -= old_dt
             reading = detect_ir_line(sensor, speed=args.speed)
+            if reading.physical == (0, 0, 0, 0):
+                if p0000_since is None:
+                    p0000_since = now
+            else:
+                p0000_since = None
             if reading.state.kind in (Kind.ON_LINE, Kind.DRIFT):
                 previous_localising = reading.physical
 
@@ -173,10 +179,16 @@ def main() -> int:
                 last = time.monotonic()
                 continue
 
-            if line_search_required(reading.state, previous_localising):
-                log_search("P0000 resolved as genuine line loss; entering SEARCH MODE 1")
+            if (
+                p0000_since is not None
+                and now - p0000_since >= LINE_LOSS_CONFIRM_S
+            ):
+                log_search(
+                    f"P0000 confirmed for {LINE_LOSS_CONFIRM_S:.1f}s; entering SEARCH MODE 1"
+                )
                 while not search_mode_1():
                     search_mode_2()
+                p0000_since = None
                 previous_command = None
                 previous_localising = None
                 last = time.monotonic()
