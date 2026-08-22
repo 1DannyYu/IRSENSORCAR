@@ -124,19 +124,13 @@ This is the repeatable operator workflow for the Map 1 IR tracking task. Edit on
 locally, push the commit to GitHub, pull it onto the Raspberry Pi, and then run exactly one bounded
 phase with a timestamped log.
 
-這是 Map 1 IR 循線任務的標準流程：在 Mac 編輯並測試，commit 後 push 到 GitHub，再讓
-Raspberry Pi pull 最新版本，最後一次只執行一個有時間與距離上限的 Phase 並保存 LOG。
-
-### Safety / 安全規則
+### Safety
 
 Motor-moving commands may run over SSH only when an operator is physically beside the car and can
 cut main power immediately. Flatten and secure the entire paper map, clear the chassis underside,
 and never continue to the next phase when the current phase fails.
 
-馬達測試時，人必須站在車旁並能立刻切斷主電源。先把整張地圖壓平固定、確認底盤下方
-沒有紙邊或障礙物；目前 Phase 未通過時，不可直接繼續下一段。
-
-### Which file controls each setting? / 每個設定在哪裡修改？
+### Which file controls each setting?
 
 | What to change | Source of truth | Notes |
 |---|---|---|
@@ -152,7 +146,7 @@ and never continue to the next phase when the current phase fails.
 
 The ten phase specifications currently are:
 
-| Phase | Entry pose / 起始方向 | Planned action / 任務 |
+| Phase | Entry pose | Planned action |
 |---:|---|---|
 | 1 | Start stem, heading north | Sensor-blind 16cm departure, then desired 90° right turn |
 | 2 | East straight, heading east | Actively centre on `P0110`, then follow east for 15.5cm |
@@ -165,7 +159,7 @@ The ten phase specifications currently are:
 | 9 | Roundabout entry, heading southwest | Follow 270° and take the mapped exit |
 | 10 | Final straight, heading west | Follow west for 21.5cm and stop |
 
-### 1. Edit and inspect locally / 在 Mac 編輯與檢查
+### 1. Edit and inspect locally
 
 ```bash
 cd /Users/dannyyu/Desktop/IRsensorCar
@@ -176,9 +170,6 @@ git diff --check
 
 Do not edit `vendor/`. Do not use `git add .` when unrelated changes are present; stage the exact
 files that belong to the change.
-
-不要修改 `vendor/`。如果工作區還有其他變更，不要直接使用 `git add .`；只加入這次要
-提交的明確檔案。
 
 For phase constants and IR controller changes, run the focused checks:
 
@@ -197,7 +188,7 @@ uv run python -m pytest -q \
   tests/test_ir_route.py
 ```
 
-### 2. Commit and push to GitHub / 提交並推送到 GitHub
+### 2. Commit and push to GitHub
 
 Stage only the files intentionally edited, review the staged diff, then commit and push the local
 `main` branch through the configured `danny` remote:
@@ -221,16 +212,10 @@ Remove paths from `git add` when they were not edited, and add other intentional
 If `git commit` reports that nothing is staged, stop and inspect `git status --short` instead of
 forcing a commit.
 
-沒有修改的路徑要從 `git add` 移除；其他確定要提交的檔案則明確加入。如果沒有 staged
-changes，先回到 `git status --short` 檢查，不要強制製造 commit。
-
-### 3. Pull safely on the Raspberry Pi / 在樹莓派安全更新
+### 3. Pull safely on the Raspberry Pi
 
 This command refuses to pull when the Pi has uncommitted tracked changes. Untracked LOG files under
 `scratch/` do not block it.
-
-下面的指令會先檢查 Pi 上是否有尚未提交的 tracked changes；若有就停止，不會覆蓋。
-`scratch/` 內未追蹤的 LOG 不會阻擋 pull。
 
 ```bash
 ssh carpi 'cd ~/Car-and-Robotic-Arm && if test -n "$(git status --porcelain --untracked-files=no)"; then echo "ERROR: Pi has uncommitted tracked changes; pull cancelled."; git status --short --untracked-files=no; exit 1; fi && git pull --ff-only origin main && echo "PI HEAD=$(git rev-parse --short HEAD)"'
@@ -239,16 +224,10 @@ ssh carpi 'cd ~/Car-and-Robotic-Arm && if test -n "$(git status --porcelain --un
 Compare the printed Pi commit with `git log -1 --oneline` on the Mac before a motor test. Never use
 `git reset --hard` merely to make a pull succeed.
 
-馬達測試前，確認 Pi 顯示的 commit 與 Mac 的最新 commit 相同。不要為了強行 pull 而使用
-`git reset --hard`。
-
-### 4. Run any one Phase with one editable variable / 改一個數字測任意 Phase
+### 4. Run any one Phase with one editable variable
 
 Change only `PHASE=1` at the beginning to any integer from 1 through 10. The same value selects the
 controller phase and generates the LOG filename automatically.
-
-以後只需修改開頭的 `PHASE=1`，可改成 1 到 10 的任意整數。這個值同時控制實際執行的
-Phase，並自動產生對應 LOG 檔名。
 
 ```bash
 ssh -t carpi 'cd ~/Car-and-Robotic-Arm && PHASE=1 && PHASE_TAG=$(printf "%02d" "$PHASE") && mkdir -p scratch/ir-sensor-tracking && LOG="scratch/ir-sensor-tracking/$(date +%Y-%m-%d-%H%M%S)-phase${PHASE_TAG}-20s.log" && echo "COMMIT=$(git rev-parse --short HEAD) PHASE=$PHASE LOG=$LOG" && PYTHONPATH=src python3 -u examples/40_map1_ir_phase_test.py --phase "$PHASE" --duration 20 --heartbeat-s 2 --speed 150 --start-acquire-timeout-s 5 2>&1 | tee "$LOG"'
@@ -256,9 +235,6 @@ ssh -t carpi 'cd ~/Car-and-Robotic-Arm && PHASE=1 && PHASE_TAG=$(printf "%02d" "
 
 The text `phase01` inside a LOG filename does **not** control the program. Only `--phase "$PHASE"`
 selects the phase. `--phase` accepts one integer, not a range such as `1-4`.
-
-LOG 檔名裡的 `phase01` **不會**控制車子；真正控制階段的是 `--phase "$PHASE"`。
-`--phase` 一次只接受一個整數，不能填入 `1-4`。
 
 Phase-specific notes:
 
@@ -274,7 +250,7 @@ Phase-specific notes:
 - Phases 2-10 require manual placement at the documented entry pose. Test one phase, inspect its
   result, and reposition the stopped car before starting another phase.
 
-### 5. Review or copy the LOG / 查看與保存測試紀錄
+### 5. Review or copy the LOG
 
 List recent evidence on the Pi:
 
@@ -299,9 +275,6 @@ scp 'carpi:~/Car-and-Robotic-Arm/scratch/ir-sensor-tracking/*.log' \
 Only after all ten independent phases pass should the integrated route be tested. The detailed
 gates, expected sensor patterns, and troubleshooting procedure are in
 [`tasks/ir-sensor-tracking/run-book.md`](tasks/ir-sensor-tracking/run-book.md).
-
-只有十個獨立 Phase 都通過後，才可測試整合路線。完整的安全門檻、感測器讀數與疑難排解
-請看 [`tasks/ir-sensor-tracking/run-book.md`](tasks/ir-sensor-tracking/run-book.md)。
 
 ---
 
