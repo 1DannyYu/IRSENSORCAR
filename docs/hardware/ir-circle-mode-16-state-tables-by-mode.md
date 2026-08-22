@@ -72,15 +72,9 @@ auto tracing.
 ## 3. Exit roundabout mode
 
 After entering, the car returns to auto tracing while inside the roundabout. Exit
-mode tracks this verified ordered sequence:
-
-```text
-P0111 -> P0101 -> P0100 -> P0110
-```
-
-Only the complete sequence confirms the exit. The final `P0110` causes one right
-turn out of the roundabout; a single `P0110` without the preceding sequence is just
-the normal centred state.
+mode has no multi-reading sequence: continuous `P1001` for over 0.1 seconds
+immediately triggers the exit action. The car drives forward 5 cm and turns right
+50 degrees, then the roundabout mode is marked exited.
 
 | State | Canonical meaning | Exit roundabout action |
 |---|---|---|
@@ -88,18 +82,18 @@ the normal centred state.
 | `P0001` | Far right, outer sensor only | Forward; no right correction |
 | `P0010` | Slight right drift | Forward; no right correction |
 | `P0011` | Right pair / junction evidence | Forward; do not confirm exit |
-| `P0100` | Slight left drift | Strong left correction; sequence step 3 after `P0111 -> P0101` |
-| `P0101` | Non-contiguous noise | Sequence step 2 after `P0111`; hold while tracking |
-| `P0110` | Centred on line | Sequence step 4 confirms exit; turn right, then resume tracing |
-| `P0111` | Left branch / curve evidence | Sequence step 1; begin exit tracking |
+| `P0100` | Slight left drift | Strong left correction; continue auto tracing |
+| `P0101` | Non-contiguous noise | Hold/continue auto-tracing policy |
+| `P0110` | Centred on line | Continue auto tracing |
+| `P0111` | Left branch / curve evidence | Continue auto tracing |
 | `P1000` | Far left, outer sensor only | Hard left pivot |
-| `P1001` | Outer pair only / noise | If continuous for over 0.2s inside the roundabout: drive 5cm, then turn right 50 degrees (one-shot) |
+| `P1001` | Outer pair only / noise | If continuous for over 0.1s inside the roundabout: enter exit mode, drive 5cm, then turn right 50 degrees (one-shot) |
 | `P1010` | Non-contiguous noise | Hold/continue auto-tracing policy |
 | `P1011` | Non-contiguous noise | Hold/continue auto-tracing policy |
-| `P1100` | Left pair / junction evidence | Strong left correction; not an exit step |
+| `P1100` | Left pair / junction evidence | Strong left correction; continue auto tracing |
 | `P1101` | Non-contiguous noise | Hold/continue auto-tracing policy |
-| `P1110` | Left branch / curve evidence | Strong left correction; not the exit step |
-| `P1111` | Symmetric crossbar | Forward/hold; not an exit step |
+| `P1110` | Left branch / curve evidence | Strong left correction; continue auto tracing |
+| `P1111` | Symmetric crossbar | Forward/hold; continue auto tracing |
 
 ## 4. Phase 1 -> Phase 2
 

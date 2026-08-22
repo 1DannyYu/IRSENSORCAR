@@ -12,7 +12,7 @@ CIRCLE_MODE_START_S = 25.6
 SEARCH_SWEEP_ANGLES_DEG = (5.0, 20.0, 45.0)
 SEARCH_REPLAY_S = 2.0
 LINE_LOSS_CONFIRM_S = 1.0
-ROUNDABOUT_P1001_HOLD_S = 0.2
+ROUNDABOUT_P1001_HOLD_S = 0.1
 ROUNDABOUT_P1001_FORWARD_CM = 5.0
 ROUNDABOUT_P1001_TURN_DEG = 50.0
 ROUNDABOUT_ENTRY_PAIR_WINDOW_S = 1.0
@@ -20,12 +20,6 @@ SPIN_RATE_DEG_PER_S = 39.7
 SPIN_DEAD_TIME_S = 0.41
 ROUNDABOUT_ENTRY_TRIGGERS = {(1, 1, 1, 0), (1, 1, 1, 1)}
 ROUNDABOUT_ENTRY_TURN_DEG = 42.5
-ROUNDABOUT_EXIT_SEQUENCE = (
-    (0, 1, 1, 1),
-    (0, 1, 0, 1),
-    (0, 1, 0, 0),
-    (0, 1, 1, 0),
-)
 
 
 class DriveMode(str, Enum):
@@ -44,7 +38,6 @@ class CirclePhase(str, Enum):
 @dataclass
 class CircleModeState:
     phase: CirclePhase = CirclePhase.WAITING
-    exit_sequence_index: int = 0
     entry_window_started_s: float | None = None
     entry_window_bits: set[tuple[int, int, int, int]] = field(default_factory=set)
 
@@ -71,24 +64,8 @@ class CircleModeState:
             if not pair_triggered and not timed_triggered:
                 return None
             self.phase = CirclePhase.INSIDE
-            self.exit_sequence_index = 0
             return "enter"
 
-        if self.phase is CirclePhase.EXITED:
-            return None
-
-        expected = ROUNDABOUT_EXIT_SEQUENCE[self.exit_sequence_index]
-        if bits == expected:
-            self.exit_sequence_index += 1
-            if self.exit_sequence_index == len(ROUNDABOUT_EXIT_SEQUENCE):
-                self.phase = CirclePhase.EXITED
-                return "exit"
-            return None
-
-        if bits == ROUNDABOUT_EXIT_SEQUENCE[0]:
-            self.exit_sequence_index = 1
-        elif bits != expected:
-            self.exit_sequence_index = 0
         return None
 
 

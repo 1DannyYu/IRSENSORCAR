@@ -43,10 +43,9 @@ def test_circle_mode_splits_entry_auto_trace_and_exit() -> None:
     assert state.observe(elapsed_s=CIRCLE_MODE_START_S - 0.1, bits=(1, 1, 1, 1)) is None
     assert state.observe(elapsed_s=CIRCLE_MODE_START_S, bits=(1, 1, 1, 1)) == "enter"
     assert state.phase.value == "inside-roundabout"
-    for bits in ((0, 1, 1, 1), (0, 1, 0, 1), (0, 1, 0, 0)):
+    for bits in ((0, 1, 1, 1), (0, 1, 0, 1), (0, 1, 0, 0), (0, 1, 1, 0)):
         assert state.observe(elapsed_s=30.0, bits=bits) is None
-    assert state.observe(elapsed_s=30.0, bits=(0, 1, 1, 0)) == "exit"
-    assert state.phase.value == "exited-roundabout"
+    assert state.phase.value == "inside-roundabout"
 
 
 def test_circle_mode_enters_when_both_entry_readings_arrive_within_one_second() -> None:

@@ -4,8 +4,8 @@
 Modes:
   auto-tracing       Follow the 16-state table; motion is forward or left correction only.
   phase1-to-phase2   Drive forward 17 cm, spin right 90 degrees, then auto-trace Phase 2.
-  circle             After 25.6 seconds and P1110/P1111, turn into the roundabout, auto-trace inside, then exit on
-                     the verified P0111 -> P0101 -> P0100 -> P0110.
+  circle             After 25.6 seconds and P1110/P1111, turn into the roundabout, auto-trace inside, then
+                     enter exit mode on sustained P1001.
   chained             Phase 1 -> Phase 2 -> auto-tracing -> split circle mode.
 
 Motor-moving. The operator must stand beside the car, secure the chassis or lift the wheels,
@@ -60,8 +60,8 @@ def main() -> int:
         print(
             f"Circle mode: after {CIRCLE_MODE_START_S:.1f}s on P1110/P1111, or both within "
             f"{ROUNDABOUT_ENTRY_PAIR_WINDOW_S:.1f}s, turn right about 42.5 degrees; "
-            f"auto-trace inside; sustained P1001 ({ROUNDABOUT_P1001_HOLD_S:.1f}s) drives 5 cm and turns right 50 degrees; "
-            "then exit on P0111 -> P0101 -> P0100 -> P0110"
+            f"auto-trace inside; sustained P1001 ({ROUNDABOUT_P1001_HOLD_S:.1f}s) enters exit mode: "
+            "drive 5 cm and turn right 50 degrees"
         )
 
     if not args.dry_run and input(
@@ -193,28 +193,18 @@ def main() -> int:
             ):
                 print(
                     f"{elapsed:.1f}s: P1001 held for over {ROUNDABOUT_P1001_HOLD_S:.1f}s; "
-                    "driving forward 5 cm, then turning right 40 degrees",
+                    "entering exit mode: driving forward 5 cm, then turning right 50 degrees",
                     flush=True,
                 )
                 if car:
                     car.move_for(p1001_forward_s, args.speed, args.speed)
                     car.move_for(p1001_turn_s, args.speed, -args.speed)
+                circle_state.phase = CirclePhase.EXITED
                 p1001_action_done = True
                 p1001_since = None
                 previous_command = None
                 last = time.monotonic()
                 continue
-            if circle_event == "exit":
-                print(
-                    f"{elapsed:.1f}s: roundabout exit sequence confirmed; turning right to exit",
-                    flush=True,
-                )
-                if car:
-                    car.move_for(turn_s, args.speed, -args.speed)
-                previous_command = None
-                last = time.monotonic()
-                continue
-
             if (
                 p0000_since is not None
                 and now - p0000_since >= LINE_LOSS_CONFIRM_S
