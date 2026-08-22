@@ -1,5 +1,6 @@
 from carbot.ir_geometry import classify
 from carbot.ir_modes import (
+    LEFT_CORRECTION_RATIO_SCALE,
     DriveMode,
     auto_tracing_command,
     circle_triggered,
@@ -16,6 +17,7 @@ def test_auto_tracing_never_emits_right_motion() -> None:
 
 def test_auto_tracing_turns_left_for_left_drift() -> None:
     command = auto_tracing_command(classify((0, 1, 0, 0), physical=True), speed=150)
+    assert command.left == round(150 * 0.73 * LEFT_CORRECTION_RATIO_SCALE)
     assert command.left < command.right
 
 

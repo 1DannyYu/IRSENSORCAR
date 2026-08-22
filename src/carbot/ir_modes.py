@@ -7,6 +7,8 @@ from enum import Enum
 
 from carbot.ir_geometry import IRState, Kind, resolve_blind, wheel_speeds
 
+LEFT_CORRECTION_RATIO_SCALE = 0.60
+
 
 class DriveMode(str, Enum):
     AUTO_TRACING = "auto-tracing"
@@ -27,7 +29,8 @@ def _forward(speed: int, reason: str) -> ModeCommand:
 
 
 def _left_from_state(state: IRState, speed: int, reason: str) -> ModeCommand:
-    left, right = wheel_speeds(speed, -1, state.inner_ratio)
+    inner_ratio = max(0.0, min(1.0, state.inner_ratio * LEFT_CORRECTION_RATIO_SCALE))
+    left, right = wheel_speeds(speed, -1, inner_ratio)
     return ModeCommand(left, right, reason)
 
 
@@ -48,7 +51,7 @@ def auto_tracing_command(
     if state.kind is Kind.AMBIGUOUS:
         verdict, offset = resolve_blind(previous_localising)
         if verdict == "blind" and offset is not None and offset < 0:
-            return ModeCommand(round(speed * state.inner_ratio), speed, "blind band after left drift; left correction")
+            return _left_from_state(state, speed, "blind band after left drift; stronger left correction")
         if verdict == "hold" and previous_command is not None:
             return previous_command
         return _forward(speed, f"{state.label}; forward-only policy")
