@@ -25,7 +25,7 @@ from carbot.ir_modes import (
     roundabout_p1001_action_timing,
 )
 
-P0111_STOP_START_S = 45.0
+P0111_STOP_START_S = 40.0
 
 
 def main() -> int:
