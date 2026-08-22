@@ -229,7 +229,7 @@ readings the nav loop is already interpreting.
 
 The car undershot its first T-junction turn (~45° instead of 90°) on the third
 same-day track attempt. A spin-angle sweep to re-measure `spin_rate_deg_per_s`/
-`spin_dead_time_s` (`examples/41_motor_spin_angle_sweep.py`) turned up something
+`spin_dead_time_s` (`examples/other/41_motor_spin_angle_sweep.py`) turned up something
 the angle numbers alone would not have caught: partway through, the "in-place"
 pivot was not in place — the chassis translated ~15cm north-east while
 spinning, radius should have been zero. The operator checked the wheels/axles

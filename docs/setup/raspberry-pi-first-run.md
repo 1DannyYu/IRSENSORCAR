@@ -63,7 +63,7 @@ source ~/.bashrc && uv sync
 ## 4. Verify Communication Without Moving Anything
 
 ```bash
-uv run python examples/01_i2c_probe.py
+uv run python examples/other/01_i2c_probe.py
 ```
 
 Expected result: `✓ Reset command sent successfully; the driver board responded`, followed by a brief
@@ -77,7 +77,7 @@ firmware status LED on the board.
 Lift the car so that all four wheels are off the ground.
 
 ```bash
-uv run python examples/02_motor_check.py
+uv run python examples/other/02_motor_check.py
 ```
 
 Each motor runs forward for one second, stops, then runs in reverse for one second. Record:
@@ -113,7 +113,7 @@ Direction handling:
 Keep the car lifted.
 
 ```bash
-uv run python examples/03_motor_drive.py
+uv run python examples/other/03_motor_drive.py
 ```
 
 The script tests:

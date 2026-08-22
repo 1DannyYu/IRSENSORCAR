@@ -13,7 +13,7 @@ emits :class:`NavCommand` values that the caller applies via `carbot.Car`
 Roundabout exit uses the agreed double confirmation: a fork (``junction``) is
 needed **and** the elapsed time inside the roundabout must reach
 ``roundabout_loop_min_s``, which is anchored to the verified spin rate
-(53.5 deg/s at speed 200, `examples/23_cam_spin_rate_check.py`) — one full lap at
+(53.5 deg/s at speed 200, `examples/ai_camera/23_cam_spin_rate_check.py`) — one full lap at
 the calibrated speed takes ~6.7 s, so the default 6.5 s only counts a lap
 that actually went around. Numbers stay tunable through :class:`NavPolicy`
 and are expected to be adjusted against real runs.
@@ -143,7 +143,7 @@ class NavPolicy:
     # 0 disables the timed spin. A clock-based 90° turn drove off the paper.
     first_right_s: float = 0.0
     first_right_deg: float = 90.0
-    # Verified in-place yaw at speed 200 (examples/23_cam_spin_rate_check.py).
+    # Verified in-place yaw at speed 200 (examples/ai_camera/23_cam_spin_rate_check.py).
     spin_deg_per_s_at_200: float = 53.5
 
     def __post_init__(self) -> None:

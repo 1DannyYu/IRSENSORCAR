@@ -1,6 +1,6 @@
 """Decoding for ``vcgencmd get_throttled`` power-health bits.
 
-``examples/08_battery_check.py`` and ``examples/14_all_sensors_preflight_check.py`` each
+``examples/other/08_battery_check.py`` and ``examples/other/14_all_sensors_preflight_check.py`` each
 decoded these bits inline, and both had the two halves inverted: the **low
 nibble** carries the live state and **bits 16-19** carry the sticky
 since-boot history. A ``0x50000`` reading — undervoltage and throttling *have

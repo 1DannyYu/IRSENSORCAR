@@ -5,7 +5,7 @@ from runpy import run_path
 
 import pytest
 
-SCRIPT = Path(__file__).parents[2] / "examples" / "39_map1_ir_line_follow.py"
+SCRIPT = Path(__file__).parents[2] / "examples" / "other" / "39_map1_ir_line_follow.py"
 RUN_HARDCODED_PHASE1 = run_path(str(SCRIPT))["run_hardcoded_phase1"]
 PHASE2_ACQUISITION_COMMAND = run_path(str(SCRIPT))["phase2_acquisition_command"]
 PHASE3_LEAD_IN_TRANSITION = run_path(str(SCRIPT))["phase3_lead_in_transition"]

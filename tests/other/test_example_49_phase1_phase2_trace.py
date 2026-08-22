@@ -11,7 +11,7 @@ from carbot.ir_geometry import classify
 from carbot.ir_line_nav import IRLineReading
 from carbot.ir_modes import ROUNDABOUT_P1001_HOLD_S
 
-SCRIPT = Path(__file__).parents[2] / "examples" / "49_ir_phase1_to_phase2_then_original_trace.py"
+SCRIPT = Path(__file__).parents[2] / "examples" / "other" / "49_ir_phase1_to_phase2_then_original_trace.py"
 NAMESPACE = run_path(str(SCRIPT))
 LoopState = NAMESPACE["LoopState"]
 StopAction = NAMESPACE["StopAction"]

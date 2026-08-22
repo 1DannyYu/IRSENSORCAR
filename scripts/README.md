@@ -109,7 +109,7 @@ Main purpose:
 
 What it does:
 - `cd`s to the repository root so it works from any directory
-- calls `examples/36_ir_tracing_check.py` with this build's verified pins (`24,25,22,23`) and inversion (`0,1,2,3`)
+- calls `examples/other/36_ir_tracing_check.py` with this build's verified pins (`24,25,22,23`) and inversion (`0,1,2,3`)
 - prints 30 readings at 0.3 s intervals
 
 Safe to run over SSH — nothing moves. Re-run it after touching the sensitivity potentiometers, since channel polarity is not stable across retunes.

@@ -47,7 +47,7 @@ The port produced four artifacts, all committed on 2026-07-30:
 | [`src/carbot/servo.py`](../../src/carbot/servo.py) | `a3f7254`, extracted in `eb7f86e` | Robotic-arm servo check |
 
 Supporting: [`src/carbot/config.py`](../../src/carbot/config.py) (wheel mapping),
-[`tests/test_nezha.py`](../../tests/test_nezha.py), and `examples/01`–`04`.
+[`tests/other/test_nezha.py`](../../tests/other/test_nezha.py), and `examples/01`–`04`.
 
 ### Translation decisions
 

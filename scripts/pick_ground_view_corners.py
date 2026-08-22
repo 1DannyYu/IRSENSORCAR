@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Click four floor points on a still to build a ``--corners`` string.
 
-``examples/27_cam_ground_view_calibrate.py --corners`` wants eight pixel numbers
+``examples/ai_camera/27_cam_ground_view_calibrate.py --corners`` wants eight pixel numbers
 (TL,TR,BR,BL of a rectangle measured on the floor). Reading those off an image
 by eye is error-prone at 2028x1520+. This opens the still in an OpenCV window,
 scaled to fit the screen, and turns four clicks (in TL, TR, BR, BL order) into
@@ -96,7 +96,7 @@ def main() -> int:
     print(
         "\nFull command (fill in --size-m for your measured rectangle and "
         "--near-m for its near-edge distance from the front wheels):\n"
-        f"  PYTHONPATH=src python3 examples/27_cam_ground_view_calibrate.py \\\n"
+        f"  PYTHONPATH=src python3 examples/ai_camera/27_cam_ground_view_calibrate.py \\\n"
         f"    --image {args.image} --corners {corners} \\\n"
         "    --size-m WIDTH_M,HEIGHT_M --near-m NEAR_M"
     )

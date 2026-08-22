@@ -1,7 +1,7 @@
 from pathlib import Path
 from runpy import run_path
 
-SCRIPT = Path(__file__).parents[2] / "examples" / "46_map1_ir_transition_drive.py"
+SCRIPT = Path(__file__).parents[2] / "examples" / "other" / "46_map1_ir_transition_drive.py"
 NAMESPACE = run_path(str(SCRIPT))
 EXAMPLE39_ARGUMENTS = NAMESPACE["example39_arguments"]
 
@@ -9,7 +9,7 @@ EXAMPLE39_ARGUMENTS = NAMESPACE["example39_arguments"]
 def test_default_run_consolidates_the_morning_transition_settings() -> None:
     args = EXAMPLE39_ARGUMENTS()
 
-    assert args[0].endswith("examples/39_map1_ir_line_follow.py")
+    assert args[0].endswith("examples/other/39_map1_ir_line_follow.py")
     assert args[args.index("--test-phase") + 1] == "3"
     assert args[args.index("--duration") + 1] == "20.0"
     assert args[args.index("--speed") + 1] == "150"

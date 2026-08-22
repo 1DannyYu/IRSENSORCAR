@@ -5,7 +5,7 @@ These lock the contracts that the mapping loop depends on:
 - ``scan_angle_rad`` derives the angle from the *configured* spin duration, so
   ``--spin360`` can never drift apart from the angle conversion.
 - ``polar_to_points`` uses angle=0 -> +y (sensor forward), matching the
-  odometry axis in examples/11_sonar_explore_mapping.py.
+  odometry axis in examples/other/11_sonar_explore_mapping.py.
 - ``Pose2D`` heading follows the room convention atan2(Y, X) with the local
   forward axis on +y.
 - ``SensorExtrinsics`` chains sensor -> chassis -> world with explicit signs.

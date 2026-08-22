@@ -82,7 +82,7 @@ camera's (x, y, heading) directly.
   designed position/yaw/size), per-tag pose re-solved with the map's own size
   (a wrong detection size cannot silently scale localization), outlier
   rejection across tags, graceful single-tag fallback. Pure and unit-tested;
-  `examples/31_cam_ground_tag_pose.py` is the no-motor validation tool.
+  `examples/ai_camera/31_cam_ground_tag_pose.py` is the no-motor validation tool.
 
 ## Why this fixes the heuristic pile-up
 
@@ -121,7 +121,7 @@ camera's (x, y, heading) directly.
 
 - **Phase 0** (no motors): printed tags detected and localized from the real
   camera at the real mount angles; overlay + JSON match the car's parked
-  position within a few cm. (Tool: `examples/31_cam_ground_tag_pose.py`.)
+  position within a few cm. (Tool: `examples/ai_camera/31_cam_ground_tag_pose.py`.)
 - **Phase 1** (no motors): localization module on the Pi with the taped tags;
   a standing pose log agrees with ruler measurements.
 - **Phase 2** (operator beside the car): closed-loop heading turns; Gate B+
