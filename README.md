@@ -69,9 +69,13 @@ Car-and-Robotic-Arm/
 ├── tests/                 Automated tests (pytest)
 ├── tasks/                 Per-task working notes and run books
 ├── assets/                Build photos and reference diagrams
-├── site/                  Astro source for the live project website
-└── vendor/                Read-only vendor SDKs and datasheets
+└── site/                  Astro source for the live project website
 ```
+
+`vendor/` is reserved for third-party material and stays read-only when used (see
+[CONVENTIONS.md §4](CONVENTIONS.md#4-vendor-import-rules)); it is currently empty — the imported
+NeZha SDK/manual and BCM2711 datasheet were removed once the facts they sourced were fully
+captured in [docs/hardware/](docs/hardware/) and [ADR 0004](docs/adr/0004-nezha-python-driver-port.md).
 
 See [CONVENTIONS.md](CONVENTIONS.md) for the full layout and naming rules.
 
