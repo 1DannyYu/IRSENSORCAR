@@ -9,6 +9,10 @@ from carbot.ir_geometry import IRState, Kind, resolve_blind, wheel_speeds
 
 LEFT_CORRECTION_RATIO_SCALE = 0.0
 CIRCLE_MODE_START_S = 22.0
+SEARCH_SWEEP_ANGLES_DEG = (5.0, 20.0, 45.0)
+SEARCH_REPLAY_S = 2.0
+SPIN_RATE_DEG_PER_S = 39.7
+SPIN_DEAD_TIME_S = 0.41
 ROUNDABOUT_ENTRY_SEQUENCE = (
     (1, 1, 1, 1),
     (1, 0, 0, 1),
@@ -138,3 +142,20 @@ def phase1_to_phase2_timing() -> tuple[float, float]:
 def roundabout_entry_turn_s() -> float:
     """Return the calibrated open-loop time for the documented 42.5-degree entry turn."""
     return 0.41 + ROUNDABOUT_ENTRY_TURN_DEG / 39.7
+
+
+def search_sweep_turn_s(angle_deg: float) -> float:
+    """Return the calibrated open-loop time for one search pivot."""
+    if angle_deg <= 0:
+        raise ValueError("search angle must be positive")
+    return SPIN_DEAD_TIME_S + angle_deg / SPIN_RATE_DEG_PER_S
+
+
+def line_search_required(
+    state: IRState, previous_localising: tuple[int, int, int, int] | None
+) -> bool:
+    """Return true only for P0000 that resolves to genuine line loss."""
+    if state.kind is not Kind.AMBIGUOUS:
+        return False
+    verdict, _ = resolve_blind(previous_localising)
+    return verdict == "lost"

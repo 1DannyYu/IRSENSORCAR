@@ -4,8 +4,10 @@ from carbot.ir_modes import (
     CircleModeState,
     DriveMode,
     auto_tracing_command,
+    line_search_required,
     phase1_to_phase2_timing,
     roundabout_entry_turn_s,
+    search_sweep_turn_s,
 )
 
 
@@ -62,3 +64,14 @@ def test_chained_mode_is_available() -> None:
 def test_roundabout_entry_turn_is_shorter_than_phase1_turn() -> None:
     _, phase1_turn_s = phase1_to_phase2_timing()
     assert 1.4 < roundabout_entry_turn_s() < phase1_turn_s
+
+
+def test_search_starts_only_for_genuine_p0000_line_loss() -> None:
+    assert line_search_required(classify((0, 0, 0, 0), physical=True), None)
+    assert line_search_required(classify((0, 0, 0, 0), physical=True), (1, 0, 0, 0))
+    assert not line_search_required(classify((0, 0, 0, 0), physical=True), (0, 1, 0, 0))
+
+
+def test_search_sweeps_use_5_20_45_degree_progression() -> None:
+    assert search_sweep_turn_s(5.0) < search_sweep_turn_s(20.0)
+    assert search_sweep_turn_s(20.0) < search_sweep_turn_s(45.0)

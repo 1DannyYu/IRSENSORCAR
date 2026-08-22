@@ -16,17 +16,22 @@ from __future__ import annotations
 
 import argparse
 import time
+from collections import deque
 
 from carbot.ir_geometry import Kind
 from carbot.ir_line_nav import detect_ir_line
 from carbot.ir_modes import (
     CIRCLE_MODE_START_S,
+    SEARCH_REPLAY_S,
+    SEARCH_SWEEP_ANGLES_DEG,
     CircleModeState,
     DriveMode,
     ModeCommand,
     auto_tracing_command,
+    line_search_required,
     phase1_to_phase2_timing,
     roundabout_entry_turn_s,
+    search_sweep_turn_s,
 )
 
 
@@ -86,9 +91,59 @@ def main() -> int:
         previous_command: ModeCommand | None = None
         previous_localising = None
         circle_state = CircleModeState()
+        command_history: deque[tuple[int, int, float]] = deque()
+        command_history_s = 0.0
+
+        def log_search(message: str) -> None:
+            print(f"{time.monotonic() - started:6.1f}s {message}", flush=True)
+
+        def search_mode_1() -> bool:
+            """Sweep 5, 20, then 45 degrees in both directions until line reacquisition."""
+            for angle_deg in SEARCH_SWEEP_ANGLES_DEG:
+                duration = search_sweep_turn_s(angle_deg)
+                for direction, label in ((-1, "left"), (1, "right")):
+                    log_search(f"SEARCH MODE 1: sweeping {label} {angle_deg:.0f} degrees")
+                    deadline = time.monotonic() + duration
+                    while time.monotonic() < deadline:
+                        reading = detect_ir_line(sensor, speed=args.speed)
+                        if reading.state.kind in (Kind.ON_LINE, Kind.DRIFT):
+                            if car:
+                                car.stop(best_effort=True)
+                            log_search(f"SEARCH MODE 1: line reacquired at P{''.join(map(str, reading.physical))}")
+                            return True
+                        if car:
+                            car.drive(-args.speed, args.speed) if direction < 0 else car.drive(args.speed, -args.speed)
+                        time.sleep(0.01)
+                    if car:
+                        car.stop(best_effort=True)
+            log_search("SEARCH MODE 1: no line found after 5, 20, and 45 degree sweeps")
+            return False
+
+        def search_mode_2() -> None:
+            """Replay the most recent two seconds in reverse, then return to Mode 1."""
+            log_search(f"SEARCH MODE 2: reverse-replaying up to {SEARCH_REPLAY_S:.1f}s")
+            remaining = SEARCH_REPLAY_S
+            for left, right, segment_s in reversed(command_history):
+                if remaining <= 0:
+                    break
+                duration = min(segment_s, remaining)
+                if car:
+                    car.move_for(duration, -left, -right)
+                remaining -= duration
+            if car:
+                car.stop(best_effort=True)
+            log_search("SEARCH MODE 2: replay complete; returning to SEARCH MODE 1")
+
         while time.monotonic() - started < args.duration:
             now = time.monotonic()
+            dt = now - last
             elapsed = now - started
+            if previous_command is not None and dt > 0:
+                command_history.append((previous_command.left, previous_command.right, dt))
+                command_history_s += dt
+                while command_history_s > SEARCH_REPLAY_S and command_history:
+                    _, _, old_dt = command_history.popleft()
+                    command_history_s -= old_dt
             reading = detect_ir_line(sensor, speed=args.speed)
             if reading.state.kind in (Kind.ON_LINE, Kind.DRIFT):
                 previous_localising = reading.physical
@@ -115,6 +170,15 @@ def main() -> int:
                 if car:
                     car.move_for(turn_s, args.speed, -args.speed)
                 previous_command = None
+                last = time.monotonic()
+                continue
+
+            if line_search_required(reading.state, previous_localising):
+                log_search("P0000 resolved as genuine line loss; entering SEARCH MODE 1")
+                while not search_mode_1():
+                    search_mode_2()
+                previous_command = None
+                previous_localising = None
                 last = time.monotonic()
                 continue
 
