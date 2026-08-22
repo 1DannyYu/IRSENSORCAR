@@ -10,9 +10,12 @@ nothing else:
 
 | Target | Files |
 |---|---|
-| Arduino | [`vendor/yourfun-nezha/sdk/arduino/`](../../vendor/yourfun-nezha/sdk/arduino/) — `NeZha.cpp` (575 lines), `NeZha.h`, `NeZha_I2C.cpp`, `NeZha_I2C.h` |
-| STM32 | [`vendor/yourfun-nezha/sdk/stm32/`](../../vendor/yourfun-nezha/sdk/stm32/) — same API, different bit-bang layer |
-| C51 | [`vendor/yourfun-nezha/sdk/c51/`](../../vendor/yourfun-nezha/sdk/c51/) — same again |
+| Arduino | [`vendor/yourfun-nezha/sdk/arduino/`](https://github.com/1DannyYu/IRSENSORCAR/tree/1da6a8e/vendor/yourfun-nezha/sdk/arduino) — `NeZha.cpp` (575 lines), `NeZha.h`, `NeZha_I2C.cpp`, `NeZha_I2C.h` |
+| STM32 | [`vendor/yourfun-nezha/sdk/stm32/`](https://github.com/1DannyYu/IRSENSORCAR/tree/1da6a8e/vendor/yourfun-nezha/sdk/stm32) — same API, different bit-bang layer |
+| C51 | [`vendor/yourfun-nezha/sdk/c51/`](https://github.com/1DannyYu/IRSENSORCAR/tree/1da6a8e/vendor/yourfun-nezha/sdk/c51) — same again |
+
+(`vendor/yourfun-nezha/` was removed from the working tree once the facts below were fully
+captured; the links above point at the last commit that still had it, `1da6a8e`.)
 
 Three constraints applied:
 
@@ -115,8 +118,7 @@ M3 needed inversion) and populated `config.INVERTED_MOTORS`.
 
 ## Links
 
-- Vendor sources: [`vendor/yourfun-nezha/sdk/`](../../vendor/yourfun-nezha/sdk/) (read-only,
-  imported in `0968aad`)
+- Vendor sources (removed from the working tree, see note above): [`vendor/yourfun-nezha/sdk/`](https://github.com/1DannyYu/IRSENSORCAR/tree/1da6a8e/vendor/yourfun-nezha/sdk)
 - Protocol reference: [`docs/hardware/nezha-i2c-protocol.md`](../hardware/nezha-i2c-protocol.md)
 - Wiring and power facts:
   [`docs/hardware/nezha-integration-notes.md`](../hardware/nezha-integration-notes.md)
