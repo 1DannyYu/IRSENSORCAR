@@ -1,6 +1,6 @@
 # Car and Robotic Arm
 
-![Smart car and robotic arm build](assets/assembly/021_RobotCar_With_RoboticArm_Combined.jpg)
+![Smart car and robotic arm build](assets/assembly/033_RobotCar_Assembled_Desk_View.jpg)
 
 A Raspberry Pi 5 smart car and robotic arm build. This README is a map of the repository, not a
 description of it — everything it explains lives in the files it links to.
@@ -17,7 +17,7 @@ There is no single "read the whole thing" path — start from whichever question
 | See the annotated Task 1 route map with phase markers | [docs/MapWithPhases.png](docs/MapWithPhases.png) |
 | Read the Python that drives the robot | [src/carbot/](src/carbot/) |
 | Run a hardware check myself | [examples/](examples/) |
-| Check that the code is tested | [tests/](tests/) |
+| Check that the code is tested | [unit_tests/](unit_tests/) |
 | Follow the day-to-day engineering trail (what changed, why, what broke) | [docs/progress/](docs/progress/) |
 | Connect from a Mac / work over SSH | [docs/setup/mac-to-raspberry-pi-access.md](docs/setup/mac-to-raspberry-pi-access.md) |
 | See the working notes for one specific task (e.g. IR line tracking, 3D mapping) | [tasks/](tasks/) |
@@ -32,12 +32,11 @@ cd ~/Car-and-Robotic-Arm
 
 (`carpi` is an SSH alias — see [docs/setup/mac-to-raspberry-pi-access.md](docs/setup/mac-to-raspberry-pi-access.md) to set it up.)
 
-These are motor-moving scripts: stand beside the car, secure the chassis or lift the wheels, and
-be ready to cut power before running either one.
+This is a motor-moving script: stand beside the car, secure the chassis or lift the wheels, and
+be ready to cut power before running it.
 
 ```bash
-uv run --project ~/Car-and-Robotic-Arm python ~/Car-and-Robotic-Arm/examples/49_ir_phase1_to_phase2_then_original_trace.py
-uv run --project ~/Car-and-Robotic-Arm python ~/Car-and-Robotic-Arm/examples/50_ir_phase1_to_phase2_then_original_trace.py
+uv run --project ~/Car-and-Robotic-Arm python "$HOME/Car-and-Robotic-Arm/Full run.py"
 ```
 
 Add `--dry-run` to preview the commands without moving the motors.
@@ -47,13 +46,14 @@ Add `--dry-run` to preview the commands without moving the motors.
 ```
 Car-and-Robotic-Arm/
 ├── README.md              You are here
+├── Full run.py            The complete Phase 1 -> Phase 2 -> auto-tracing run script
 ├── docs/                  Written record: setup guides, dated progress logs, reference images
 │   ├── setup/             Bring-up and environment setup guides
 │   ├── progress/          Dated logs of completed, verified work
 │   └── MapWithPhases.png  Annotated Task 1 route map (phase markers)
 ├── src/carbot/            The importable Python driver and control package
 ├── examples/              Runnable, numbered scripts that exercise real hardware
-├── tests/                 Automated tests (pytest), flat, one file per subsystem
+├── unit_tests/            Automated tests (pytest), flat, one file per subsystem
 ├── tasks/                 Per-task working notes and run books
 └── assets/                Build photos and reference diagrams
 ```
