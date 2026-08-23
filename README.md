@@ -36,8 +36,8 @@ These are motor-moving scripts: stand beside the car, secure the chassis or lift
 be ready to cut power before running either one.
 
 ```bash
-uv run python ~/Car-and-Robotic-Arm/examples/49_ir_phase1_to_phase2_then_original_trace.py
-uv run python ~/Car-and-Robotic-Arm/examples/50_ir_phase1_to_phase2_then_original_trace.py
+uv run --project ~/Car-and-Robotic-Arm python ~/Car-and-Robotic-Arm/examples/49_ir_phase1_to_phase2_then_original_trace.py
+uv run --project ~/Car-and-Robotic-Arm python ~/Car-and-Robotic-Arm/examples/50_ir_phase1_to_phase2_then_original_trace.py
 ```
 
 Add `--dry-run` to preview the commands without moving the motors.
