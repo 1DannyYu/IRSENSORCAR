@@ -5,8 +5,8 @@ Same run as example 49: blind forward 17 cm + 90 degree right turn, then
 auto-trace with the original table (left and right corrections both allowed).
 A P1001 reading held past ROUNDABOUT_P1001_HOLD_S triggers the exit move once
 (forward 5 cm, right 50 degrees) and drops back into auto-tracing. Once we're
-40s in, a P0111 reading means we've reached the end marker - drive forward
-1.2s and stop.
+40s in, a P0111 reading held past END_MARKER_HOLD_S means we've reached the
+end marker - drive forward 1.2s and stop.
 
 Motor-moving. The operator must stand beside the car, secure the chassis or
 lift the wheels, and be able to cut power instantly.
@@ -28,6 +28,7 @@ from carbot.ir_modes import (
 # After this point in the run, a P0111 reading means "end marker reached",
 # not "correct right" as it would earlier in the run.
 END_MARKER_AFTER_S = 40.0
+END_MARKER_HOLD_S = 0.2
 END_MARKER_FORWARD_S = 1.2
 
 
@@ -77,6 +78,7 @@ def main() -> int:
         previous_command = None
         previous_localising = None
         p1001_since = None
+        end_marker_since = None
         exit_done = False  # the roundabout exit move only ever fires once
 
         # Phase 2: read the IR sensors on a ~10ms loop and drive according
@@ -97,9 +99,17 @@ def main() -> int:
             if reading.state.kind.value in ("on_line", "drift"):
                 previous_localising = reading.physical
 
-            # After 40s, a P0111 reading is the end marker: drive forward
-            # briefly and stop instead of treating it as a correction.
+            # After 40s, a P0111 reading is the end marker. Track how long
+            # it's been held continuously, so a brief flicker doesn't
+            # trigger the stop early - only a hold past END_MARKER_HOLD_S
+            # counts as actually reaching the marker.
             if elapsed >= END_MARKER_AFTER_S and reading.physical == (0, 1, 1, 1):
+                if end_marker_since is None:
+                    end_marker_since = now
+            else:
+                end_marker_since = None
+
+            if end_marker_since is not None and now - end_marker_since > END_MARKER_HOLD_S:
                 if car:
                     car.move_for(END_MARKER_FORWARD_S, args.speed, args.speed)
                     car.stop(best_effort=True)
