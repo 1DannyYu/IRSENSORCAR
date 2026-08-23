@@ -9,19 +9,17 @@ description of it — everything it explains lives in the files it links to.
 
 ## How to Explore This Repo
 
-There is no single "read the whole thing" path — start from whichever question you have:
-
-| I want to... | Go to |
-|---|---|
-| See what the robot looks like and what parts it's built from | [assets/](assets/) |
-| See the annotated Task 1 route map with phase markers | [docs/MapWithPhases.png](docs/MapWithPhases.png) |
-| Read the Python that drives the robot | [src/carbot/](src/carbot/) |
-| Run a hardware check myself | [examples/](examples/) |
-| Check that the code is tested | [unit_tests/](unit_tests/) |
-| Follow the day-to-day engineering trail (what changed, why, what broke) | [docs/progress/](docs/progress/) |
-| Connect from a Mac / work over SSH | [docs/setup/mac-to-raspberry-pi-access.md](docs/setup/mac-to-raspberry-pi-access.md) |
-| See exactly what the car runs end to end | [full_run.py](full_run.py) |
-| Assess this as a school Software Engineering project | see [For Examiners and Teachers](#for-examiners-and-teachers) below |
+| I want to...                                                            | Go to                                                                               |
+| ----------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| See what the robot looks like and what parts it's built from            | [assets/](assets/)                                                                   |
+| See the annotated Task 1 route map with phase markers                   | [docs/MapWithPhases.png](docs/MapWithPhases.png)                                     |
+| Read the Python that drives the robot                                   | [src/carbot/](src/carbot/)                                                           |
+| Run a hardware check myself                                             | [examples/](examples/)                                                               |
+| Check that the code is tested                                           | [unit_tests/](unit_tests/)                                                           |
+| Follow the day-to-day engineering trail (what changed, why, what broke) | [docs/progress/](docs/progress/)                                                     |
+| Connect from a Mac / work over SSH                                      | [docs/setup/mac-to-raspberry-pi-access.md](docs/setup/mac-to-raspberry-pi-access.md) |
+| See exactly what the car runs end to end                                | [full_run.py](full_run.py)                                                           |
+| Assess this as a school Software Engineering project                    | see[For Examiners and Teachers](#for-examiners-and-teachers) below                   |
 
 ## Connect to the Pi and Run an Example
 
@@ -63,4 +61,3 @@ This repository is also the submission for an 11 Software Engineering assessment
 
 - [full_run.py](full_run.py) — the actual script the car runs end to end
 - [docs/progress/](docs/progress/) — dated, verified evidence of work as it happened, in order
-- Git history — commit messages describe the why, not just the what, scoped by top-level folder
