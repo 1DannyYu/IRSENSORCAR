@@ -20,7 +20,7 @@ There is no single "read the whole thing" path — start from whichever question
 | Check that the code is tested | [unit_tests/](unit_tests/) |
 | Follow the day-to-day engineering trail (what changed, why, what broke) | [docs/progress/](docs/progress/) |
 | Connect from a Mac / work over SSH | [docs/setup/mac-to-raspberry-pi-access.md](docs/setup/mac-to-raspberry-pi-access.md) |
-| See the working notes for one specific task (e.g. IR line tracking, 3D mapping) | [tasks/](tasks/) |
+| See exactly what the car runs end to end | [full_run.py](full_run.py) |
 | Assess this as a school Software Engineering project | see [For Examiners and Teachers](#for-examiners-and-teachers) below |
 
 ## Connect to the Pi and Run an Example
@@ -36,7 +36,7 @@ This is a motor-moving script: stand beside the car, secure the chassis or lift 
 be ready to cut power before running it.
 
 ```bash
-uv run --project ~/Car-and-Robotic-Arm python "$HOME/Car-and-Robotic-Arm/Full run.py"
+uv run --project ~/Car-and-Robotic-Arm python ~/Car-and-Robotic-Arm/full_run.py
 ```
 
 Add `--dry-run` to preview the commands without moving the motors.
@@ -46,7 +46,7 @@ Add `--dry-run` to preview the commands without moving the motors.
 ```
 Car-and-Robotic-Arm/
 ├── README.md              You are here
-├── Full run.py            The complete Phase 1 -> Phase 2 -> auto-tracing run script
+├── full_run.py            The complete Phase 1 -> Phase 2 -> auto-tracing run script
 ├── docs/                  Written record: setup guides, dated progress logs, reference images
 │   ├── setup/             Bring-up and environment setup guides
 │   ├── progress/          Dated logs of completed, verified work
@@ -54,7 +54,6 @@ Car-and-Robotic-Arm/
 ├── src/carbot/            The importable Python driver and control package
 ├── examples/              Runnable, numbered scripts that exercise real hardware
 ├── unit_tests/            Automated tests (pytest), flat, one file per subsystem
-├── tasks/                 Per-task working notes and run books
 └── assets/                Build photos and reference diagrams
 ```
 
@@ -62,6 +61,6 @@ Car-and-Robotic-Arm/
 
 This repository is also the submission for an 11 Software Engineering assessment.
 
+- [full_run.py](full_run.py) — the actual script the car runs end to end
 - [docs/progress/](docs/progress/) — dated, verified evidence of work as it happened, in order
-- [tasks/](tasks/) — working notes and run books behind each major task
 - Git history — commit messages describe the why, not just the what, scoped by top-level folder
