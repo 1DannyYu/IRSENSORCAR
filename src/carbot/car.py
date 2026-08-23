@@ -11,7 +11,7 @@ mapping and inversion rules from `config.py`.
         car.stop()
 
 The current `config.WHEEL_TO_MOTOR` mapping and inversion settings were verified on real hardware.
-If motor wiring changes, lift the car and rerun `examples/other/02_motor_check.py`.
+If motor wiring changes, lift the car and rerun `examples/02_motor_check.py`.
 """
 
 from __future__ import annotations

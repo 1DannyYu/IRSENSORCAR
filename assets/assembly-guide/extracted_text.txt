@@ -4,7 +4,6 @@ Page 1
 Page 1
 Dasheng Multi-Form Smart Car Assembly Instructions
 Page 1: Title & Document Version
-See site/src/data/assembly-guide.json for the complete English instructions and safety notes.
 
 ---
 Page 2
@@ -12,7 +11,6 @@ Page 2
 Page 2
 4-Wheel Differential Drive Chassis Overview
 Page 2: 4-Wheel Differential Drive Chassis
-See site/src/data/assembly-guide.json for the complete English instructions and safety notes.
 
 ---
 Page 3
@@ -20,7 +18,6 @@ Page 3
 Page 3
 Ackermann Steering Chassis Overview
 Page 3: Ackermann Steering Chassis
-See site/src/data/assembly-guide.json for the complete English instructions and safety notes.
 
 ---
 Page 4
@@ -28,7 +25,6 @@ Page 4
 Page 4
 Mecanum Wheel Chassis Overview
 Page 4: Mecanum Wheel Chassis
-See site/src/data/assembly-guide.json for the complete English instructions and safety notes.
 
 ---
 Page 5
@@ -36,7 +32,6 @@ Page 5
 Page 5
 Top Plate Hole Dimension Diagram
 Page 5: Top Plate Dimensions & Hole Layout
-See site/src/data/assembly-guide.json for the complete English instructions and safety notes.
 
 ---
 Page 6
@@ -44,7 +39,6 @@ Page 6
 Page 6
 Development Board / Nezha Control Board Direct Mounting
 Page 6: Dev Board / Nezha Board Installation
-See site/src/data/assembly-guide.json for the complete English instructions and safety notes.
 
 ---
 Page 7
@@ -52,7 +46,6 @@ Page 7
 Page 7
 Dual-Form ABS Smart Car Packing List
 Page 7: Packing List - Dual-Form ABS Smart Car
-See site/src/data/assembly-guide.json for the complete English instructions and safety notes.
 
 ---
 Page 8
@@ -60,7 +53,6 @@ Page 8
 Page 8
 Acrylic Robotic Arm Packing List
 Page 8: Packing List - Acrylic Robotic Arm Kit
-See site/src/data/assembly-guide.json for the complete English instructions and safety notes.
 
 ---
 Page 9
@@ -68,7 +60,6 @@ Page 9
 Page 9
 Safety Precautions & Critical Assembly Rules
 Page 10: Critical Precautions & Safety Warnings
-See site/src/data/assembly-guide.json for the complete English instructions and safety notes.
 
 ---
 Page 10
@@ -76,7 +67,6 @@ Page 10
 Page 10
 Safety Precautions & Critical Assembly Rules
 Page 10: Critical Precautions & Safety Warnings
-See site/src/data/assembly-guide.json for the complete English instructions and safety notes.
 
 ---
 Page 11
@@ -84,7 +74,6 @@ Page 11
 Page 11
 Screw Model Identification & Parts Reference Guide
 Page 11: Hardware & Screw Identification Guide
-See site/src/data/assembly-guide.json for the complete English instructions and safety notes.
 
 ---
 Page 12
@@ -92,7 +81,6 @@ Page 12
 Page 12
 Steering Module: Tie Rod & Motor Seats
 Page 12-13: Steering Module Sub-assembly
-See site/src/data/assembly-guide.json for the complete English instructions and safety notes.
 
 ---
 Page 13
@@ -100,7 +88,6 @@ Page 13
 Page 13
 Steering Module: Tie Rod & Motor Seats
 Page 12-13: Steering Module Sub-assembly
-See site/src/data/assembly-guide.json for the complete English instructions and safety notes.
 
 ---
 Page 14
@@ -108,7 +95,6 @@ Page 14
 Page 14
 Motor Pressing Plate & Frame Assembly
 Page 14-16: Motor Seats & Frame Mounting
-See site/src/data/assembly-guide.json for the complete English instructions and safety notes.
 
 ---
 Page 15
@@ -116,7 +102,6 @@ Page 15
 Page 15
 Motor Pressing Plate & Frame Assembly
 Page 14-16: Motor Seats & Frame Mounting
-See site/src/data/assembly-guide.json for the complete English instructions and safety notes.
 
 ---
 Page 16
@@ -124,7 +109,6 @@ Page 16
 Page 16
 Motor Pressing Plate & Frame Assembly
 Page 14-16: Motor Seats & Frame Mounting
-See site/src/data/assembly-guide.json for the complete English instructions and safety notes.
 
 ---
 Page 17
@@ -132,7 +116,6 @@ Page 17
 Page 17
 Steering Servo & Steering Module Insertion
 Page 17-18: Servo Installation & Horn Alignment
-See site/src/data/assembly-guide.json for the complete English instructions and safety notes.
 
 ---
 Page 18
@@ -140,7 +123,6 @@ Page 18
 Page 18
 Steering Servo & Steering Module Insertion
 Page 17-18: Servo Installation & Horn Alignment
-See site/src/data/assembly-guide.json for the complete English instructions and safety notes.
 
 ---
 Page 19
@@ -148,7 +130,6 @@ Page 19
 Page 19
 Steering Module Fixation & Linkage Connection
 Page 19-20: Steering Linkage Connection
-See site/src/data/assembly-guide.json for the complete English instructions and safety notes.
 
 ---
 Page 20
@@ -156,7 +137,6 @@ Page 20
 Page 20
 Steering Module Fixation & Linkage Connection
 Page 19-20: Steering Linkage Connection
-See site/src/data/assembly-guide.json for the complete English instructions and safety notes.
 
 ---
 Page 21
@@ -164,7 +144,6 @@ Page 21
 Page 21
 Wheel & Chassis Baffle Installation
 Page 21-22: Wheel & Baffle Installation
-See site/src/data/assembly-guide.json for the complete English instructions and safety notes.
 
 ---
 Page 22
@@ -172,7 +151,6 @@ Page 22
 Page 22
 Wheel & Chassis Baffle Installation
 Page 21-22: Wheel & Baffle Installation
-See site/src/data/assembly-guide.json for the complete English instructions and safety notes.
 
 ---
 Page 23
@@ -180,7 +158,6 @@ Page 23
 Page 23
 Direction Lock Screw Configuration per Mode
 Page 23: Direction Lock Screw Setup Rules
-See site/src/data/assembly-guide.json for the complete English instructions and safety notes.
 
 ---
 Page 24
@@ -188,7 +165,6 @@ Page 24
 Page 24
 Direction Lock Screw Configuration per Mode
 Page 23: Direction Lock Screw Setup Rules
-See site/src/data/assembly-guide.json for the complete English instructions and safety notes.
 
 ---
 Page 25
@@ -196,7 +172,6 @@ Page 25
 Page 25
 Upper Plate Assembly & Mounting
 Page 25-27: Upper Acrylic Plate Assembly
-See site/src/data/assembly-guide.json for the complete English instructions and safety notes.
 
 ---
 Page 26
@@ -204,7 +179,6 @@ Page 26
 Page 26
 Upper Plate Assembly & Mounting
 Page 25-27: Upper Acrylic Plate Assembly
-See site/src/data/assembly-guide.json for the complete English instructions and safety notes.
 
 ---
 Page 27
@@ -212,7 +186,6 @@ Page 27
 Page 27
 Upper Plate Assembly & Mounting
 Page 25-27: Upper Acrylic Plate Assembly
-See site/src/data/assembly-guide.json for the complete English instructions and safety notes.
 
 ---
 Page 28
@@ -220,7 +193,6 @@ Page 28
 Page 28
 Mainboard & Minimum System Installation
 Page 28-33: Controller Board Mounting Standoffs
-See site/src/data/assembly-guide.json for the complete English instructions and safety notes.
 
 ---
 Page 29
@@ -228,7 +200,6 @@ Page 29
 Page 29
 Mainboard & Minimum System Installation
 Page 28-33: Controller Board Mounting Standoffs
-See site/src/data/assembly-guide.json for the complete English instructions and safety notes.
 
 ---
 Page 30
@@ -236,7 +207,6 @@ Page 30
 Page 30
 Mainboard & Minimum System Installation
 Page 28-33: Controller Board Mounting Standoffs
-See site/src/data/assembly-guide.json for the complete English instructions and safety notes.
 
 ---
 Page 31
@@ -244,7 +214,6 @@ Page 31
 Page 31
 Mainboard & Minimum System Installation
 Page 28-33: Controller Board Mounting Standoffs
-See site/src/data/assembly-guide.json for the complete English instructions and safety notes.
 
 ---
 Page 32
@@ -252,7 +221,6 @@ Page 32
 Page 32
 Mainboard & Minimum System Installation
 Page 28-33: Controller Board Mounting Standoffs
-See site/src/data/assembly-guide.json for the complete English instructions and safety notes.
 
 ---
 Page 33
@@ -260,7 +228,6 @@ Page 33
 Page 33
 Mainboard & Minimum System Installation
 Page 28-33: Controller Board Mounting Standoffs
-See site/src/data/assembly-guide.json for the complete English instructions and safety notes.
 
 ---
 Page 34
@@ -268,7 +235,6 @@ Page 34
 Page 34
 Mecanum Coupler & Roller Orientation Setup
 Page 34-35: Mecanum Wheel Coupler & Direction Setup
-See site/src/data/assembly-guide.json for the complete English instructions and safety notes.
 
 ---
 Page 35
@@ -276,7 +242,6 @@ Page 35
 Page 35
 Mecanum Coupler & Roller Orientation Setup
 Page 34-35: Mecanum Wheel Coupler & Direction Setup
-See site/src/data/assembly-guide.json for the complete English instructions and safety notes.
 
 ---
 Page 36
@@ -284,7 +249,6 @@ Page 36
 Page 36
 Arm Base Assembly & Servo Initial Neutral Position
 Page 36-37: Arm Base & Servo Neutral Position
-See site/src/data/assembly-guide.json for the complete English instructions and safety notes.
 
 ---
 Page 37
@@ -292,7 +256,6 @@ Page 37
 Page 37
 Arm Base Assembly & Servo Initial Neutral Position
 Page 36-37: Arm Base & Servo Neutral Position
-See site/src/data/assembly-guide.json for the complete English instructions and safety notes.
 
 ---
 Page 38
@@ -300,7 +263,6 @@ Page 38
 Page 38
 Main Arm Acrylic Linkages & Servo Horn Fixation
 Page 38-39: Main Arm Linkage & Servo Fastening
-See site/src/data/assembly-guide.json for the complete English instructions and safety notes.
 
 ---
 Page 39
@@ -308,7 +270,6 @@ Page 39
 Page 39
 Main Arm Acrylic Linkages & Servo Horn Fixation
 Page 38-39: Main Arm Linkage & Servo Fastening
-See site/src/data/assembly-guide.json for the complete English instructions and safety notes.
 
 ---
 Page 40
@@ -316,7 +277,6 @@ Page 40
 Page 40
 Arm Standoffs & Joint Lock Nut Adjustment
 Page 40-41: Arm Frame Standoffs & Joint Lock Nuts
-See site/src/data/assembly-guide.json for the complete English instructions and safety notes.
 
 ---
 Page 41
@@ -324,7 +284,6 @@ Page 41
 Page 41
 Arm Standoffs & Joint Lock Nut Adjustment
 Page 40-41: Arm Frame Standoffs & Joint Lock Nuts
-See site/src/data/assembly-guide.json for the complete English instructions and safety notes.
 
 ---
 Page 42
@@ -332,7 +291,6 @@ Page 42
 Page 42
 Gripper Claw & End-Effector Assembly
 Page 42-44: Gripper / Claw Assembly
-See site/src/data/assembly-guide.json for the complete English instructions and safety notes.
 
 ---
 Page 43
@@ -340,7 +298,6 @@ Page 43
 Page 43
 Gripper Claw & End-Effector Assembly
 Page 42-44: Gripper / Claw Assembly
-See site/src/data/assembly-guide.json for the complete English instructions and safety notes.
 
 ---
 Page 44
@@ -348,7 +305,6 @@ Page 44
 Page 44
 Gripper Claw & End-Effector Assembly
 Page 42-44: Gripper / Claw Assembly
-See site/src/data/assembly-guide.json for the complete English instructions and safety notes.
 
 ---
 Page 45
@@ -356,7 +312,6 @@ Page 45
 Page 45
 Claw-to-Arm Integration & Final Linkages
 Page 45-47: Gripper to Arm Integration
-See site/src/data/assembly-guide.json for the complete English instructions and safety notes.
 
 ---
 Page 46
@@ -364,7 +319,6 @@ Page 46
 Page 46
 Claw-to-Arm Integration & Final Linkages
 Page 45-47: Gripper to Arm Integration
-See site/src/data/assembly-guide.json for the complete English instructions and safety notes.
 
 ---
 Page 47
@@ -372,7 +326,6 @@ Page 47
 Page 47
 Claw-to-Arm Integration & Final Linkages
 Page 45-47: Gripper to Arm Integration
-See site/src/data/assembly-guide.json for the complete English instructions and safety notes.
 
 ---
 Page 48
@@ -380,7 +333,6 @@ Page 48
 Page 48
 Mounting Arm on Chassis & Complete Robot Showcase
 Page 50: Assembled Smart Car & Robotic Arm Showcase
-See site/src/data/assembly-guide.json for the complete English instructions and safety notes.
 
 ---
 Page 49
@@ -388,7 +340,6 @@ Page 49
 Page 49
 Mounting Arm on Chassis & Complete Robot Showcase
 Page 50: Assembled Smart Car & Robotic Arm Showcase
-See site/src/data/assembly-guide.json for the complete English instructions and safety notes.
 
 ---
 Page 50
@@ -396,5 +347,4 @@ Page 50
 Page 50
 Mounting Arm on Chassis & Complete Robot Showcase
 Page 50: Assembled Smart Car & Robotic Arm Showcase
-See site/src/data/assembly-guide.json for the complete English instructions and safety notes.
 

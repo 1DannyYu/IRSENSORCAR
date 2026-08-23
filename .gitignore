@@ -9,14 +9,6 @@ __pycache__/
 .ruff_cache/
 *.egg-info/
 
-# Node and site build tooling
-node_modules/
-dist/
-.astro/
-
-# Build output
-_site/
-
 # Rebuildable Keil MDK artifacts excluded from vendor imports
 *.o
 *.crf

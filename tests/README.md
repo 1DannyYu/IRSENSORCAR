@@ -1,33 +1,13 @@
 # Tests Overview
 
-This folder contains the automated regression and validation tests for the robot project. The tests cover hardware protocol checks, camera and vision behavior, line following, navigation, mapping, and motion logic.
+This folder contains the automated regression and validation tests for the robot project. The tests cover hardware protocol checks, line following, navigation, mapping, and motion logic.
 
 The goal of the suite is to verify that the system behavior remains correct after changes to the codebase and to catch regressions before running on real hardware.
 
 ## Folder layout
 
-Tests are organized into two top-level subfolders:
-
-### `tests/ai_camera/` — AI camera (IMX500) and vision-related tests
-Everything that directly uses camera frames, OpenCV (`cv2`), calibration, AprilTag
-pose estimation, visual yaw, image-based line detection, landmark/tag geometry,
-or scale recovery from camera trajectories.
-
-| File | Purpose |
-|---|---|
-| `test_frame_quality.py` | Image quality scoring, tile grids, keypoint extraction |
-| `test_ground_view.py` | Bird's-eye ground-view line tracking and calibration |
-| `test_landmarks.py` | Tag/map landmark rotation math and JSON loading |
-| `test_line_follow.py` | Downward black-line detection with synthetic images and ROI filtering |
-| `test_scale.py` | Metric scale recovery from camera positions |
-| `test_vision.py` | Camera calibration, undistortion, AprilTag/ChArUco pose |
-| `test_vision_avoid.py` | Vision + sonar obstacle fusion and blocking logic |
-| `test_visual_yaw.py` | Visual turn/yaw estimation from two-frame homography |
-
-### `tests/other/` — Everything else (IR sensors, motors, servos, sonar, state machines, protocol)
-All test files that do not require camera hardware or image processing. This
-covers the NeZha I2C board, IR 4-channel tracing sensor, sonar distance math,
-motion and timing calculations, route/tag navigation state machines, and the
+Tests are flat, one file per subsystem: NeZha I2C board, IR 4-channel tracing sensor, sonar
+distance math, motion and timing calculations, route/tag navigation state machines, and the
 extracted pure decision logic from the numbered example scripts.
 
 | File | Purpose |
@@ -60,19 +40,7 @@ extracted pure decision logic from the numbered example scripts.
 
 ## Script-by-script summary
 
-### `ai_camera/test_frame_quality.py`
-Main purpose:
-- Validate image quality scoring logic.
-- Confirm frame dimensions, tile grids, and keypoint extraction behave as expected.
-- Reject invalid image sizes or unsupported shapes.
-
-What it checks:
-- image dimensions and grid layout
-- grayscale/color normalization behavior
-- invalid input rejection
-- tile-based quality assessment logic
-
-### `other/test_frames.py`
+### `test_frames.py`
 Main purpose:
 - Verify scan angle and frame-related geometry functions.
 
@@ -81,38 +49,7 @@ What it checks:
 - configured spin settings and angular normalization
 - motion math related to the scan sequence
 
-### `ai_camera/test_ground_view.py`
-Main purpose:
-- Validate ground-view line tracking and visual error estimation.
-
-What it checks:
-- line offset in bird's-eye view
-- tracking stability under distractions
-- preferred existing target selection
-- robust estimation under noise and near-field blockers
-
-### `ai_camera/test_landmarks.py`
-Main purpose:
-- Validate tag and map landmark math, including rotation and map loading.
-
-What it checks:
-- world-to-tag rotation transforms
-- proper rotation matrix properties
-- JSON landmark map parsing and validation
-- landmark/pose logic for navigation tasks
-
-### `ai_camera/test_line_follow.py`
-Main purpose:
-- Verify the black-line detection pipeline used for following a track.
-
-What it checks:
-- centred line yields near-zero error
-- shifted line yields signed error values
-- blank floor returns no detected line
-- ROI and threshold rules exclude chassis/shadow artifacts
-- noisy or sparse features are ignored
-
-### `other/test_line_nav.py`
+### `test_line_nav.py`
 Main purpose:
 - Validate command generation from line-follow state.
 
@@ -123,7 +60,7 @@ What it checks:
 - no-drive behavior when the line is invisible
 - search/follow state transitions
 
-### `other/test_mapping.py`
+### `test_mapping.py`
 Main purpose:
 - Test map generation, scan registration, and occupancy-grid logic.
 
@@ -134,7 +71,7 @@ What it checks:
 - occupancy grid updates and bounds
 - scan file parsing and conversion to points
 
-### `other/test_motion.py`
+### `test_motion.py`
 Main purpose:
 - Validate simple robot motion equations.
 
@@ -142,7 +79,7 @@ What it checks:
 - forward-distance time conversion
 - basic model calculations used for driving commands
 
-### `other/test_nezha.py`
+### `test_nezha.py`
 Main purpose:
 - Verify low-level NeZha motor, encoder, servo, and I2C command behavior.
 
@@ -153,7 +90,7 @@ What it checks:
 - servo angle conversion
 - invalid input rejection
 
-### `other/test_power.py`
+### `test_power.py`
 Main purpose:
 - Validate power-status interpretation and bit decoding.
 
@@ -162,7 +99,7 @@ What it checks:
 - undervoltage and throttle state reporting
 - clean/dirty power conditions
 
-### `other/test_route_nav.py`
+### `test_route_nav.py`
 Main purpose:
 - Verify route-tracker state machine logic.
 
@@ -172,7 +109,7 @@ What it checks:
 - remaining-distance reporting
 - no self-driving or invalid command invention
 
-### `other/test_route_plan.py`
+### `test_route_plan.py`
 Main purpose:
 - Validate route-plan structure and expected step count.
 
@@ -181,16 +118,7 @@ What it checks:
 - step metadata and labels
 - route consistency
 
-### `ai_camera/test_scale.py`
-Main purpose:
-- Validate metric scale estimation from scene geometry.
-
-What it checks:
-- true scale recovery
-- scale estimation under rotation/offset
-- robustness across multiple scale values
-
-### `other/test_servo.py`
+### `test_servo.py`
 Main purpose:
 - Validate servo behavior and safety limits.
 
@@ -199,7 +127,7 @@ What it checks:
 - channel initialization and motion sequencing
 - command generation for servo movement
 
-### `other/test_sonar.py`
+### `test_sonar.py`
 Main purpose:
 - Validate ultrasonic range calculation.
 
@@ -208,7 +136,7 @@ What it checks:
 - echo interpretation
 - expected readings for normal and zero-distance cases
 
-### `other/test_ir_tracing.py`
+### `test_ir_tracing.py`
 Main purpose:
 - Verify the IR tracing sensor normalization contract: all channels report
   1 on black and 0 on white, regardless of raw comparator polarity.
@@ -221,7 +149,7 @@ What it checks:
 - read order follows channel (Out) order
 - invalid `invert` indices and empty channel lists are rejected
 
-### `other/test_tag_nav.py`
+### `test_tag_nav.py`
 Main purpose:
 - Validate tag-based navigation state logic.
 
@@ -229,35 +157,6 @@ What it checks:
 - state progression between departure, follow, and hold phases
 - whether a valid position fix is required before moving
 - navigation command generation under different conditions
-
-### `ai_camera/test_vision_avoid.py`
-Main purpose:
-- Check obstacle detection and avoidance logic from vision inputs.
-
-What it checks:
-- detection geometry and area calculations
-- center and edge clipping behavior
-- label fallback handling
-- central obstacle blocking logic
-
-### `ai_camera/test_vision.py`
-Main purpose:
-- Validate camera calibration and visual pose estimation.
-
-What it checks:
-- real calibration loading
-- scale-to-resolution conversion
-- board and tag pose estimation
-- AprilTag detection and undistortion behavior
-
-### `ai_camera/test_visual_yaw.py`
-Main purpose:
-- Validate visual yaw estimation from camera input.
-
-What it checks:
-- known-turn recovery accuracy
-- confidence/trustworthiness of yaw estimation
-- estimation under different input conditions
 
 ---
 
@@ -269,27 +168,12 @@ Run the whole suite from the repository root:
 uv run pytest tests/ -v
 ```
 
-Run only the AI camera tests (OpenCV/camera vision stack):
-
-```bash
-uv run pytest tests/ai_camera/ -v
-```
-
-Run only the non-camera tests (IR, motors, sonar, state machines, protocol):
-
-```bash
-uv run pytest tests/other/ -v
-```
-
 When debugging a subsystem, start with the test file that matches the area of interest:
 
-- Hardware protocol -> `other/test_nezha.py`
-- IR line follow -> `other/test_ir_modes.py`, `other/test_ir_line_nav.py`
-- Camera line follow -> `ai_camera/test_line_follow.py`
-- Navigation logic -> `other/test_line_nav.py`, `other/test_route_nav.py`, `other/test_tag_nav.py`
-- Sonar mapping/localization -> `other/test_mapping.py`, `ai_camera/test_landmarks.py`, `ai_camera/test_scale.py`
-- Vision/camera -> `ai_camera/test_vision.py`, `ai_camera/test_visual_yaw.py`, `ai_camera/test_ground_view.py`
-- Obstacle detection -> `ai_camera/test_vision_avoid.py`
-- Example 49 decisions -> `other/test_example_49_phase1_phase2_trace.py`
+- Hardware protocol -> `test_nezha.py`
+- IR line follow -> `test_ir_modes.py`, `test_ir_line_nav.py`
+- Navigation logic -> `test_line_nav.py`, `test_route_nav.py`, `test_tag_nav.py`
+- Sonar mapping -> `test_mapping.py`
+- Example 49 decisions -> `test_example_49_phase1_phase2_trace.py`
 
 This folder is the project's safety net: each test documents a specific contract that the robot code must keep working.

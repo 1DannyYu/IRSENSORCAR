@@ -17,7 +17,7 @@
 
 ## Confirmed on real hardware
 
-On 2026-07-30, `examples/other/02_motor_check.py` confirmed:
+On 2026-07-30, `examples/02_motor_check.py` confirmed:
 M1 = rear left, M2 = rear right, M3 = front right, M4 = front left.
 M2 and M3 need inversion.
 """

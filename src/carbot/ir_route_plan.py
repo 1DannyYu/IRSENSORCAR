@@ -21,7 +21,7 @@ This module is a planning/logging artifact, mirroring the role ``carbot.route_pl
 plays for the camera-based ``carbot.route_nav``. It does not drive the IR-sensor car:
 that job belongs to ``carbot.ir_route`` (``task1_route_for_laps``) and
 ``carbot.ir_line_nav.IRLineNav``, whose junction-sequence + distance-gate design is
-already verified for exactly this two-lap behaviour (see ``tests/other/test_ir_route.py``).
+already verified for exactly this two-lap behaviour (see ``tests/test_ir_route.py``).
 Keeping the actual navigation on one source avoids the 2026-08-19 failure class this
 project already hit once: two structures describing the same lap that can drift apart.
 """

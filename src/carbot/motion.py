@@ -4,7 +4,7 @@
 feedback, so dead reckoning falls back to a calibrated time model. The three
 constants below were measured on the real chassis and live in
 ``docs/handoff-2026-08-16-line-follow.md``; the calibration example
-``examples/other/30_cam_motion_calibrate.py`` can refine them for the current battery.
+``examples/30_cam_motion_calibrate.py`` can refine them for the current battery.
 
     forward @ 200  ~= 0.104 m/s (measured 2026-08-16)
     forward @ 150  ~= 0.088 m/s

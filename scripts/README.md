@@ -6,10 +6,7 @@ According to [CONVENTIONS.md](../CONVENTIONS.md), this directory is meant for fi
 
 ## Script categories
 
-### 1. Data validation and integrity checks
-- `check_inventory_data.py` — Verifies the website inventory dataset, checks image existence, IDs, localization fields, and naming conventions.
-
-### 2. Map and route generation
+### 1. Map and route generation
 - `generate_task1_map.py` — Generates the printable Task-1 map as multi-page A4 PDFs and emits the tag placement JSON.
 - `annotate_tag_map.py` — Overlays tag IDs and orientations onto a corrected route map for visual checking.
 - `generate_apriltag_sheet.py` — Produces a printable AprilTag sheet for physical tagging of the map.
@@ -56,18 +53,6 @@ What it does:
 
 This is useful for checking whether tag positions are physically placed correctly.
 
-### `check_inventory_data.py`
-Main purpose:
-- Validates the website inventory data and image references.
-
-What it does:
-- loads the inventory JSON dataset
-- checks duplicate IDs and missing fields
-- verifies localized entries and wiring sections
-- checks that referenced images exist
-- ensures filenames follow the repository naming rule for inventory assets
-- reports unreferenced asset photos
-
 This is a quality-control script for the website data.
 
 ### `generate_apriltag_sheet.py`
@@ -109,7 +94,7 @@ Main purpose:
 
 What it does:
 - `cd`s to the repository root so it works from any directory
-- calls `examples/other/36_ir_tracing_check.py` with this build's verified pins (`24,25,22,23`) and inversion (`0,1,2,3`)
+- calls `examples/36_ir_tracing_check.py` with this build's verified pins (`24,25,22,23`) and inversion (`0,1,2,3`)
 - prints 30 readings at 0.3 s intervals
 
 Safe to run over SSH — nothing moves. Re-run it after touching the sensitivity potentiometers, since channel polarity is not stable across retunes.
@@ -148,6 +133,5 @@ A common project flow is:
 2. Run `run_colmap_sfm.py` to build a reconstruction.
 3. Run `anchor_sfm_scale.py` to get real-world metric scale.
 4. Use `generate_task1_map.py` or `annotate_tag_map.py` to prepare printable maps and tag placement layouts.
-5. Validate inventory and other shared project data with `check_inventory_data.py`.
 
 This folder is not the robot runtime code; it is the project’s preparation, generation, and validation toolkit.

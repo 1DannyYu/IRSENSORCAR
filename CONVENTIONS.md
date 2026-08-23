@@ -31,10 +31,8 @@ Car-and-Robotic-Arm/
 │   └── project-terminology.md            English project glossary
 │
 ├── src/carbot/            Importable Python package
-├── tests/                 Automated tests, split into ai_camera/ (vision-dependent) and other/
-├── examples/              Runnable example and verification scripts, split the same way:
-│   ├── ai_camera/         Scripts that read the Raspberry Pi AI Camera (IMX500) — the `cam` tag
-│   └── other/             Everything else — motor, servo, I2C, sonar, IR, power, multi-sensor
+├── tests/                 Automated tests (pytest), flat, one file per subsystem
+├── examples/              Runnable example and verification scripts, flat, `NN_<tool>_<function>.py`
 ├── scripts/               One-off tools and validators
 │
 ├── tasks/                 Per-task working notes, plans, and run books
@@ -45,17 +43,6 @@ Car-and-Robotic-Arm/
 │   ├── assembly/          Assembly photos (numbered sequence)
 │   ├── reference/         Diagrams, screenshots, spec images
 │   └── assembly-guide/    Extracted assembly manual pages and text
-│
-├── site/                  Astro website source
-│   ├── src/data/          Shared website data files
-│   ├── src/pages/         English-only routes
-│   ├── src/components/    Components
-│   ├── src/layouts/       Layouts
-│   ├── src/styles/        Shared tokens and page styles
-│   └── public/            Static files copied as-is
-│
-├── astro.config.mjs       Build configuration (`_site/` output is not committed)
-├── package.json
 │
 └── vendor/                Third-party material, kept read-only when present (empty as of 2026-08-22 —
                              the NeZha SDK/manual and the BCM2711 datasheet were removed; the I2C
@@ -73,7 +60,6 @@ Car-and-Robotic-Arm/
 | First-party code | `src/`, `tests/`, `examples/`, `scripts/` | Yes |
 | Working notes and run books scoped to one task | `tasks/<task-slug>/` | Yes |
 | Curated photos we captured and intend to publish | `assets/` | Append only |
-| Website frontend | `site/` | Yes |
 | Vendor-provided material | `vendor/` | No |
 | Private raw captures and generated scratch output | `scratch/` | Not committed |
 
@@ -104,7 +90,6 @@ and keep the original files untouched for reference.
 ```
 docs/hardware/nezha-i2c-protocol.md
 scripts/build-assembly-html.py
-site/inventory/index.html
 ```
 
 The only exception is Python modules, which use `snake_case` because they must be imported, for
@@ -120,16 +105,6 @@ good: mac-to-raspberry-pi-access.md
 bad:  deskflow-macos-raspberrypi.en.md
 ```
 
-This rule costs nothing, because the website does not resolve language through filenames either.
-The project website is English-only. Its content is organised in three places, none of which uses
-a language suffix in the filename:
-
-| Layer | Mechanism |
-|---|---|
-| Routes | English pages directly under `site/src/pages/` |
-| UI strings | The `en` dictionary in `site/src/i18n/ui.ts` |
-| Page data | The `i18n.en` field inside `site/src/data/*.json` |
-
 Adding a `.en` or `.zh` suffix to a file therefore signals nothing to any build step, and only
 creates a second naming style to remember.
 
@@ -142,7 +117,6 @@ scope of the current work; do not add new non-English content to technical files
 |---|---|
 | `docs/hardware/`, `docs/adr/`, `docs/progress/` | English |
 | `docs/reflections/` | English |
-| `docs/setup/mac-to-raspberry-pi-access.md` | Bilingual (visitor-facing) |
 | `tasks/ir-sensor-tracking/run-book.md` | Bilingual (operator-facing) |
 | Operator workflow sections in `README.md` | Bilingual (operator-facing) |
 | Other `docs/setup/` procedures | English |
@@ -201,12 +175,11 @@ Exceptions:
 A reader scanning `ls examples/` must be able to tell **which hardware a script drives** without
 opening it. The filename therefore names the tool before it names the task.
 
-`examples/` itself is split into two folders on the same axis used for `tests/`: `ai_camera/` for
-every script that actually reads the IMX500 (including ones that fuse it with another sensor, e.g.
-`22_cam_sonar_patrol_capture.py`), and `other/` for everything else. A script keeps its `cam` tag
-even if placed in `other/` when it does not actually import a camera module — that is a naming bug
-to fix (tag and filename together), not a placement decision; `30_cam_motion_calibrate.py` is the
-current example (it calibrates from operator-measured tape distance, not from the camera).
+`examples/` is flat — all scripts live directly under `examples/`, same as `tests/`. The `cam` tag
+still identifies a script that reads the Raspberry Pi AI Camera (IMX500); a script keeps the `cam`
+tag even if it turns out not to actually import a camera module — that is a naming bug to fix (tag
+and filename together), not a placement decision. `30_cam_motion_calibrate.py` is the current
+example (it calibrates from operator-measured tape distance, not from the camera).
 
 ```
 good: 26_cam_line_follow_drive.py       camera-guided line following
@@ -311,51 +284,7 @@ Always remove generated build artifacts such as `.o`, `.crf`, `.d`, `.lst`, `.de
 `.axf`, and `.uvoptx`. The full ignore list lives in `.gitignore`. These files can be rebuilt and
 consume most of the unnecessary space in imported SDKs.
 
-## 5. Website Data
-
-Keep page content in data files instead of hardcoding it inside HTML or component markup.
-
-The website uses a single shared dataset with English content under `i18n.en`:
-
-```js
-{
-  id, number, name, category, tags, images,
-  i18n: {
-    en: { title, desc, specs, ... }
-  }
-}
-```
-
-`images` stores paths relative to the repository root, such as
-`assets/inventory/001_Example_Module.jpg`.
-
-Current data files:
-
-| File | Purpose |
-|---|---|
-| `site/src/data/modules.json` | Inventory catalog |
-| `site/src/data/assembly-guide.json` | Assembly guide content |
-| `site/src/data/categories.ts` | Inventory category labels |
-
-After changing website data, run:
-
-```bash
-uv run python scripts/check_inventory_data.py
-```
-
-The validator checks that assets exist, IDs are unique, English fields are present, and asset
-filenames follow the `NNN_` rule from §3.3.
-
-### Local Preview
-
-```bash
-npm run dev
-```
-
-The site is served at <http://localhost:4321/Car-and-Robotic-Arm/> so the local path matches the
-GitHub Pages base path.
-
-## 6. Git
+## 5. Git
 
 ### Commit Messages
 
@@ -366,7 +295,6 @@ docs: add NeZha register mapping notes
 src: add Python driver for the NeZha board
 assets: add binocular camera photos 092-093
 vendor: import 37-in-1 sensor kit vendor files
-site: fix inventory image paths
 chore: add gitignore
 ```
 
@@ -378,10 +306,10 @@ This repository contains many binary assets. Keep these limits in mind:
 
 | Item | Current state | Limit |
 |---|---|---|
-| Working tree | ~52MB (excluding `node_modules/`, `.venv/`, build output) | n/a |
+| Working tree | ~52MB (excluding `.venv/`, build output) | n/a |
 | `.git` history | ~102MB | GitHub recommends under 1GB |
 | Largest file | ~2.4MB | GitHub hard limit is 100MB |
-| `assets/` | ~45MB | GitHub Pages publish limit is 1GB |
+| `assets/` | ~45MB | n/a |
 | `vendor/` | Empty (2026-08-22) | Import only what the project actually cites |
 
 Rules:
@@ -394,21 +322,21 @@ Rules:
 2026-07-30 with `git filter-repo` to reduce size. That kind of operation is destructive and must
 always be discussed before repeating it.
 
-## 7. Scratch Files
+## 6. Scratch Files
 
 Experimental output and temporary files belong in `scratch/`, which is already ignored. Use the
 operating system's `/tmp` for disposable runtime output. Never create a repository-root `tmp/`.
 Do not scatter files such as `test.py`, `tmp.json`, or generic placeholders in the repository root.
 
-Generated directories such as `_site/`, `.astro/`, `.pytest_cache/`, `.ruff_cache/`,
-`__pycache__/`, `node_modules/`, and `.venv/` are not project records. They remain ignored and may
-be regenerated; never cite them as the only copy of evidence. Keep lockfiles and source inputs.
+Generated directories such as `.pytest_cache/`, `.ruff_cache/`, `__pycache__/`, and `.venv/` are
+not project records. They remain ignored and may be regenerated; never cite them as the only copy
+of evidence. Keep lockfiles and source inputs.
 
 Before deleting an unfamiliar file, search for references and inspect Git status. Move private raw
 evidence to its canonical `scratch/` location rather than deleting it merely to obtain a clean
 worktree. Use the system Trash for recoverable cleanup when practical.
 
-## 8. Checklist Before Adding a File
+## 7. Checklist Before Adding a File
 
 1. Who created it? Choose the top-level directory from §2.
 2. Is there already a canonical file for the same fact? Update or link to it instead of duplicating it.
