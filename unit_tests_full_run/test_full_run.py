@@ -1,7 +1,9 @@
-"""Tests for the Phase 2 per-tick decision logic in example 49.
+"""Tests for the Phase 2 per-tick decision logic in full_run.py.
 
 `decide_step` is a pure function extracted from the script's main loop (no sensor, car, or
-GPIO involved), so it is exercised directly with synthetic `IRLineReading`s.
+GPIO involved), so it is exercised directly with synthetic `IRLineReading`s. Unlike example
+49, a P0111 reading past the time gate must also be *held* past `END_MARKER_HOLD_S` before it
+stops the run - a brief flicker doesn't count.
 """
 
 from pathlib import Path
@@ -11,15 +13,16 @@ from carbot.ir_geometry import classify
 from carbot.ir_line_nav import IRLineReading
 from carbot.ir_modes import ROUNDABOUT_P1001_HOLD_S
 
-SCRIPT = Path(__file__).parents[1] / "examples" / "49_ir_phase1_to_phase2_then_original_trace.py"
+SCRIPT = Path(__file__).parents[1] / "full_run.py"
 NAMESPACE = run_path(str(SCRIPT))
 LoopState = NAMESPACE["LoopState"]
 StopAction = NAMESPACE["StopAction"]
 ExitModeAction = NAMESPACE["ExitModeAction"]
 DriveAction = NAMESPACE["DriveAction"]
 decide_step = NAMESPACE["decide_step"]
-P0111_STOP_START_S = NAMESPACE["P0111_STOP_START_S"]
-P0111_STOP_FORWARD_S = NAMESPACE["P0111_STOP_FORWARD_S"]
+END_MARKER_AFTER_S = NAMESPACE["END_MARKER_AFTER_S"]
+END_MARKER_HOLD_S = NAMESPACE["END_MARKER_HOLD_S"]
+END_MARKER_FORWARD_S = NAMESPACE["END_MARKER_FORWARD_S"]
 
 P1001_FORWARD_S = 0.62
 P1001_TURN_S = 1.67
@@ -64,7 +67,7 @@ def test_p1001_below_hold_threshold_keeps_driving():
 
     assert isinstance(action, DriveAction)
     assert state.p1001_since == 1.0
-    assert not state.exit_action_done
+    assert not state.exit_done
 
 
 def test_sustained_p1001_triggers_exit_mode_once():
@@ -74,7 +77,7 @@ def test_sustained_p1001_triggers_exit_mode_once():
     action = step((1, 0, 0, 1), elapsed=1.2, now=1.2, state=state)
 
     assert action == ExitModeAction(P1001_FORWARD_S, P1001_TURN_S)
-    assert state.exit_action_done
+    assert state.exit_done
     assert state.p1001_since is None
     assert state.previous_command is None
 
@@ -96,35 +99,81 @@ def test_p1001_interrupted_before_hold_resets_the_timer():
     assert state.p1001_since == 1.06
 
 
-def test_p0111_before_the_time_gate_does_not_stop():
+def test_p0111_before_the_time_gate_is_not_an_end_marker():
     state = LoopState()
 
-    action = step((0, 1, 1, 1), elapsed=P0111_STOP_START_S - 0.1, now=10.0, state=state)
+    action = step((0, 1, 1, 1), elapsed=END_MARKER_AFTER_S - 0.1, now=10.0, state=state)
 
     assert isinstance(action, DriveAction)
+    assert state.end_marker_since is None
 
 
-def test_p0111_after_the_time_gate_stops():
+def test_p0111_after_the_time_gate_starts_the_hold_but_does_not_stop_yet():
     state = LoopState()
 
-    action = step((0, 1, 1, 1), elapsed=P0111_STOP_START_S, now=100.0, state=state)
+    action = step((0, 1, 1, 1), elapsed=END_MARKER_AFTER_S, now=100.0, state=state)
 
-    assert action == StopAction(P0111_STOP_FORWARD_S)
+    # A single tick isn't a hold: END_MARKER_HOLD_S hasn't elapsed yet.
+    assert isinstance(action, DriveAction)
+    assert state.end_marker_since == 100.0
 
 
-def test_p0111_stop_fires_despite_a_stale_unresolved_p1001_latch():
-    """A single tick can only report one physical reading, so a P1001 latch from an earlier,
-    incomplete hold must not survive into a later P0111 tick and block the stop path."""
+def test_p0111_held_past_the_hold_threshold_stops():
     state = LoopState()
-    step((1, 0, 0, 1), elapsed=P0111_STOP_START_S - 1.0, now=39.0, state=state)
-    assert state.p1001_since == 39.0
+    step((0, 1, 1, 1), elapsed=END_MARKER_AFTER_S, now=100.0, state=state)
 
     action = step(
         (0, 1, 1, 1),
-        elapsed=P0111_STOP_START_S,
-        now=39.0 + ROUNDABOUT_P1001_HOLD_S + 1.0,
+        elapsed=END_MARKER_AFTER_S + 0.3,
+        now=100.0 + END_MARKER_HOLD_S + 0.1,
         state=state,
     )
 
-    assert action == StopAction(P0111_STOP_FORWARD_S)
+    assert action == StopAction(END_MARKER_FORWARD_S)
+
+
+def test_p0111_flicker_before_the_hold_resets_and_does_not_stop():
+    state = LoopState()
+    step((0, 1, 1, 1), elapsed=END_MARKER_AFTER_S, now=100.0, state=state)
+    step((0, 1, 1, 0), elapsed=END_MARKER_AFTER_S + 0.05, now=100.05, state=state)
+    assert state.end_marker_since is None
+
+    action = step(
+        (0, 1, 1, 1),
+        elapsed=END_MARKER_AFTER_S + 0.35,
+        now=100.05 + END_MARKER_HOLD_S + 0.1,
+        state=state,
+    )
+
+    # The new hold only just started on this tick, so it hasn't been held
+    # past END_MARKER_HOLD_S yet.
+    assert isinstance(action, DriveAction)
+    assert state.end_marker_since == 100.05 + END_MARKER_HOLD_S + 0.1
+
+
+def test_end_marker_stop_takes_priority_over_a_stale_unresolved_p1001_latch():
+    """A single tick can only report one physical reading, so a P1001 latch from an earlier,
+    incomplete hold must not survive into a later P0111 hold and block the stop path."""
+    state = LoopState()
+    step((1, 0, 0, 1), elapsed=END_MARKER_AFTER_S - 1.0, now=39.0, state=state)
+    assert state.p1001_since == 39.0
+
+    step((0, 1, 1, 1), elapsed=END_MARKER_AFTER_S, now=40.0, state=state)
+    action = step(
+        (0, 1, 1, 1),
+        elapsed=END_MARKER_AFTER_S + 0.3,
+        now=40.0 + END_MARKER_HOLD_S + 0.1,
+        state=state,
+    )
+
+    assert action == StopAction(END_MARKER_FORWARD_S)
     assert state.p1001_since is None
+
+
+def test_p1001_hold_still_fires_before_the_end_marker_time_gate():
+    state = LoopState()
+    step((1, 0, 0, 1), elapsed=5.0, now=5.0, state=state)
+
+    action = step((1, 0, 0, 1), elapsed=5.2, now=5.0 + ROUNDABOUT_P1001_HOLD_S + 0.1, state=state)
+
+    assert action == ExitModeAction(P1001_FORWARD_S, P1001_TURN_S)

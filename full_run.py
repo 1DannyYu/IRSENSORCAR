@@ -16,10 +16,12 @@ from __future__ import annotations
 
 import argparse
 import time
+from dataclasses import dataclass
 
-from carbot.ir_line_nav import detect_ir_line
+from carbot.ir_line_nav import IRLineReading, detect_ir_line
 from carbot.ir_modes import (
     ROUNDABOUT_P1001_HOLD_S,
+    ModeCommand,
     auto_tracing_original_command,
     phase1_to_phase2_timing,
     roundabout_p1001_action_timing,
@@ -30,6 +32,94 @@ from carbot.ir_modes import (
 END_MARKER_AFTER_S = 40.0
 END_MARKER_HOLD_S = 0.2
 END_MARKER_FORWARD_S = 1.2
+
+
+@dataclass
+class LoopState:
+    """Latches carried between ticks of the Phase 2 auto-tracing loop."""
+
+    previous_command: ModeCommand | None = None
+    previous_localising: tuple[int, int, int, int] | None = None
+    p1001_since: float | None = None
+    end_marker_since: float | None = None
+    exit_done: bool = False
+
+
+@dataclass(frozen=True)
+class StopAction:
+    forward_s: float
+
+
+@dataclass(frozen=True)
+class ExitModeAction:
+    forward_s: float
+    turn_s: float
+
+
+@dataclass(frozen=True)
+class DriveAction:
+    command: ModeCommand
+
+
+Action = StopAction | ExitModeAction | DriveAction
+
+
+def decide_step(
+    reading: IRLineReading,
+    *,
+    elapsed: float,
+    now: float,
+    speed: int,
+    state: LoopState,
+    p1001_forward_s: float,
+    p1001_turn_s: float,
+) -> Action:
+    """Decide the next action for one tick and update ``state`` in place.
+
+    Mirrors the original inline loop body exactly, so it can be unit tested without a car,
+    sensor, or GPIO.
+    """
+    # Track how long the roundabout pattern (P1001) has been held
+    # continuously, so a brief flicker doesn't trigger the exit move.
+    if not state.exit_done and reading.physical == (1, 0, 0, 1):
+        if state.p1001_since is None:
+            state.p1001_since = now
+    else:
+        state.p1001_since = None
+    if reading.state.kind.value in ("on_line", "drift"):
+        state.previous_localising = reading.physical
+
+    # After END_MARKER_AFTER_S, a P0111 reading is the end marker. Track how
+    # long it's been held continuously, so a brief flicker doesn't trigger
+    # the stop early - only a hold past END_MARKER_HOLD_S counts as actually
+    # reaching the marker.
+    if elapsed >= END_MARKER_AFTER_S and reading.physical == (0, 1, 1, 1):
+        if state.end_marker_since is None:
+            state.end_marker_since = now
+    else:
+        state.end_marker_since = None
+
+    if state.end_marker_since is not None and now - state.end_marker_since > END_MARKER_HOLD_S:
+        return StopAction(END_MARKER_FORWARD_S)
+
+    # P1001 held past the hold threshold: this is the roundabout exit move
+    # (forward, then hard right), fired once per run.
+    if state.p1001_since is not None and now - state.p1001_since > ROUNDABOUT_P1001_HOLD_S:
+        state.exit_done = True
+        state.p1001_since = None
+        state.previous_command = None
+        return ExitModeAction(p1001_forward_s, p1001_turn_s)
+
+    # Normal case: look up the drive command for this sensor reading in the
+    # original 16-state table and apply it.
+    command = auto_tracing_original_command(
+        reading.state,
+        speed=speed,
+        previous_command=state.previous_command,
+        previous_localising=state.previous_localising,
+    )
+    state.previous_command = command
+    return DriveAction(command)
 
 
 def main() -> int:
@@ -75,11 +165,7 @@ def main() -> int:
             car.move_for(turn_s, args.speed, -args.speed)
 
         started = time.monotonic()
-        previous_command = None
-        previous_localising = None
-        p1001_since = None
-        end_marker_since = None
-        exit_done = False  # the roundabout exit move only ever fires once
+        state = LoopState()
 
         # Phase 2: read the IR sensors on a ~10ms loop and drive according
         # to the original 16-state table, until duration runs out or one of
@@ -88,55 +174,29 @@ def main() -> int:
             now = time.monotonic()
             elapsed = now - started
             reading = detect_ir_line(sensor, speed=args.speed)
+            action = decide_step(
+                reading,
+                elapsed=elapsed,
+                now=now,
+                speed=args.speed,
+                state=state,
+                p1001_forward_s=p1001_forward_s,
+                p1001_turn_s=p1001_turn_s,
+            )
 
-            # Track how long the roundabout pattern (P1001) has been held
-            # continuously, so a brief flicker doesn't trigger the exit move.
-            if not exit_done and reading.physical == (1, 0, 0, 1):
-                if p1001_since is None:
-                    p1001_since = now
-            else:
-                p1001_since = None
-            if reading.state.kind.value in ("on_line", "drift"):
-                previous_localising = reading.physical
-
-            # After 40s, a P0111 reading is the end marker. Track how long
-            # it's been held continuously, so a brief flicker doesn't
-            # trigger the stop early - only a hold past END_MARKER_HOLD_S
-            # counts as actually reaching the marker.
-            if elapsed >= END_MARKER_AFTER_S and reading.physical == (0, 1, 1, 1):
-                if end_marker_since is None:
-                    end_marker_since = now
-            else:
-                end_marker_since = None
-
-            if end_marker_since is not None and now - end_marker_since > END_MARKER_HOLD_S:
+            if isinstance(action, StopAction):
                 if car:
-                    car.move_for(END_MARKER_FORWARD_S, args.speed, args.speed)
+                    car.move_for(action.forward_s, args.speed, args.speed)
                     car.stop(best_effort=True)
                 return 0
-
-            # P1001 held past the hold threshold: this is the roundabout
-            # exit move (forward, then hard right), fired once per run.
-            if p1001_since is not None and now - p1001_since > ROUNDABOUT_P1001_HOLD_S:
+            if isinstance(action, ExitModeAction):
                 if car:
-                    car.move_for(p1001_forward_s, args.speed, args.speed)
-                    car.move_for(p1001_turn_s, args.speed, -args.speed)
-                exit_done = True
-                p1001_since = None
-                previous_command = None
+                    car.move_for(action.forward_s, args.speed, args.speed)
+                    car.move_for(action.turn_s, args.speed, -args.speed)
                 continue
 
-            # Normal case: look up the drive command for this sensor
-            # reading in the original 16-state table and apply it.
-            command = auto_tracing_original_command(
-                reading.state,
-                speed=args.speed,
-                previous_command=previous_command,
-                previous_localising=previous_localising,
-            )
             if car:
-                car.drive(command.left, command.right)
-            previous_command = command
+                car.drive(action.command.left, action.command.right)
             time.sleep(max(0.0, 0.01 - (time.monotonic() - now)))
     except KeyboardInterrupt:
         print("Stopped by operator")
